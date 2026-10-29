@@ -96,9 +96,13 @@ export type Mascota ={
   cuidado: string;
   fechaCuidado: string;
   estado:string;
+  responsableNombre: string | null;
 };
 
-export type DatosMascota = Omit<Mascota, "id"|"estado">;
+export type DatosMascota = Omit<
+  Mascota,
+  "id" | "estado" | "responsableNombre"
+>;
 
 type MascotaRespuesta ={
   id:number;
@@ -109,10 +113,11 @@ type MascotaRespuesta ={
   fecha_cuidado: string;
   estado: string;
   usuario_id: number;
+  responsable_nombre: string | null;
 };
 
 function convertirMascota(datos: MascotaRespuesta): Mascota {
- return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado};  
+ return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado, responsableNombre: datos.responsable_nombre, };  
 }
 
 function cuerpoMascota(datos: DatosMascota) {
@@ -234,4 +239,10 @@ function convertirRegistroHistorial(datos: RegistroHistorialRespuesta): Registro
 export async function listarHistorial() {
   const datos = await pedir<RegistroHistorialRespuesta[]>("/historial");
   return datos.map(convertirRegistroHistorial);
+}
+export async function asignarResponsable(id: number, correo: string) {
+  return pedir(`/mascotas/${id}/responsable`, {
+    metodo: "PATCH",
+    cuerpo: { correo }
+  });
 }

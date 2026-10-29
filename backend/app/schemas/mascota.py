@@ -28,4 +28,8 @@ class MascotaSalida(BaseModel):
     cuidado: str
     fecha_cuidado:date
     estado:str
-    usuario_id:int
+    usuario_id:int  
+    responsable_nombre: str | None = None
+
+class ResponsableEntrada(BaseModel):
+    correo: str

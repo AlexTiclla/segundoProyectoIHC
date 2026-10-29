@@ -17,7 +17,22 @@ class Mascota(Base):
     estado: Mapped[str] = mapped_column(String(20),default=PENDIENTE)
     eliminada: Mapped[bool] = mapped_column(Boolean, default=False)
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
-
+    responsable_id: Mapped[int | None] = mapped_column(
+        ForeignKey("usuarios.id"),
+        nullable=True
+    )
     # relacion
-    usuario = relationship("Usuario", back_populates="mascotas")
+    usuario = relationship(
+        "Usuario",
+        back_populates="mascotas",
+        foreign_keys=[usuario_id]
+    )
+
+    responsable = relationship(
+        "Usuario",
+        foreign_keys=[responsable_id]
+    )
     historial=relationship("Historial", back_populates="mascota")
+    @property
+    def responsable_nombre(self):
+        return self.responsable.nombre_completo if self.responsable else None

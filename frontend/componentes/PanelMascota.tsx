@@ -8,6 +8,7 @@ import {
   filtrarMascotas,
   marcarRealizado,
   reprogramarCuidado,
+  asignarResponsable,
   type Mascota,
 } from "@/lib/api";
 import {
@@ -121,7 +122,21 @@ export default function PanelMascotas() {
       setError(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado");
     }
   }
+  async function asignar(mascota: Mascota) {
+    const correo = prompt("Correo del responsable:");
 
+    if (!correo?.trim()) return;
+
+    try {
+      await asignarResponsable(mascota.id, correo.trim());
+      await cargar();
+      setExito("Responsable asignado");
+    } catch (e) {
+      setError(
+        e instanceof ErrorApi ? e.message : "Error al asignar"
+      );
+    }
+  }
   async function realizar(mascota: Mascota) {
   if(!confirm(`¿Marcar "${mascota.cuidado}" de ${mascota.nombre} como realizado?\n\nDespués ya no podrás editarlo ni reprogramarlo.`)){
     return;
@@ -281,6 +296,7 @@ export default function PanelMascotas() {
               alEliminar={borrar}
               alRealizar={realizar}
               alReprogramar={abrirReprogramacion}
+              alAsignar={asignar}
             />
           ))}
         </div>

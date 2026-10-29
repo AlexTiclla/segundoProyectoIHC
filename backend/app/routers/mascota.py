@@ -5,7 +5,7 @@ from typing import Literal
 from app.base_datos import obtener_sesion
 from app.dependencias import obtener_usuario_actual
 from app.models.usuario import Usuario
-from app.schemas.mascota import MascotaEntrada, MascotaActualizada, MascotaSalida, MascotaReprogramar
+from app.schemas.mascota import MascotaEntrada, MascotaActualizada, MascotaSalida, MascotaReprogramar, ResponsableEntrada
 from app.services import mascota_servicio 
 
 router = APIRouter(prefix = "/mascotas", tags = ["Mascotas"])
@@ -45,3 +45,17 @@ def realizar(mascota_id:int,sesion:Session=Depends(obtener_sesion), usuario:Usua
 def reprogramar(mascota_id:int,dato_fecha:MascotaReprogramar,sesion:Session = Depends(obtener_sesion),usuario:Usuario=Depends(obtener_usuario_actual)):
     nueva_fecha = dato_fecha.fecha_cuidado
     return mascota_servicio.reprogramar_cuidado(sesion,mascota_id,usuario.id,nueva_fecha)
+
+@router.patch("/{mascota_id}/responsable", response_model=MascotaSalida)
+def asignar_responsable(
+    mascota_id: int,
+    datos: ResponsableEntrada,
+    sesion: Session = Depends(obtener_sesion),
+    usuario: Usuario = Depends(obtener_usuario_actual)
+):
+    return mascota_servicio.asignar_responsable(
+        sesion,
+        mascota_id,
+        datos.correo,
+        usuario.id
+    )

@@ -98,3 +98,28 @@ def filtrar_mascotas(session:Session,usuario_id:int,nombre:str|None=None,estado:
     if fecha_desde and fecha_hasta and fecha_desde > fecha_hasta:
         raise ErrorDeNegocio("La fecha inicial no puede ser posterior a la fecha final",400)
     return repo.filtrar_por_usuario(session,usuario_id,nombre,estado,tipo_cuidado,fecha_desde,fecha_hasta)
+
+def asignar_responsable(
+    session: Session,
+    mascota_id: int,
+    correo: str,
+    usuario_id: int
+):
+    mascota = _obtener_propia(session, mascota_id, usuario_id)
+
+    if mascota.estado == "realizado":
+        raise ErrorDeNegocio("El cuidado ya fue realizado", 400)
+
+    responsable = repo_usuario.buscar_por_correo(
+        session, correo.strip().lower()
+    )
+
+    if responsable is None:
+        raise ErrorDeNegocio("El usuario no existe", 404)
+
+    mascota.responsable_id = responsable.id
+
+    session.commit()
+    session.refresh(mascota)
+
+    return mascota

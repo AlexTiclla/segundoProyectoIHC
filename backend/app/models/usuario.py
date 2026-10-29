@@ -16,5 +16,9 @@ class Usuario(Base):
     creado_en: Mapped[datetime] = mapped_column(default=ahora_utc)
 
     # relacion
-    mascotas = relationship("Mascota", back_populates="usuario")
+    mascotas = relationship(
+        "Mascota",
+        back_populates="usuario",
+        foreign_keys="Mascota.usuario_id"
+    )
     historial = relationship("Historial",back_populates="usuario") 

@@ -8,6 +8,7 @@ type Props = {
   alEliminar: (mascota: Mascota) => void;
   alRealizar: (mascota: Mascota) => void;
   alReprogramar: (mascota: Mascota) => void;
+  alAsignar: (mascota: Mascota) => void;
 };
 
 export function formatearFecha(fecha: string): string {
@@ -38,7 +39,14 @@ function textoDias(dias: number): string {
   return `hace ${Math.abs(dias)} días`;
 }
 
-export default function TarjetaMascota({ mascota, alEditar, alEliminar, alRealizar, alReprogramar }: Props) {
+export default function TarjetaMascota({
+  mascota,
+  alEditar,
+  alEliminar,
+  alRealizar,
+  alReprogramar,
+  alAsignar
+}: Props) {
   const realizado = mascota.estado === "realizado";
   const dias = diasHasta(mascota.fechaCuidado);
   const atrasado = !realizado && dias < 0;
@@ -87,7 +95,21 @@ export default function TarjetaMascota({ mascota, alEditar, alEliminar, alRealiz
           Este cuidado ya fue realizado, por eso no se puede reprogramar ni editar.
         </p>
       )}
+      {/* Responsable del cuidado */}
+      <p>
+        <strong>Responsable:</strong>{" "}
+        {mascota.responsableNombre || "Sin asignar"}
+      </p>
 
+      {!realizado && (
+        <button
+          type="button"
+          onClick={() => alAsignar(mascota)}
+          className="min-h-11 w-full rounded-lg border border-arena px-4 py-2 font-semibold text-tinta hover:bg-menta-claro"
+        >
+          Asignar responsable
+        </button>
+      )}
       {!realizado && (
         <div className="mt-2 flex flex-col gap-3">
           <button
