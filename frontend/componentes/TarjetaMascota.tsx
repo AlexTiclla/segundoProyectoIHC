@@ -107,7 +107,7 @@ export default function TarjetaMascota({
           onClick={() => alAsignar(mascota)}
           className="min-h-11 w-full rounded-lg border border-arena px-4 py-2 font-semibold text-tinta hover:bg-menta-claro"
         >
-          Asignar responsable
+          Asignar dueno del cuidado
         </button>
       )}
       {!realizado && (

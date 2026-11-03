@@ -12,7 +12,7 @@ export default async function PaginaPrivada() {
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center gap-6 p-6 text-center">
       <header className="flex items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold">Hola, {usuario.nombreCompleto}</h1> 
+        <h1 className="text-3xl font-bold">Hola Mundo, {usuario.nombreCompleto}</h1> 
         <BotonSalir />
       </header>
       <PanelMascotas/>
