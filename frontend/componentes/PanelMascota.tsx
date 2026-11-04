@@ -214,13 +214,21 @@ export default function PanelMascotas() {
       {accion?.tipo === "realizar" && (
         <DialogoConfirmar
           titulo="¿Marcar como realizado?"
-          mensaje={`${accion.mascota.cuidado} de ${accion.mascota.nombre}. Después ya no podrás editarlo ni reprogramarlo.`}
+          mensaje={`${accion.mascota.cuidado} de ${accion.mascota.nombre}. Después ya no podrás editarlo ni reprogramarlo.${
+            accion.mascota.proximaFecha
+              ? ` Se programará el próximo para el ${formatearFecha(accion.mascota.proximaFecha)}.`
+              : ""
+          }`}
           textoConfirmar="Marcar como realizado"
           alCerrar={cerrarAccion}
           alConfirmar={() =>
             ejecutar(
               () => marcarRealizado(accion.mascota.id),
-              `El cuidado de ${accion.mascota.nombre} se marcó como realizado`
+              `El cuidado de ${accion.mascota.nombre} se marcó como realizado${
+                accion.mascota.proximaFecha
+                  ? `. Próximo cuidado: ${formatearFecha(accion.mascota.proximaFecha)}`
+                  : ""
+              }`
             )
           }
         />
@@ -229,7 +237,9 @@ export default function PanelMascotas() {
       {accion?.tipo === "eliminar" && (
         <DialogoConfirmar
           titulo="¿Eliminar este cuidado?"
-          mensaje={`${accion.mascota.cuidado} de ${accion.mascota.nombre}, del ${formatearFecha(accion.mascota.fechaCuidado)}. Esta acción no se puede deshacer.`}
+          mensaje={`${accion.mascota.cuidado} de ${accion.mascota.nombre}, del ${formatearFecha(accion.mascota.fechaCuidado)}. ${
+            accion.mascota.proximaFecha ? "Dejará de repetirse. " : ""
+          }Esta acción no se puede deshacer.`}
           textoConfirmar="Eliminar"
           peligroso
           alCerrar={cerrarAccion}

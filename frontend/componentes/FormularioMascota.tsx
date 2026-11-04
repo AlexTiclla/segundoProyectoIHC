@@ -3,11 +3,12 @@
 import { useState, type FormEvent } from "react";
 
 import { actualizarMascota, crearMascota, ErrorApi, type Mascota } from "@/lib/api";
-import { CUIDADOS, ESPECIES } from "@/lib/constantes";
+import { CUIDADOS, ESPECIES, NO_SE_REPITE, REPETICIONES } from "@/lib/constantes";
 import {
   fechaHoy,
   validarCuidado,
   validarEspecie,
+  validarIntervalo,
   validarNombreMascota,
   validarNuevaFecha,
 } from "@/lib/validaciones";
@@ -27,6 +28,7 @@ type Errores = {
   especie?: string;
   cuidado?: string;
   fecha?: string;
+  intervalo?: string;
 };
 
 export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar }: Props) {
@@ -37,9 +39,14 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
   const [especie, setEspecie] = useState(mascotaEditar?.especie ?? "");
   const [cuidado, setCuidado] = useState(mascotaEditar?.cuidado ?? "");
   const [fecha, setFecha] = useState(mascotaEditar?.fechaCuidado ?? "");
+  const [textoRepeticion, setTextoRepeticion] = useState(
+    REPETICIONES.find((opcion) => opcion.unidad === mascotaEditar?.intervaloUnidad)?.texto ?? NO_SE_REPITE
+  );
+  const [cantidad, setCantidad] = useState(mascotaEditar?.intervaloCantidad?.toString() ?? "");
   const [errores, setErrores] = useState<Errores>({});
   const [errorGeneral, setErrorGeneral] = useState("");
   const [cargando, setCargando] = useState(false);
+  const repeticion = REPETICIONES.find((opcion) => opcion.texto === textoRepeticion);
 
   async function enviar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
@@ -51,6 +58,7 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
       cuidado: validarCuidado(cuidado),
       // Al editar la fecha no se cambia: para eso está "Reprogramar"
       fecha: mascotaEditar ? undefined : validarNuevaFecha(fecha),
+      intervalo: repeticion ? validarIntervalo(cantidad) : undefined,
     };
     setErrores(nuevosErrores);
     if (Object.values(nuevosErrores).some(Boolean)) return;
@@ -61,6 +69,8 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
       especie: especie.trim(),
       cuidado: cuidado.trim(),
       fechaCuidado: fecha,
+      intervaloCantidad: repeticion ? Number(cantidad) : null,
+      intervaloUnidad: repeticion ? repeticion.unidad : null,
     };
 
     setCargando(true);
@@ -113,6 +123,26 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
         deshabilitado={Boolean(mascotaEditar)}
         ayuda={mascotaEditar ? "Para cambiar la fecha usa el botón Reprogramar" : "Desde hoy en adelante"}
       />
+      <CampoSeleccion
+        id="repeticion"
+        etiqueta="¿Se repite?"
+        opciones={[NO_SE_REPITE, ...REPETICIONES.map((opcion) => opcion.texto)]}
+        valor={textoRepeticion}
+        alCambiar={setTextoRepeticion}
+        ayuda="Al marcarlo como realizado se programa el siguiente, contando desde ese día"
+      />
+      {repeticion && (
+        <CampoTexto
+          id="cantidad"
+          etiqueta={`Cada cuántos ${repeticion.plural}`}
+          tipo="number"
+          min="1"
+          valor={cantidad}
+          alCambiar={setCantidad}
+          error={errores.intervalo}
+          ayuda="De 1 a 365"
+        />
+      )}
 
       <div className="flex flex-wrap justify-end gap-2">
         <Boton texto="Cancelar" variante="secundario" alClic={alCancelar} deshabilitado={cargando} />

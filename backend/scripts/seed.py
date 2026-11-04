@@ -41,6 +41,8 @@ def crear_cuidado(
     fecha_cuidado: date,
     estado: str = PENDIENTE,
     eliminada: bool = False,
+    intervalo_cantidad: int | None = None,
+    intervalo_unidad: str | None = None,
 ) -> Mascota:
     mascota = Mascota(
         nombre=nombre,
@@ -51,6 +53,8 @@ def crear_cuidado(
         estado=estado,
         eliminada=eliminada,
         usuario_id=usuario_id,
+        intervalo_cantidad=intervalo_cantidad,
+        intervalo_unidad=intervalo_unidad,
     )
     session.add(mascota)
     session.flush()
@@ -117,14 +121,15 @@ def ejecutar_semilla() -> None:
             )
 
         # Cinco pendientes con fecha futura.
+        # Tres de ellos son recurrentes: al realizarlos se programa el siguiente.
         datos = [
-            ("Milo", "Macho", "perro", "vacuna", 4),
-            ("Mia", "Hembra", "gato", "control veterinario", 7),
-            ("Simba", "Macho", "gato", "desparasitación", 10),
-            ("Kira", "Hembra", "perro", "baño", 14),
-            ("Bruno", "Macho", "conejo", "corte de uñas", 21),
+            ("Milo", "Macho", "perro", "vacuna", 4, 1, "anios"),
+            ("Mia", "Hembra", "gato", "control veterinario", 7, None, None),
+            ("Simba", "Macho", "gato", "desparasitación", 10, 3, "meses"),
+            ("Kira", "Hembra", "perro", "baño", 14, 7, "dias"),
+            ("Bruno", "Macho", "conejo", "corte de uñas", 21, None, None),
         ]
-        for nombre, sexo, especie, cuidado, dias in datos:
+        for nombre, sexo, especie, cuidado, dias, cantidad, unidad in datos:
             creados.append(
                 crear_cuidado(
                     session,
@@ -134,6 +139,8 @@ def ejecutar_semilla() -> None:
                     especie,
                     cuidado,
                     hoy + timedelta(days=dias),
+                    intervalo_cantidad=cantidad,
+                    intervalo_unidad=unidad,
                 )
             )
 

@@ -18,6 +18,7 @@ const etiquetas: Record<string, string> = {
   eliminar: "Eliminación",
   reprogramar: "Reprogramación",
   realizar: "Cuidado realizado",
+  programar: "Próximo cuidado programado",
   responsable: "Responsable asignado",
 };
 

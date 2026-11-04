@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.errores import ErrorDeNegocio
 from app.models.mascota import Mascota
+from app.recurrencia import CANTIDAD_MAXIMA, texto_intervalo
 from app.schemas.mascota import MascotaEntrada,MascotaActualizada
 from app.repositories import mascota_repositorio as repo
 from app.repositories import usuario_repositorio as repo_usuario
@@ -16,17 +17,29 @@ def _obtener_propia(session:Session, mascota_id:int, usuario_id:int) -> Mascota:
         raise ErrorDeNegocio("No se encontró la mascota",404)
     return mascota
 
+def _validar_intervalo(cantidad:int|None, unidad:str|None):
+    if cantidad is None and unidad is None:
+        return
+    if cantidad is None or unidad is None:
+        raise ErrorDeNegocio("Indica cada cuánto se repite el cuidado",400)
+    if not 1 <= cantidad <= CANTIDAD_MAXIMA:
+        raise ErrorDeNegocio(f"La repetición debe ser de 1 a {CANTIDAD_MAXIMA}",400)
+
 def crear_mascota(session:Session, datos: MascotaEntrada, usuario_id: int):
     usuario = repo_usuario.buscar_por_id(session,usuario_id)
     if usuario is None:
         raise ErrorDeNegocio("No se encontró el usuario",404)
     if datos.fecha_cuidado < date.today():
         raise ErrorDeNegocio("La fecha del cuidado no puede ser anterior a hoy",400)
-    mascota = repo.crear(session,datos.nombre,datos.sexo,datos.especie,datos.cuidado,datos.fecha_cuidado,usuario_id)
+    _validar_intervalo(datos.intervalo_cantidad,datos.intervalo_unidad)
+    mascota = repo.crear(session,datos.nombre,datos.sexo,datos.especie,datos.cuidado,datos.fecha_cuidado,usuario_id,datos.intervalo_cantidad,datos.intervalo_unidad)
+    descripcion = f"Se creó la mascota '{mascota.nombre}' para {usuario.nombre_completo}."
+    if mascota.intervalo_cantidad:
+        descripcion += f" El cuidado se repite {texto_intervalo(mascota.intervalo_cantidad,mascota.intervalo_unidad)}."
     historial_servicio.registrar(
         session,
         "crear",
-        f"Se creó la mascota '{mascota.nombre}' para {usuario.nombre_completo}.",
+        descripcion,
         usuario_id,
         mascota.id,
     )
@@ -42,7 +55,8 @@ def actualizar_mascota(session:Session, mascota_id:int, datos: MascotaActualizad
     mascota = _obtener_propia(session,mascota_id,usuario_id)
     if mascota.estado == "realizado":
         raise ErrorDeNegocio("Este cuidado ya fue realizado, por eso no se puede editar",400)
-    mascota = repo.actualizar(session,mascota,datos.nombre,datos.sexo,datos.especie,datos.cuidado)
+    _validar_intervalo(datos.intervalo_cantidad,datos.intervalo_unidad)
+    mascota = repo.actualizar(session,mascota,datos.nombre,datos.sexo,datos.especie,datos.cuidado,datos.intervalo_cantidad,datos.intervalo_unidad)
     historial_servicio.registrar(
         session,
         "actualizar",
@@ -67,7 +81,12 @@ def marcar_realizado(session:Session,mascota_id:int, usuario_id:int):
     mascota =_obtener_propia(session,mascota_id,usuario_id)
     if mascota.estado == "realizado":
         raise ErrorDeNegocio("Este cuidado ya está marcado como realizado",400)
-    mascota = repo.cambiar_estado(session,mascota,"realizado")
+    proxima_fecha = mascota.proxima_fecha
+    if proxima_fecha is None:
+        siguiente = None
+        mascota = repo.cambiar_estado(session,mascota,"realizado")
+    else:
+        mascota, siguiente = repo.realizar_y_programar(session,mascota,proxima_fecha)
     historial_servicio.registrar(
         session,
         "realizar",
@@ -75,6 +94,15 @@ def marcar_realizado(session:Session,mascota_id:int, usuario_id:int):
         usuario_id,
         mascota.id,
     )
+    if siguiente is not None:
+        historial_servicio.registrar(
+            session,
+            "programar",
+            f"Se programó el próximo cuidado de '{siguiente.nombre}' para el {proxima_fecha.isoformat()} "
+            f"({texto_intervalo(siguiente.intervalo_cantidad,siguiente.intervalo_unidad)}).",
+            usuario_id,
+            siguiente.id,
+        )
     return mascota
 
 def reprogramar_cuidado(session:Session,mascota_id:int,usuario_id:int,nueva_fecha:date):

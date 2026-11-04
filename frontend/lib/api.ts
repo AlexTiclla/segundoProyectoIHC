@@ -97,11 +97,14 @@ export type Mascota ={
   fechaCuidado: string;
   estado:string;
   responsableNombre: string | null;
+  intervaloCantidad: number | null;
+  intervaloUnidad: string | null;
+  proximaFecha: string | null;
 };
 
 export type DatosMascota = Omit<
   Mascota,
-  "id" | "estado" | "responsableNombre"
+  "id" | "estado" | "responsableNombre" | "proximaFecha"
 >;
 
 type MascotaRespuesta ={
@@ -114,10 +117,13 @@ type MascotaRespuesta ={
   estado: string;
   usuario_id: number;
   responsable_nombre: string | null;
+  intervalo_cantidad: number | null;
+  intervalo_unidad: string | null;
+  proxima_fecha: string | null;
 };
 
 function convertirMascota(datos: MascotaRespuesta): Mascota {
- return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado, responsableNombre: datos.responsable_nombre, };  
+ return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado, responsableNombre: datos.responsable_nombre, intervaloCantidad: datos.intervalo_cantidad, intervaloUnidad: datos.intervalo_unidad, proximaFecha: datos.proxima_fecha, };
 }
 
 function cuerpoMascota(datos: DatosMascota) {
@@ -127,6 +133,8 @@ function cuerpoMascota(datos: DatosMascota) {
     especie: datos.especie,
     cuidado: datos.cuidado,
     fecha_cuidado: datos.fechaCuidado,
+    intervalo_cantidad: datos.intervaloCantidad,
+    intervalo_unidad: datos.intervaloUnidad,
   };
 }
 
@@ -136,6 +144,8 @@ function cuerpoMascotaActualizar(datos: DatosMascota) {
     sexo: datos.sexo,
     especie: datos.especie,
     cuidado: datos.cuidado,
+    intervalo_cantidad: datos.intervaloCantidad,
+    intervalo_unidad: datos.intervaloUnidad,
   };
 }
 

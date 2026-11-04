@@ -38,6 +38,13 @@ export function fechaHoy(): string {
     return `${ahora.getFullYear()}-${mes}-${dia}`;
 }
 
+export function validarIntervalo(cantidad: string): string | undefined {
+    const numero = Number(cantidad);
+    if (!Number.isInteger(numero) || numero < 1 || numero > 365) {
+        return "Escribe un número entero de 1 a 365";
+    }
+}
+
 // Para fechas que se eligen al crear o reprogramar un cuidado
 export function validarNuevaFecha(fecha:string): string | undefined{
     if(fecha.trim().length < 1){

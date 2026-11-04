@@ -1,7 +1,8 @@
 from datetime import date
-from sqlalchemy import String,Date,ForeignKey,Boolean
+from sqlalchemy import String,Date,ForeignKey,Boolean,Integer
 from sqlalchemy.orm import Mapped, mapped_column,relationship
 from app.base_datos import Base
+from app.recurrencia import sumar_intervalo
 
 PENDIENTE = "pendiente"
 REALIZADO = "realizado" 
@@ -21,6 +22,9 @@ class Mascota(Base):
         ForeignKey("usuarios.id"),
         nullable=True
     )
+    # Cada cuánto se repite el cuidado. Sin valores, no se repite.
+    intervalo_cantidad: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    intervalo_unidad: Mapped[str | None] = mapped_column(String(10), nullable=True)
     # relacion
     usuario = relationship(
         "Usuario",
@@ -36,3 +40,10 @@ class Mascota(Base):
     @property
     def responsable_nombre(self):
         return self.responsable.nombre_completo if self.responsable else None
+
+    # La fecha del siguiente cuidado si se marca como realizado hoy
+    @property
+    def proxima_fecha(self) -> date | None:
+        if self.estado == REALIZADO or not self.intervalo_cantidad or not self.intervalo_unidad:
+            return None
+        return sumar_intervalo(date.today(), self.intervalo_cantidad, self.intervalo_unidad)

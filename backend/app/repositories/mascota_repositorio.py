@@ -1,7 +1,7 @@
 from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models.mascota import Mascota
+from app.models.mascota import Mascota, REALIZADO
 
 
 def buscar_por_id(session: Session, mascota_id: int) -> Mascota | None:
@@ -32,6 +32,8 @@ def crear(
     cuidado: str,
     fecha_cuidado: date,
     usuario_id: int,
+    intervalo_cantidad: int | None = None,
+    intervalo_unidad: str | None = None,
 ) -> Mascota:
     mascota = Mascota(
         nombre=nombre,
@@ -40,6 +42,8 @@ def crear(
         cuidado=cuidado,
         fecha_cuidado=fecha_cuidado,
         usuario_id=usuario_id,
+        intervalo_cantidad=intervalo_cantidad,
+        intervalo_unidad=intervalo_unidad,
     )
     session.add(mascota)
     session.commit()
@@ -54,11 +58,15 @@ def actualizar(
     sexo: str,
     especie: str,
     cuidado: str,
+    intervalo_cantidad: int | None = None,
+    intervalo_unidad: str | None = None,
 ) -> Mascota:
     mascota.nombre = nombre
     mascota.sexo = sexo
     mascota.especie = especie
     mascota.cuidado = cuidado
+    mascota.intervalo_cantidad = intervalo_cantidad
+    mascota.intervalo_unidad = intervalo_unidad
     session.commit()
     session.refresh(mascota)
     return mascota
@@ -78,6 +86,31 @@ def cambiar_estado(
     session.commit()
     session.refresh(mascota)
     return mascota
+
+
+# Un solo commit: el cuidado no puede quedar realizado sin su siguiente ocurrencia.
+def realizar_y_programar(
+    session: Session,
+    mascota: Mascota,
+    proxima_fecha: date,
+) -> tuple[Mascota, Mascota]:
+    siguiente = Mascota(
+        nombre=mascota.nombre,
+        sexo=mascota.sexo,
+        especie=mascota.especie,
+        cuidado=mascota.cuidado,
+        fecha_cuidado=proxima_fecha,
+        usuario_id=mascota.usuario_id,
+        responsable_id=mascota.responsable_id,
+        intervalo_cantidad=mascota.intervalo_cantidad,
+        intervalo_unidad=mascota.intervalo_unidad,
+    )
+    mascota.estado = REALIZADO
+    session.add(siguiente)
+    session.commit()
+    session.refresh(mascota)
+    session.refresh(siguiente)
+    return mascota, siguiente
 
 
 def actualizar_fecha_cuidado(

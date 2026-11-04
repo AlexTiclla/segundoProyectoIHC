@@ -1,5 +1,5 @@
 import type { Mascota } from "@/lib/api";
-import { diasHasta, formatearFecha, textoDias } from "@/lib/fechas";
+import { diasHasta, formatearFecha, textoDias, textoRecurrencia } from "@/lib/fechas";
 import Boton from "./Boton";
 import MenuAcciones, { type OpcionMenu } from "./MenuAcciones";
 
@@ -23,6 +23,7 @@ export default function TarjetaMascota({
   const realizado = mascota.estado === "realizado";
   const dias = diasHasta(mascota.fechaCuidado);
   const atrasado = !realizado && dias < 0;
+  const recurrencia = textoRecurrencia(mascota.intervaloCantidad, mascota.intervaloUnidad);
 
   let estado = { texto: `Pendiente · ${textoDias(dias)}`, color: "bg-amber-100 text-amber-900" };
   if (realizado) estado = { texto: "Realizado", color: "bg-green-100 text-green-900" };
@@ -68,6 +69,8 @@ export default function TarjetaMascota({
       <div>
         <p className="break-words font-semibold first-letter:uppercase">{mascota.cuidado}</p>
         <p className="text-sm">{formatearFecha(mascota.fechaCuidado)}</p>
+        {/* En un cuidado realizado no se muestra: la repetición sigue en su siguiente tarjeta */}
+        {recurrencia && !realizado && <p className="text-sm">Se repite {recurrencia}</p>}
         <p className="mt-1 break-words text-sm text-grisazulado">
           Responsable: {mascota.responsableNombre || "sin asignar"}
         </p>

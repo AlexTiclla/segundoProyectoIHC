@@ -12,3 +12,11 @@ export const CUIDADOS = [
   "Corte de uñas",
   "Limpieza dental",
 ];
+
+// Cada cuánto se puede repetir un cuidado
+export const NO_SE_REPITE = "No se repite";
+export const REPETICIONES = [
+  { texto: "Cada ciertos días", unidad: "dias", singular: "día", plural: "días" },
+  { texto: "Cada ciertos meses", unidad: "meses", singular: "mes", plural: "meses" },
+  { texto: "Cada ciertos años", unidad: "anios", singular: "año", plural: "años" },
+];

@@ -1,4 +1,12 @@
+import { REPETICIONES } from "@/lib/constantes";
 import { fechaHoy } from "@/lib/validaciones";
+
+// "cada año", "cada 3 meses". Sin frecuencia, el cuidado no se repite.
+export function textoRecurrencia(cantidad: number | null, unidad: string | null): string | null {
+  const repeticion = REPETICIONES.find((opcion) => opcion.unidad === unidad);
+  if (!cantidad || !repeticion) return null;
+  return cantidad === 1 ? `cada ${repeticion.singular}` : `cada ${cantidad} ${repeticion.plural}`;
+}
 
 export function formatearFecha(fecha: string): string {
   const [anio, mes, dia] = fecha.split("-").map(Number);
