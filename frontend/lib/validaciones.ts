@@ -45,6 +45,11 @@ export function validarIntervalo(cantidad: string): string | undefined {
     }
 }
 
+export function validarMotivo(motivo: string): string | undefined {
+    if (motivo.trim().length < 1) return "Escribe el motivo del cambio";
+    if (motivo.trim().length > 200) return "El motivo no puede tener más de 200 caracteres";
+}
+
 // Para fechas que se eligen al crear o reprogramar un cuidado
 export function validarNuevaFecha(fecha:string): string | undefined{
     if(fecha.trim().length < 1){

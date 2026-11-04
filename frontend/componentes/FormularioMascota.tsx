@@ -129,7 +129,7 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
         opciones={[NO_SE_REPITE, ...REPETICIONES.map((opcion) => opcion.texto)]}
         valor={textoRepeticion}
         alCambiar={setTextoRepeticion}
-        ayuda="Al marcarlo como realizado se programa el siguiente, contando desde ese día"
+        ayuda="Al marcarlo como realizado se programa el siguiente"
       />
       {repeticion && (
         <CampoTexto

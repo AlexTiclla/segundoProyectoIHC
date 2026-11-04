@@ -72,14 +72,16 @@ def test_la_siguiente_conserva_el_responsable(session, usuario, otro_usuario):
     assert siguiente.responsable_nombre == otro_usuario.nombre_completo
 
 
-@pytest.mark.parametrize("dias", [-30, 20])
-def test_se_calcula_desde_hoy_aunque_se_marque_con_retraso_o_adelanto(session, usuario, dias):
+# Sigue el ritmo de la serie: con retraso salta a la primera fecha futura,
+# con adelanto queda después de la fecha programada.
+@pytest.mark.parametrize("dias, esperado", [(-30, 5), (20, 27)])
+def test_la_siguiente_mantiene_el_ritmo_de_la_serie(session, usuario, dias, esperado):
     mascota = crear_recurrente(session, usuario, 7, "dias", HOY + timedelta(days=dias))
 
     servicio.marcar_realizado(session, mascota.id, usuario.id)
 
     [siguiente] = pendientes(session, usuario)
-    assert siguiente.fecha_cuidado == HOY + timedelta(days=7)
+    assert siguiente.fecha_cuidado == HOY + timedelta(days=esperado)
 
 
 def test_proxima_fecha_anticipa_la_que_se_creara(session, usuario):
@@ -156,11 +158,13 @@ def test_eliminar_el_pendiente_detiene_la_serie(session, usuario):
 def test_reprogramar_conserva_la_repeticion(session, usuario):
     mascota = crear_recurrente(session, usuario)
 
-    servicio.reprogramar_cuidado(session, mascota.id, usuario.id, HOY + timedelta(days=30))
+    servicio.reprogramar_cuidado(session, mascota.id, usuario.id, HOY + timedelta(days=30), "Viaje")
     servicio.marcar_realizado(session, mascota.id, usuario.id)
 
+    # Sigue cada 7 días desde la fecha original, sin caer antes de la fecha movida
     [siguiente] = pendientes(session, usuario)
-    assert siguiente.fecha_cuidado == HOY + timedelta(days=7)
+    assert siguiente.fecha_cuidado == HOY + timedelta(days=35)
+    assert (siguiente.intervalo_cantidad, siguiente.intervalo_unidad) == (7, "dias")
 
 
 @pytest.mark.parametrize(

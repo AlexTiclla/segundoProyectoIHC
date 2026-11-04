@@ -27,7 +27,18 @@ class MascotaActualizada(BaseModel):
     intervalo_unidad: UnidadIntervalo | None = None
 
 class MascotaReprogramar(BaseModel):
-    fecha_cuidado: date  
+    fecha_cuidado: date
+    motivo: str = Field(max_length=200)
+    alcance: Literal["solo_esta", "futuras"] = "solo_esta"
+
+class ReprogramacionSalida(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    fecha_anterior: date
+    fecha_nueva: date
+    diferencia_dias: int
+    motivo: str
+    alcance: str
 
 class MascotaSalida(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -44,6 +55,9 @@ class MascotaSalida(BaseModel):
     intervalo_cantidad: int | None = None
     intervalo_unidad: str | None = None
     proxima_fecha: date | None = None
+    proximas_fechas: list[date] = []
+    fecha_original: date
+    reprogramaciones: list[ReprogramacionSalida] = []
 
 class ResponsableEntrada(BaseModel):
     correo: str

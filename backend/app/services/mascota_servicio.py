@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.errores import ErrorDeNegocio
 from app.models.mascota import Mascota
+from app.models.reprogramacion import FUTURAS, SOLO_ESTA
 from app.recurrencia import CANTIDAD_MAXIMA, texto_intervalo
 from app.schemas.mascota import MascotaEntrada,MascotaActualizada
 from app.repositories import mascota_repositorio as repo
@@ -105,17 +106,34 @@ def marcar_realizado(session:Session,mascota_id:int, usuario_id:int):
         )
     return mascota
 
-def reprogramar_cuidado(session:Session,mascota_id:int,usuario_id:int,nueva_fecha:date):
+def reprogramar_cuidado(session:Session,mascota_id:int,usuario_id:int,nueva_fecha:date,motivo:str,alcance:str=SOLO_ESTA):
     mascota = _obtener_propia(session,mascota_id,usuario_id)
     if(mascota.estado == "realizado"):
         raise ErrorDeNegocio("Este cuidado ya fue realizado, por eso no se puede reprogramar",400)
     if nueva_fecha < date.today():
         raise ErrorDeNegocio("La nueva fecha no puede ser anterior a hoy", 400)
-    mascota = repo.actualizar_fecha_cuidado(session,mascota,nueva_fecha)
+    fecha_anterior = mascota.fecha_cuidado
+    if nueva_fecha == fecha_anterior:
+        raise ErrorDeNegocio("Elige una fecha distinta a la actual",400)
+    motivo = motivo.strip()
+    if not motivo:
+        raise ErrorDeNegocio("Escribe el motivo del cambio",400)
+    if alcance == FUTURAS and not mascota.intervalo_cantidad:
+        raise ErrorDeNegocio("Este cuidado no se repite, por eso no tiene fechas siguientes",400)
+
+    # Con "solo esta" la base no se mueve, así las siguientes siguen en sus fechas.
+    # Con "futuras" la base se mueve lo mismo que esta fecha, y las siguientes con ella.
+    base = mascota.fecha_base or fecha_anterior
+    if alcance == FUTURAS:
+        base += nueva_fecha - fecha_anterior
+
+    mascota = repo.reprogramar(session,mascota,nueva_fecha,base,motivo,alcance)
+    texto_alcance = "esta y las siguientes" if alcance == FUTURAS else "solo esta fecha"
     historial_servicio.registrar(
         session,
         "reprogramar",
-        f"Se reprogramó el cuidado de '{mascota.nombre}' para el {nueva_fecha.isoformat()}.",
+        f"Se reprogramó el cuidado de '{mascota.nombre}' del {fecha_anterior.isoformat()} al {nueva_fecha.isoformat()} "
+        f"({texto_alcance}). Motivo: {motivo}",
         usuario_id,
         mascota.id,
     )

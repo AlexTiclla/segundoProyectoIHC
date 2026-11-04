@@ -17,6 +17,16 @@ export function formatearFecha(fecha: string): string {
   });
 }
 
+// "11 nov 2026": para listas de fechas dentro de una tarjeta
+export function formatearFechaCorta(fecha: string): string {
+  const [anio, mes, dia] = fecha.split("-").map(Number);
+  return new Date(anio, mes - 1, dia).toLocaleDateString("es", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 // Días que faltan (positivo) o que pasaron (negativo) respecto a hoy.
 // Se usa Date.UTC para que el cambio de horario no altere el conteo.
 export function diasHasta(fecha: string): number {

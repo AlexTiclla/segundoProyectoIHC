@@ -33,6 +33,7 @@ def test_operaciones_de_mascota_crean_historial(session, usuario):
         mascota.id,
         usuario.id,
         date.today() + timedelta(days=10),
+        "El veterinario no atiende ese día",
     )
     mascota_servicio.eliminar_mascota(session, mascota.id, usuario.id)
 

@@ -42,9 +42,8 @@ def realizar(mascota_id:int,sesion:Session=Depends(obtener_sesion), usuario:Usua
     return mascota_servicio.marcar_realizado(sesion,mascota_id,usuario.id)
 
 @router.patch("/{mascota_id}/reprogramar", response_model=MascotaSalida)
-def reprogramar(mascota_id:int,dato_fecha:MascotaReprogramar,sesion:Session = Depends(obtener_sesion),usuario:Usuario=Depends(obtener_usuario_actual)):
-    nueva_fecha = dato_fecha.fecha_cuidado
-    return mascota_servicio.reprogramar_cuidado(sesion,mascota_id,usuario.id,nueva_fecha)
+def reprogramar(mascota_id:int,datos:MascotaReprogramar,sesion:Session = Depends(obtener_sesion),usuario:Usuario=Depends(obtener_usuario_actual)):
+    return mascota_servicio.reprogramar_cuidado(sesion,mascota_id,usuario.id,datos.fecha_cuidado,datos.motivo,datos.alcance)
 
 @router.patch("/{mascota_id}/responsable", response_model=MascotaSalida)
 def asignar_responsable(

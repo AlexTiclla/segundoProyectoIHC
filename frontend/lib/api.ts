@@ -88,6 +88,16 @@ export async function cambiarContrasena(correo: string, codigo: string, contrase
   });
 }
 
+export type AlcanceReprogramacion = "solo_esta" | "futuras";
+
+export type Reprogramacion = {
+  fechaAnterior: string;
+  fechaNueva: string;
+  diferenciaDias: number;
+  motivo: string;
+  alcance: string;
+};
+
 export type Mascota ={
   id: number;
   nombre: string;
@@ -100,11 +110,14 @@ export type Mascota ={
   intervaloCantidad: number | null;
   intervaloUnidad: string | null;
   proximaFecha: string | null;
+  proximasFechas: string[];
+  fechaOriginal: string;
+  reprogramaciones: Reprogramacion[];
 };
 
 export type DatosMascota = Omit<
   Mascota,
-  "id" | "estado" | "responsableNombre" | "proximaFecha"
+  "id" | "estado" | "responsableNombre" | "proximaFecha" | "proximasFechas" | "fechaOriginal" | "reprogramaciones"
 >;
 
 type MascotaRespuesta ={
@@ -120,10 +133,19 @@ type MascotaRespuesta ={
   intervalo_cantidad: number | null;
   intervalo_unidad: string | null;
   proxima_fecha: string | null;
+  proximas_fechas: string[];
+  fecha_original: string;
+  reprogramaciones: {
+    fecha_anterior: string;
+    fecha_nueva: string;
+    diferencia_dias: number;
+    motivo: string;
+    alcance: string;
+  }[];
 };
 
 function convertirMascota(datos: MascotaRespuesta): Mascota {
- return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado, responsableNombre: datos.responsable_nombre, intervaloCantidad: datos.intervalo_cantidad, intervaloUnidad: datos.intervalo_unidad, proximaFecha: datos.proxima_fecha, };
+ return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado, responsableNombre: datos.responsable_nombre, intervaloCantidad: datos.intervalo_cantidad, intervaloUnidad: datos.intervalo_unidad, proximaFecha: datos.proxima_fecha, proximasFechas: datos.proximas_fechas, fechaOriginal: datos.fecha_original, reprogramaciones: datos.reprogramaciones.map((r) => ({ fechaAnterior: r.fecha_anterior, fechaNueva: r.fecha_nueva, diferenciaDias: r.diferencia_dias, motivo: r.motivo, alcance: r.alcance })), };
 }
 
 function cuerpoMascota(datos: DatosMascota) {
@@ -182,10 +204,10 @@ export async function marcarRealizado(id: number){
   return convertirMascota(respuesta);
 }
 
-export async function reprogramarCuidado(id:number,nuevaFecha:string){
+export async function reprogramarCuidado(id:number,nuevaFecha:string,motivo:string,alcance:AlcanceReprogramacion){
   const respuesta = await pedir<MascotaRespuesta>(`/mascotas/${id}/reprogramar`,{
     metodo: "PATCH",
-    cuerpo: {fecha_cuidado: nuevaFecha} 
+    cuerpo: {fecha_cuidado: nuevaFecha, motivo, alcance}
   });
   return convertirMascota(respuesta);
 }

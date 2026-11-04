@@ -2,6 +2,7 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models.mascota import Mascota, REALIZADO
+from app.models.reprogramacion import Reprogramacion
 
 
 def buscar_por_id(session: Session, mascota_id: int) -> Mascota | None:
@@ -113,12 +114,27 @@ def realizar_y_programar(
     return mascota, siguiente
 
 
-def actualizar_fecha_cuidado(
+# Un solo commit: la fecha no puede cambiar sin que quede su registro.
+def reprogramar(
     session: Session,
     mascota: Mascota,
     nueva_fecha: date,
+    nueva_base: date,
+    motivo: str,
+    alcance: str,
 ) -> Mascota:
+    session.add(
+        Reprogramacion(
+            mascota_id=mascota.id,
+            fecha_anterior=mascota.fecha_cuidado,
+            fecha_nueva=nueva_fecha,
+            diferencia_dias=(nueva_fecha - mascota.fecha_cuidado).days,
+            motivo=motivo,
+            alcance=alcance,
+        )
+    )
     mascota.fecha_cuidado = nueva_fecha
+    mascota.fecha_base = nueva_base
     session.commit()
     session.refresh(mascota)
     return mascota

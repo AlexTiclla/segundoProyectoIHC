@@ -26,6 +26,24 @@ def sumar_intervalo(fecha: date, cantidad: int, unidad: str) -> date:
     return date(anio, mes, dia)
 
 
+# Las siguientes fechas de la serie (base + k intervalos) posteriores a "despues_de".
+def fechas_siguientes(
+    base: date,
+    despues_de: date,
+    cantidad: int,
+    unidad: str,
+    total: int = 3,
+) -> list[date]:
+    fechas = []
+    veces = 1
+    while len(fechas) < total:
+        fecha = sumar_intervalo(base, veces * cantidad, unidad)
+        if fecha > despues_de:
+            fechas.append(fecha)
+        veces += 1
+    return fechas
+
+
 def texto_intervalo(cantidad: int, unidad: str) -> str:
     singular, plural = _NOMBRES[unidad]
     return f"cada {singular}" if cantidad == 1 else f"cada {cantidad} {plural}"

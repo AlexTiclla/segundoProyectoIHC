@@ -98,7 +98,7 @@ test('El historial guarda cada vez que se realiza', async ({ page }, testInfo) =
   await expect(registros.filter({ hasText: 'Cuidado realizado' })).toHaveCount(2);
   await expect(registros.filter({ hasText: 'Próximo cuidado programado' })).toHaveCount(2);
   await expect(registros.first()).toContainText('Próximo cuidado programado');
-  await expect(registros.first()).toContainText(fechaConDias(7));
+  await expect(registros.first()).toContainText(fechaConDias(14));
 });
 
 test('Ana no puede guardar una repetición de 0 días', async ({ page }, testInfo) => {

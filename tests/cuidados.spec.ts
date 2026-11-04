@@ -46,6 +46,7 @@ test('Ana reprograma un cuidado', async ({ page }, testInfo) => {
 
   await tarjeta(page, nombre).getByRole('button', { name: 'Reprogramar' }).click();
   await page.getByLabel('Nueva fecha').fill(nuevaFecha);
+  await page.getByLabel('Motivo').fill('La clínica cierra ese día');
   await page.getByRole('button', { name: 'Guardar fecha' }).click();
 
   await expect(page.getByText(`El cuidado de ${nombre} se reprogramó con éxito`)).toBeVisible();
@@ -60,6 +61,7 @@ test('Ana no puede reprogramar a una fecha pasada', async ({ page }, testInfo) =
 
   await tarjeta(page, nombre).getByRole('button', { name: 'Reprogramar' }).click();
   await page.getByLabel('Nueva fecha').fill('2020-01-15');
+  await page.getByLabel('Motivo').fill('La clínica cierra ese día');
   await page.getByRole('button', { name: 'Guardar fecha' }).click();
 
   await expect(page.getByText('La fecha no puede ser anterior a hoy')).toBeVisible();

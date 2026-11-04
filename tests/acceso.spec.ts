@@ -36,7 +36,7 @@ test('Ana no puede registrar un correo que ya existe', async ({ page }, testInfo
   await page.getByLabel('Confirmar contraseña').fill(CONTRASENA);
   await page.getByRole('button', { name: 'Crear cuenta' }).click();
 
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('alert').filter({ hasText: 'Ya existe una cuenta con ese correo' })).toBeVisible();
   await expect(page).toHaveURL(/\/registro/);
 });
 
@@ -45,7 +45,7 @@ test('Ana ve un error si su contraseña es incorrecta', async ({ page }, testInf
 
   await ingresarPorPantalla(page, correo, 'NoEsLaClave99');
 
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('alert').filter({ hasText: 'Correo o contraseña incorrectos' })).toBeVisible();
   await expect(page).toHaveURL(/\/ingresar/);
 });
 
@@ -83,7 +83,7 @@ test('Ana ve un error si escribe un código de recuperación equivocado', async 
   await page.getByLabel('Confirmar contraseña nueva').fill('ClaveNueva5678');
   await page.getByRole('button', { name: 'Cambiar contraseña' }).click();
 
-  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('alert').filter({ hasText: 'Código inválido o vencido' })).toBeVisible();
 });
 
 test('Ana cierra sesión y ya no puede volver a su lista', async ({ page }, testInfo) => {

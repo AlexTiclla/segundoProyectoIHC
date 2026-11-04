@@ -1,5 +1,5 @@
 import type { Mascota } from "@/lib/api";
-import { diasHasta, formatearFecha, textoDias, textoRecurrencia } from "@/lib/fechas";
+import { diasHasta, formatearFecha, formatearFechaCorta, textoDias, textoRecurrencia } from "@/lib/fechas";
 import Boton from "./Boton";
 import MenuAcciones, { type OpcionMenu } from "./MenuAcciones";
 
@@ -71,10 +71,36 @@ export default function TarjetaMascota({
         <p className="text-sm">{formatearFecha(mascota.fechaCuidado)}</p>
         {/* En un cuidado realizado no se muestra: la repetición sigue en su siguiente tarjeta */}
         {recurrencia && !realizado && <p className="text-sm">Se repite {recurrencia}</p>}
+        {mascota.proximasFechas.length > 0 && (
+          <p className="text-sm text-grisazulado">
+            Próximas: {mascota.proximasFechas.map(formatearFechaCorta).join(", ")}
+          </p>
+        )}
         <p className="mt-1 break-words text-sm text-grisazulado">
           Responsable: {mascota.responsableNombre || "sin asignar"}
         </p>
       </div>
+
+      {mascota.reprogramaciones.length > 0 && (
+        <div className="text-sm">
+          <p>Fecha original: {formatearFechaCorta(mascota.fechaOriginal)}</p>
+          <details>
+            <summary className="flex min-h-11 cursor-pointer items-center font-semibold text-menta-profundo">
+              Ver cambios ({mascota.reprogramaciones.length})
+            </summary>
+            <ol className="flex flex-col gap-2">
+              {mascota.reprogramaciones.map((cambio, indice) => (
+                <li key={indice} className="break-words border-l-2 border-arena pl-2">
+                  {formatearFechaCorta(cambio.fechaAnterior)} → {formatearFechaCorta(cambio.fechaNueva)}
+                  {cambio.alcance === "futuras" && " (y las siguientes)"}
+                  <br />
+                  <span className="text-grisazulado">Motivo: {cambio.motivo}</span>
+                </li>
+              ))}
+            </ol>
+          </details>
+        </div>
+      )}
 
       {!realizado && (
         <div className="mt-auto flex flex-wrap gap-2">
