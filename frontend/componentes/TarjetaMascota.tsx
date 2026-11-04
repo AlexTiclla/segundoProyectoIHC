@@ -1,5 +1,6 @@
 import type { Mascota } from "@/lib/api";
-import { fechaHoy } from "@/lib/validaciones";
+import { diasHasta, formatearFecha, textoDias } from "@/lib/fechas";
+import Boton from "./Boton";
 import MenuAcciones, { type OpcionMenu } from "./MenuAcciones";
 
 type Props = {
@@ -10,34 +11,6 @@ type Props = {
   alReprogramar: (mascota: Mascota) => void;
   alAsignar: (mascota: Mascota) => void;
 };
-
-export function formatearFecha(fecha: string): string {
-  const [anio, mes, dia] = fecha.split("-").map(Number);
-  return new Date(anio, mes - 1, dia).toLocaleDateString("es", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-// Días que faltan (positivo) o que pasaron (negativo) respecto a hoy.
-// Se usa Date.UTC para que el cambio de horario no altere el conteo.
-function diasHasta(fecha: string): number {
-  const [anio, mes, dia] = fecha.split("-").map(Number);
-  const [anioHoy, mesHoy, diaHoy] = fechaHoy().split("-").map(Number);
-  const msPorDia = 24 * 60 * 60 * 1000;
-  return Math.round(
-    (Date.UTC(anio, mes - 1, dia) - Date.UTC(anioHoy, mesHoy - 1, diaHoy)) / msPorDia
-  );
-}
-
-function textoDias(dias: number): string {
-  if (dias === 0) return "hoy";
-  if (dias === 1) return "mañana";
-  if (dias === -1) return "ayer";
-  if (dias > 1) return `en ${dias} días`;
-  return `hace ${Math.abs(dias)} días`;
-}
 
 export default function TarjetaMascota({
   mascota,
@@ -51,20 +24,34 @@ export default function TarjetaMascota({
   const dias = diasHasta(mascota.fechaCuidado);
   const atrasado = !realizado && dias < 0;
 
+  let estado = { texto: `Pendiente · ${textoDias(dias)}`, color: "bg-amber-100 text-amber-900" };
+  if (realizado) estado = { texto: "Realizado", color: "bg-green-100 text-green-900" };
+  else if (atrasado) estado = { texto: `Atrasado · ${textoDias(dias)}`, color: "bg-red-100 text-red-900" };
+
   // Acciones poco frecuentes: van dentro del menú de tres puntos
   const opcionesMenu: OpcionMenu[] = [
-    ...(!realizado ? [{ texto: "Editar", alSeleccionar: () => alEditar(mascota) }] : []),
+    ...(!realizado
+      ? [
+          {
+            texto: mascota.responsableNombre ? "Cambiar responsable" : "Asignar responsable",
+            alSeleccionar: () => alAsignar(mascota),
+          },
+          { texto: "Editar", alSeleccionar: () => alEditar(mascota) },
+        ]
+      : []),
     { texto: "Eliminar", alSeleccionar: () => alEliminar(mascota), peligrosa: true },
   ];
 
   return (
     <article
-      className={`flex flex-col gap-2 rounded-xl border ${atrasado ? "border-red-300" : "border-arena"} ${realizado ? "bg-neutral-50" : "bg-white"} p-4 text-left text-neutral-900 shadow-sm`}
+      className={`flex h-full flex-col gap-3 rounded-xl border p-4 text-left shadow-sm ${
+        atrasado ? "border-red-300" : "border-arena"
+      } ${realizado ? "bg-neutral-50" : "bg-white"}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="text-xl font-bold">{mascota.nombre}</h3>
-          <p className="text-sm text-grisazulado">
+          <h2 className="break-words text-lg font-bold">{mascota.nombre}</h2>
+          <p className="text-sm text-grisazulado first-letter:uppercase">
             {mascota.especie} · {mascota.sexo}
           </p>
         </div>
@@ -74,58 +61,22 @@ export default function TarjetaMascota({
         />
       </div>
 
-      <p>
-        <span className="font-semibold">{mascota.cuidado}</span> el{" "}
-        {formatearFecha(mascota.fechaCuidado)}
-      </p>
-      <p>
-        <span className="font-semibold">Estado:</span>{" "}
-        {realizado ? (
-          "Realizado"
-        ) : atrasado ? (
-          <span className="font-semibold text-red-700">
-            Atrasado ({textoDias(dias)}): reprograma o márcalo como realizado
-          </span>
-        ) : (
-          <>Pendiente ({textoDias(dias)})</>
-        )}
-      </p>
-      {realizado && (
-        <p className="text-sm text-grisazulado">
-          Este cuidado ya fue realizado, por eso no se puede reprogramar ni editar.
-        </p>
-      )}
-      {/* Responsable del cuidado */}
-      <p>
-        <strong>Responsable:</strong>{" "}
-        {mascota.responsableNombre || "Sin asignar"}
+      <p className={`self-start rounded-full px-3 py-1 text-sm font-semibold ${estado.color}`}>
+        {estado.texto}
       </p>
 
+      <div>
+        <p className="break-words font-semibold first-letter:uppercase">{mascota.cuidado}</p>
+        <p className="text-sm">{formatearFecha(mascota.fechaCuidado)}</p>
+        <p className="mt-1 break-words text-sm text-grisazulado">
+          Responsable: {mascota.responsableNombre || "sin asignar"}
+        </p>
+      </div>
+
       {!realizado && (
-        <button
-          type="button"
-          onClick={() => alAsignar(mascota)}
-          className="min-h-11 w-full rounded-lg border border-arena px-4 py-2 font-semibold text-tinta hover:bg-menta-claro"
-        >
-          Asignar dueno del cuidado
-        </button>
-      )}
-      {!realizado && (
-        <div className="mt-2 flex flex-col gap-3">
-          <button
-            type="button"
-            onClick={() => alRealizar(mascota)}
-            className="min-h-11 w-full rounded-lg bg-menta-oscuro px-4 py-2 font-semibold text-white hover:bg-menta-profundo"
-          >
-            Marcar como realizado
-          </button>
-          <button
-            type="button"
-            onClick={() => alReprogramar(mascota)}
-            className="min-h-11 w-full rounded-lg border border-arena px-4 py-2 font-semibold text-tinta hover:bg-menta-claro"
-          >
-            Reprogramar
-          </button>
+        <div className="mt-auto flex flex-wrap gap-2">
+          <Boton texto="Marcar como realizado" alClic={() => alRealizar(mascota)} clase="flex-auto" />
+          <Boton texto="Reprogramar" variante="secundario" alClic={() => alReprogramar(mascota)} clase="flex-auto" />
         </div>
       )}
     </article>

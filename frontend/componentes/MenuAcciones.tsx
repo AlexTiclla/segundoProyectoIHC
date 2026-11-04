@@ -71,9 +71,10 @@ export default function MenuAcciones({ etiqueta, opciones }: Props) {
               type="button"
               onClick={() => {
                 setAbierto(false);
+                boton.current?.focus(); // la opción desaparece: el foco vuelve al botón del menú
                 opcion.alSeleccionar();
               }}
-              className={`flex min-h-11 w-full items-center px-4 text-left font-semibold ${
+              className={`flex min-h-11 w-full items-center whitespace-nowrap px-4 text-left font-semibold ${
                 opcion.peligrosa
                   ? `${indice > 0 ? "border-t border-arena " : ""}text-red-700 hover:bg-red-50`
                   : "text-tinta hover:bg-menta-claro"

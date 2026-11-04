@@ -13,13 +13,15 @@ def obtener_propia(session:Session, mascota_id:int, usuario_id:int) -> Mascota:
 def _obtener_propia(session:Session, mascota_id:int, usuario_id:int) -> Mascota:
     mascota = repo.buscar_por_id(session, mascota_id)
     if mascota is None or mascota.usuario_id != usuario_id:
-        raise ErrorDeNegocio("Error no se encontro la mascota",404)
+        raise ErrorDeNegocio("No se encontró la mascota",404)
     return mascota
 
 def crear_mascota(session:Session, datos: MascotaEntrada, usuario_id: int):
     usuario = repo_usuario.buscar_por_id(session,usuario_id)
     if usuario is None:
-        raise ErrorDeNegocio("Error no se encontro el usuario",404)
+        raise ErrorDeNegocio("No se encontró el usuario",404)
+    if datos.fecha_cuidado < date.today():
+        raise ErrorDeNegocio("La fecha del cuidado no puede ser anterior a hoy",400)
     mascota = repo.crear(session,datos.nombre,datos.sexo,datos.especie,datos.cuidado,datos.fecha_cuidado,usuario_id)
     historial_servicio.registrar(
         session,
@@ -33,7 +35,7 @@ def crear_mascota(session:Session, datos: MascotaEntrada, usuario_id: int):
 def listar_mascotas(session:Session, usuario_id: int):
     usuario = repo_usuario.buscar_por_id(session,usuario_id)
     if usuario is None:
-        raise ErrorDeNegocio("Error no se encontro el usuario",404)
+        raise ErrorDeNegocio("No se encontró el usuario",404)
     return repo.buscar_por_usuario(session,usuario_id)
 
 def actualizar_mascota(session:Session, mascota_id:int, datos: MascotaActualizada, usuario_id: int):
@@ -64,7 +66,7 @@ def eliminar_mascota(session:Session, mascota_id:int, usuario_id: int):
 def marcar_realizado(session:Session,mascota_id:int, usuario_id:int):
     mascota =_obtener_propia(session,mascota_id,usuario_id)
     if mascota.estado == "realizado":
-        raise ErrorDeNegocio("La mascota ya esta marcada como realizado",400)
+        raise ErrorDeNegocio("Este cuidado ya está marcado como realizado",400)
     mascota = repo.cambiar_estado(session,mascota,"realizado")
     historial_servicio.registrar(
         session,
@@ -94,7 +96,7 @@ def reprogramar_cuidado(session:Session,mascota_id:int,usuario_id:int,nueva_fech
 def filtrar_mascotas(session:Session,usuario_id:int,nombre:str|None=None,estado:str|None=None,tipo_cuidado:str|None=None,fecha_desde:date|None=None,fecha_hasta:date|None=None):
     usuario = repo_usuario.buscar_por_id(session,usuario_id)
     if usuario is None:
-        raise ErrorDeNegocio("Error no se encontro el usuario",404)
+        raise ErrorDeNegocio("No se encontró el usuario",404)
     if fecha_desde and fecha_hasta and fecha_desde > fecha_hasta:
         raise ErrorDeNegocio("La fecha inicial no puede ser posterior a la fecha final",400)
     return repo.filtrar_por_usuario(session,usuario_id,nombre,estado,tipo_cuidado,fecha_desde,fecha_hasta)
@@ -115,11 +117,14 @@ def asignar_responsable(
     )
 
     if responsable is None:
-        raise ErrorDeNegocio("El usuario no existe", 404)
+        raise ErrorDeNegocio("No existe una cuenta con ese correo", 404)
 
-    mascota.responsable_id = responsable.id
-
-    session.commit()
-    session.refresh(mascota)
-
+    mascota = repo.asignar_responsable(session, mascota, responsable.id)
+    historial_servicio.registrar(
+        session,
+        "responsable",
+        f"Se asignó a {responsable.nombre_completo} como responsable del cuidado de '{mascota.nombre}'.",
+        usuario_id,
+        mascota.id,
+    )
     return mascota

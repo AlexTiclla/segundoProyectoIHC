@@ -91,6 +91,17 @@ def actualizar_fecha_cuidado(
     return mascota
 
 
+def asignar_responsable(
+    session: Session,
+    mascota: Mascota,
+    responsable_id: int,
+) -> Mascota:
+    mascota.responsable_id = responsable_id
+    session.commit()
+    session.refresh(mascota)
+    return mascota
+
+
 def filtrar_por_usuario(
     session: Session,
     usuario_id: int,
@@ -127,9 +138,10 @@ def filtrar_por_usuario(
     if fecha_hasta:
         consulta = consulta.where(Mascota.fecha_cuidado <= fecha_hasta)
 
+    # "pendiente" va antes que "realizado", y los más atrasados quedan arriba.
     consulta = consulta.order_by(
-        Mascota.fecha_cuidado,
         Mascota.estado,
+        Mascota.fecha_cuidado,
         Mascota.id,
     )
 

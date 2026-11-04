@@ -18,6 +18,7 @@ const etiquetas: Record<string, string> = {
   eliminar: "Eliminación",
   reprogramar: "Reprogramación",
   realizar: "Cuidado realizado",
+  responsable: "Responsable asignado",
 };
 
 export default function PanelHistorial() {
@@ -37,10 +38,8 @@ export default function PanelHistorial() {
   return (
     <section className="flex w-full flex-col gap-4">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-wide text-menta-oscuro">
-          Actividad reciente
-        </p>
-        <h2 className="text-2xl font-bold text-tinta">Historial de acciones</h2>
+        <h1 className="text-2xl font-bold sm:text-3xl">Historial de acciones</h1>
+        <p className="text-sm text-grisazulado">Lo último que hiciste aparece primero.</p>
       </div>
 
       <MensajeError mensaje={error} />

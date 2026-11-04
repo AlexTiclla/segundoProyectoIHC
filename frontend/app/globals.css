@@ -1,32 +1,27 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-menta-claro: #bfefe0; 
-  --color-menta: #87cbb9;
-  --color-arena: #d6c7b0;
-  --color-crema: #f3ede2;
-  --color-grisazulado: #6b7280;
+  --color-fondo: #f6f8f7;
+  --color-menta-claro: #dff3ec;
+  --color-menta: #b5e0d3;
+  --color-arena: #dde3e0; /* separadores y bordes de tarjetas */
+  --color-contorno: #79847f; /* bordes de campos y botones */
+  --color-grisazulado: #56606b;
   --color-menta-oscuro: #2f7f6b;
   --color-menta-profundo: #266857;
-  --color-tinta: #374151;
+  --color-tinta: #27323a;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--color-crema);
-    color: var(--color-tinta);
-  }
+body {
+  background: var(--color-fondo);
+  color: var(--color-tinta);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Muestra dónde está el foco al navegar con teclado */
+:focus-visible {
+  outline: 2px solid var(--color-menta-profundo);
+  outline-offset: 2px;
 }

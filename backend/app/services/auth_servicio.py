@@ -34,7 +34,7 @@ def registrar(sesion: Session, datos: RegistroEntrada) -> Usuario:
 def autenticar(sesion: Session, datos: IngresoEntrada) -> Usuario:
     usuario = repositorio.buscar_por_correo(sesion, datos.correo)
     if usuario is None or not verificar_contrasena(datos.contrasena, usuario.contrasena_hash):
-        raise ErrorDeNegocio("Correo o contrasena incorrectos", 401)
+        raise ErrorDeNegocio("Correo o contraseña incorrectos", 401)
     return usuario
 
 
@@ -42,7 +42,7 @@ def usuario_desde_token(sesion: Session, token: str | None) -> Usuario:
     usuario_id = leer_token(token) if token else None
     usuario = repositorio.buscar_por_id(sesion, usuario_id) if usuario_id else None
     if usuario is None:
-        raise ErrorDeNegocio("No has iniciado sesion", 401)
+        raise ErrorDeNegocio("No has iniciado sesión", 401)
     return usuario
 
 
@@ -68,7 +68,7 @@ def cambiar_contrasena(sesion: Session, datos: CambioContrasenaEntrada) -> None:
         and verificar_contrasena(datos.codigo, usuario.codigo_recuperacion_hash)
     )
     if not codigo_valido:
-        raise ErrorDeNegocio("Codigo invalido o vencido", 400)
+        raise ErrorDeNegocio("Código inválido o vencido", 400)
     repositorio.actualizar_contrasena(
         sesion, usuario, hashear_contrasena(datos.contrasena_nueva)
     )

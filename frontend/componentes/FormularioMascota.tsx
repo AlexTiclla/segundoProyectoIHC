@@ -3,13 +3,16 @@
 import { useState, type FormEvent } from "react";
 
 import { actualizarMascota, crearMascota, ErrorApi, type Mascota } from "@/lib/api";
+import { CUIDADOS, ESPECIES } from "@/lib/constantes";
 import {
+  fechaHoy,
   validarCuidado,
   validarEspecie,
-  validarFecha,
   validarNombreMascota,
+  validarNuevaFecha,
 } from "@/lib/validaciones";
 import Boton from "./Boton";
+import CampoSeleccion from "./CampoSeleccion";
 import CampoTexto from "./CampoTexto";
 import MensajeError from "./MensajeError";
 
@@ -46,7 +49,8 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
       nombre: validarNombreMascota(nombre),
       especie: validarEspecie(especie),
       cuidado: validarCuidado(cuidado),
-      fecha: validarFecha(fecha),
+      // Al editar la fecha no se cambia: para eso está "Reprogramar"
+      fecha: mascotaEditar ? undefined : validarNuevaFecha(fecha),
     };
     setErrores(nuevosErrores);
     if (Object.values(nuevosErrores).some(Boolean)) return;
@@ -74,48 +78,49 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
   }
 
   return (
-    <form
-      onSubmit={enviar}
-      noValidate
-      className="flex flex-col gap-4 rounded-xl border border-arena bg-white p-4 text-neutral-900"
-    >
-      <h3 className="text-xl font-bold">
-        {mascotaEditar ? "Editar mascota" : "Nueva mascota"}
-      </h3>
+    <form onSubmit={enviar} noValidate className="flex flex-col gap-4">
       <MensajeError mensaje={errorGeneral} />
 
-      <CampoTexto id="nombre" etiqueta="Nombre" valor={nombre} alCambiar={setNombre} error={errores.nombre} />
+      <CampoTexto id="nombre" etiqueta="Nombre" valor={nombre} alCambiar={setNombre} error={errores.nombre} ayuda="El nombre de tu mascota" />
+      <CampoSeleccion id="sexo" etiqueta="Sexo" opciones={["Macho", "Hembra"]} valor={sexo} alCambiar={setSexo} />
+      <CampoSeleccion
+        id="especie"
+        etiqueta="Especie"
+        opciones={ESPECIES}
+        textoOtro="Otra (escribirla)"
+        valor={especie}
+        alCambiar={setEspecie}
+        error={errores.especie}
+      />
+      <CampoSeleccion
+        id="cuidado"
+        etiqueta="Cuidado"
+        opciones={CUIDADOS}
+        textoOtro="Otro (escribirlo)"
+        valor={cuidado}
+        alCambiar={setCuidado}
+        error={errores.cuidado}
+        ayuda="Qué necesita tu mascota en esa fecha"
+      />
+      <CampoTexto
+        id="fecha"
+        etiqueta="Fecha del cuidado"
+        tipo="date"
+        valor={fecha}
+        min={mascotaEditar ? undefined : fechaHoy()}
+        alCambiar={setFecha}
+        error={errores.fecha}
+        deshabilitado={Boolean(mascotaEditar)}
+        ayuda={mascotaEditar ? "Para cambiar la fecha usa el botón Reprogramar" : "Desde hoy en adelante"}
+      />
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="sexo" className="font-medium">Sexo</label>
-        <select
-          id="sexo"
-          value={sexo}
-          onChange={(e) => setSexo(e.target.value)}
-          className="w-full rounded-lg border border-arena bg-white p-3 text-neutral-900"
-        >
-          <option value="Macho">Macho</option>
-          <option value="Hembra">Hembra</option>
-        </select>
-      </div>
-
-      <CampoTexto id="especie" etiqueta="Especie" valor={especie} alCambiar={setEspecie} error={errores.especie} ayuda="Por ejemplo: perro, gato" />
-      <CampoTexto id="cuidado" etiqueta="Cuidado" valor={cuidado} alCambiar={setCuidado} error={errores.cuidado} ayuda="Por ejemplo: vacuna" />
-      <CampoTexto id="fecha" etiqueta="Fecha del cuidado" tipo="date" valor={fecha} alCambiar={setFecha} error={errores.fecha} deshabilitado={Boolean(mascotaEditar)} ayuda={mascotaEditar ? "Para cambiar la fecha usa el boton de reprogramar": undefined}/>
-
-      <div className="flex gap-2">
+      <div className="flex flex-wrap justify-end gap-2">
+        <Boton texto="Cancelar" variante="secundario" alClic={alCancelar} deshabilitado={cargando} />
         <Boton
           texto={mascotaEditar ? "Guardar cambios" : "Crear mascota"}
           textoCargando="Guardando..."
           cargando={cargando}
         />
-        <button
-          type="button"
-          onClick={alCancelar}
-          className="rounded-lg border border-arena px-6 py-3 font-semibold text-tinta hover:bg-menta-claro"
-        >
-          Cancelar
-        </button>
       </div>
     </form>
   );
