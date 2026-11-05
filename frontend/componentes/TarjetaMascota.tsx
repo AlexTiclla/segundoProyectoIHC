@@ -37,7 +37,7 @@ export default function TarjetaMascota({
             texto: mascota.responsableNombre ? "Cambiar responsable" : "Asignar responsable",
             alSeleccionar: () => alAsignar(mascota),
           },
-          { texto: "Editar", alSeleccionar: () => alEditar(mascota) },
+          
         ]
       : []),
     { texto: "Eliminar", alSeleccionar: () => alEliminar(mascota), peligrosa: true },
@@ -103,9 +103,28 @@ export default function TarjetaMascota({
       )}
 
       {!realizado && (
-        <div className="mt-auto flex flex-wrap gap-2">
-          <Boton texto="Marcar como realizado" alClic={() => alRealizar(mascota)} clase="flex-auto" />
-          <Boton texto="Reprogramar" variante="secundario" alClic={() => alReprogramar(mascota)} clase="flex-auto" />
+        <div className="mt-auto flex flex-col gap-2">
+          <Boton
+            texto="Editar datos"
+            variante="secundario"
+            alClic={() => alEditar(mascota)}
+            clase="w-full"
+          />
+
+          <div className="flex flex-wrap gap-2">
+            <Boton
+              texto="Marcar como realizado"
+              alClic={() => alRealizar(mascota)}
+              clase="flex-auto"
+            />
+
+            <Boton
+              texto="Reprogramar"
+              variante="secundario"
+              alClic={() => alReprogramar(mascota)}
+              clase="flex-auto"
+            />
+          </div>
         </div>
       )}
     </article>

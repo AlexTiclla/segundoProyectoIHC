@@ -144,8 +144,14 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
         />
       )}
 
-      <div className="flex flex-wrap justify-end gap-2">
-        <Boton texto="Cancelar" variante="secundario" alClic={alCancelar} deshabilitado={cargando} />
+      <div className="sticky bottom-0 z-10 -mx-2 flex flex-wrap justify-end gap-2 border-t border-arena bg-white px-2 py-3 shadow-sm">
+        <Boton
+          texto="Cancelar"
+          variante="secundario"
+          alClic={alCancelar}
+          deshabilitado={cargando}
+        />
+
         <Boton
           texto={mascotaEditar ? "Guardar cambios" : "Crear mascota"}
           textoCargando="Guardando..."

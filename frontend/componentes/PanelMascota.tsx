@@ -194,8 +194,15 @@ export default function PanelMascotas() {
       )}
 
       {accion?.tipo === "editar" && (
-        <Dialogo titulo="Editar mascota" alCerrar={cerrarAccion}>
-          <FormularioMascota mascotaEditar={accion.mascota} alGuardar={alGuardar} alCancelar={cerrarAccion} />
+        <Dialogo
+          titulo={`Editar datos de ${accion.mascota.nombre}`}
+          alCerrar={cerrarAccion}
+        >
+          <FormularioMascota
+            mascotaEditar={accion.mascota}
+            alGuardar={alGuardar}
+            alCancelar={cerrarAccion}
+          />
         </Dialogo>
       )}
 
