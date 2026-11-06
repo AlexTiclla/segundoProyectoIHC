@@ -1,4 +1,29 @@
+# Entorno virtual
 .venv/
+venv/
+
+# Python
 __pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+/dist/
+
+# Pruebas y herramientas
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Bases de datos locales
 *.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Variables de entorno (la plantilla .env-ejemplo sí se sube)
 .env
+.env.*
+!.env-ejemplo

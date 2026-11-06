@@ -51,14 +51,14 @@ def yo(usuario: Usuario = Depends(obtener_usuario_actual)):
 @router.post("/salir", response_model=MensajeSalida)
 def salir(respuesta: Response):
     respuesta.delete_cookie(key=configuracion.nombre_cookie, path="/")
-    return {"mensaje": "Sesion cerrada"}
+    return {"mensaje": "Sesión cerrada"}
 
 
 @router.post("/recuperar", response_model=RecuperarSalida)
 def recuperar(datos: RecuperarEntrada, sesion: Session = Depends(obtener_sesion)):
     codigo = auth_servicio.solicitar_recuperacion(sesion, datos.correo)
     return {
-        "mensaje": "Si el correo existe, se genero un codigo de recuperacion",
+        "mensaje": "Si el correo existe, se generó un código de recuperación",
         "codigo": codigo,
     }
 
@@ -68,4 +68,4 @@ def cambiar_contrasena(
     datos: CambioContrasenaEntrada, sesion: Session = Depends(obtener_sesion)
 ):
     auth_servicio.cambiar_contrasena(sesion, datos)
-    return {"mensaje": "Contrasena actualizada"}
+    return {"mensaje": "Contraseña actualizada"}

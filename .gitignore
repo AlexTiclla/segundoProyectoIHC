@@ -1,8 +1,46 @@
+<<<<<<< HEAD
 .claude/
-# Playwright
+=======
+# Reglas para todo el repositorio.
+# Lo propio de cada parte está en backend/.gitignore y frontend/.gitignore.
+
+# Variables de entorno y secretos (las plantillas .env-ejemplo sí se suben)
+.env
+.env.*
+!.env-ejemplo
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Dependencias
 node_modules/
+.pnpm-store/
+
+>>>>>>> a4023191239d79870092cb5c5f73a6561ac78067
+# Playwright
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Registros
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.idea/
+.vscode/
+*.swp
+*~
+
+# Archivos locales que no forman parte de la entrega
+/CLAUDE.md
+/CLAUDE.local.md
+.claude/
+/clase-19-feedback-a-otro-proyecto/feedback.md

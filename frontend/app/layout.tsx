@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mascota al Dia",
+  title: "Mascota al Día",
   description: "Organiza los cuidados de tu mascota",
 };
 

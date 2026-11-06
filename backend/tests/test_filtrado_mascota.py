@@ -74,7 +74,7 @@ def test_rango_invertido_se_rechaza(session, usuario, cuidados):
  
 def test_cuidado_reprogramado_aparece_por_su_nueva_fecha(session, usuario, cuidados):
     luna = cuidados["luna_vacuna"] 
-    servicio.reprogramar_cuidado(session, luna.id, usuario.id, HOY + timedelta(days=60))
+    servicio.reprogramar_cuidado(session, luna.id, usuario.id, HOY + timedelta(days=60), "Viaje")
  
     en_fecha_vieja = servicio.filtrar_mascotas(
         session, usuario.id, fecha_desde=HOY, fecha_hasta=HOY + timedelta(days=7)

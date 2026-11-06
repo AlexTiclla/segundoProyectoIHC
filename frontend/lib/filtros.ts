@@ -1,5 +1,5 @@
 import type { FiltroCuidado } from "@/lib/api";
-import { formatearFecha } from "@/componentes/TarjetaMascota";
+import { formatearFecha } from "@/lib/fechas";
 export type Periodo = "todos" | "proximos7" | "mes" | "rango";
 
 export type FiltrosPantalla = {

@@ -88,12 +88,7 @@ export default function FormularioRecuperar() {
         <p role="status" className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-emerald-800">
           Contraseña actualizada. Ya puedes ingresar con la nueva.
         </p>
-        <Link
-          href="/ingresar"
-          className="rounded-lg bg-menta-oscuro px-4 py-3 text-center font-semibold text-white hover:bg-menta-profundo"
-        >
-          Ir a ingresar
-        </Link>
+        <Boton texto="Ir a ingresar" href="/ingresar" />
       </div>
     );
   }

@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   ErrorApi,
   eliminarMascota,
   filtrarMascotas,
   marcarRealizado,
-  reprogramarCuidado,
-  asignarResponsable,
   type Mascota,
 } from "@/lib/api";
+import { formatearFecha } from "@/lib/fechas";
 import {
   aParametros,
   FILTROS_INICIALES,
@@ -19,30 +18,45 @@ import {
   validarRango,
   type FiltrosPantalla,
 } from "@/lib/filtros";
-import { fechaHoy, validarNuevaFecha } from "@/lib/validaciones";
 import Boton from "./Boton";
+import BuscadorMascotas from "./BuscadorMascotas";
+import Dialogo from "./Dialogo";
+import DialogoConfirmar from "./DialogoConfirmar";
 import FiltrosMascotas from "./FiltrosMascotas";
 import FormularioMascota from "./FormularioMascota";
+import FormularioReprogramar from "./FormularioReprogramar";
+import FormularioResponsable from "./FormularioResponsable";
 import MensajeError from "./MensajeError";
-import TarjetaMascota, {formatearFecha} from "./TarjetaMascota";
 import MensajeExito from "./MensajeExito";
+import ResumenFiltros from "./ResumenFiltros";
+import TarjetaMascota from "./TarjetaMascota";
+
+// Qué ventana está abierta en este momento
+type Accion =
+  | { tipo: "nueva" }
+  | { tipo: "editar" | "reprogramar" | "responsable" | "eliminar" | "realizar"; mascota: Mascota };
+
+const ID_PANEL_FILTROS = "panel-filtros-mascotas";
 
 export default function PanelMascotas() {
   const [mascotas, setMascotas] = useState<Mascota[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-  const [formularioAbierto, setFormularioAbierto] = useState(false);
-  const [mascotaEditar, setMascotaEditar] = useState<Mascota | null>(null);
   const [exito, setExito] = useState("");
+<<<<<<< HEAD
   const [mascotaReprogramar, setMascotaReprogramar] = useState<Mascota | null>(null);
   const [nuevaFecha, setNuevaFecha] = useState("");
   const [guardandoReprogramacion, setGuardandoReprogramacion] = useState(false);
   const [errorReprogramacion, setErrorReprogramacion] = useState("");
   const [filtros, setFiltros] = useState<FiltrosPantalla>(FILTROS_INICIALES);
+=======
+  const [accion, setAccion] = useState<Accion | null>(null);
+  const [filtros, setFiltros] = useState<FiltrosPantalla>(FILTROS_VACIOS);
+>>>>>>> a4023191239d79870092cb5c5f73a6561ac78067
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const filtrosRef = useRef(filtros);
   const peticionActual = useRef(0);
-  const primeraCarga = useRef(true);   
+  const primeraCarga = useRef(true);
 
   // Carga la lista desde el servidor usando los filtros vigentes
   async function cargar() {
@@ -52,6 +66,7 @@ export default function PanelMascotas() {
       return;
     }
     const numero = ++peticionActual.current;
+    setCargando(true);
     try {
       const datos = await filtrarMascotas(aParametros(vigentes));
       if (numero !== peticionActual.current) return; // llegó una respuesta más nueva
@@ -61,7 +76,7 @@ export default function PanelMascotas() {
       if (numero !== peticionActual.current) return;
       setError(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado");
     } finally {
-      setCargando(false);
+      if (numero === peticionActual.current) setCargando(false);
     }
   }
 
@@ -75,232 +90,182 @@ export default function PanelMascotas() {
     return () => clearTimeout(temporizador);
   }, [filtros]);
 
-
   useEffect(() => {
-    if(!exito) return;
+    if (!exito) return;
     const temporizador = setTimeout(() => setExito(""), 4000);
     return () => clearTimeout(temporizador);
-  },[exito]);
+  }, [exito]);
 
-  function abrirNueva() {
-    setMascotaEditar(null);
-    setMascotaReprogramar(null); 
-    setFormularioAbierto(true);
+  function cerrarAccion() {
+    setAccion(null);
   }
 
-  function abrirEdicion(mascota: Mascota) {
-    setMascotaEditar(mascota);
-    setMascotaReprogramar(null);
-    setFormularioAbierto(true);
-  }
-
-  function abrirReprogramacion(mascota: Mascota){
-    setFormularioAbierto(false);
-    setMascotaReprogramar(mascota);
-    setNuevaFecha(mascota.fechaCuidado);
-    setErrorReprogramacion("");
-    setError("");
-    setExito("");
-  }
-
-  function cerrarReprogramacion(){
-    setMascotaReprogramar(null);
-    setNuevaFecha("");
-    setErrorReprogramacion("");
-  }
-
-  async function borrar(mascota: Mascota) {
-    if (!confirm(`¿Eliminar el cuidado ${mascota.cuidado} de ${mascota.nombre} del ${formatearFecha(mascota.fechaCuidado)}?\n\nEsta acción no se puede deshacer.`)){
-      return;
-    }
-    setError("");
-    setExito("");
-    try {
-      await eliminarMascota(mascota.id);
-      await cargar();
-      setExito(`el cuidado ${mascota.cuidado} de ${mascota.nombre} se elimino con éxito`);
-    } catch (e) {
-      setError(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado");
-    }
-  }
-  async function asignar(mascota: Mascota) {
-    const correo = prompt("Correo del responsable:");
-
-    if (!correo?.trim()) return;
-
-    try {
-      await asignarResponsable(mascota.id, correo.trim());
-      await cargar();
-      setExito("Responsable asignado");
-    } catch (e) {
-      setError(
-        e instanceof ErrorApi ? e.message : "Error al asignar"
-      );
-    }
-  }
-  async function realizar(mascota: Mascota) {
-  if(!confirm(`¿Marcar "${mascota.cuidado}" de ${mascota.nombre} como realizado?\n\nDespués ya no podrás editarlo ni reprogramarlo.`)){
-    return;
-  }
-  setError("");
-  setExito("");
-  try {
-    await marcarRealizado(mascota.id);
-    await cargar();
-     setExito(`El cuidado de ${mascota.nombre} se marcó como realizado`);
-  } catch (e) {
-    setError(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado");
-  }
-}
-
-  function alGuardar(mensaje:string) {
-    setFormularioAbierto(false);
+  function alGuardar(mensaje: string) {
+    setAccion(null);
     setError("");
     setExito(mensaje);
     cargar();
   }
 
-  async function guardarReprogramacion(evento: FormEvent<HTMLFormElement>){
-    evento.preventDefault();
-    if(!mascotaReprogramar) return;
-
-    const mensajeFecha = validarNuevaFecha(nuevaFecha);
-    if(mensajeFecha){
-      setErrorReprogramacion(mensajeFecha);
-      return;
-    }
-
-    setErrorReprogramacion("");
-    setGuardandoReprogramacion(true);
-    try{
-      await reprogramarCuidado(mascotaReprogramar.id,nuevaFecha);
-      const nombre = mascotaReprogramar.nombre;
-      cerrarReprogramacion();
+  // Para las acciones que solo piden confirmación
+  async function ejecutar(operacion: () => Promise<unknown>, mensaje: string) {
+    try {
+      await operacion();
+      setAccion(null);
+      setError("");
+      setExito(mensaje);
       await cargar();
-      setExito(`El cuidado de ${nombre} se reprogramó con éxito`);
-    }catch(e){
-      setErrorReprogramacion(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado"); 
-    }finally{
-      setGuardandoReprogramacion(false);
+    } catch (e) {
+      setAccion(null);
+      setError(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado");
     }
   }
 
-  return (
-    <section className="flex w-full flex-col gap-4">
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold">Mis mascotas</h2>
-        <Boton texto="Agregar mascota" alClic={abrirNueva} />
+  function renderizarLista() {
+    if (cargando && mascotas.length === 0) {
+      return <p className="text-grisazulado">Cargando cuidados...</p>;
+    }
+    if (mascotas.length === 0) {
+      const hayFiltros = filtrosActivos(filtros).length > 0;
+      return (
+        <div className="rounded-xl border border-arena bg-white p-6">
+          <p className="font-semibold">
+            {hayFiltros ? "Ningún cuidado coincide con los filtros." : "Aún no tienes mascotas."}
+          </p>
+          <p className="text-sm text-grisazulado">
+            {hayFiltros
+              ? "Prueba con otros filtros o pulsa Limpiar todo."
+              : "Pulsa Agregar mascota para registrar la primera y su próximo cuidado."}
+          </p>
+        </div>
+      );
+    }
+    return (
+      <div className="grid gap-4 sm:grid-cols-2">
+        {mascotas.map((mascota) => (
+          <TarjetaMascota
+            key={mascota.id}
+            mascota={mascota}
+            alEditar={(elegida) => setAccion({ tipo: "editar", mascota: elegida })}
+            alEliminar={(elegida) => setAccion({ tipo: "eliminar", mascota: elegida })}
+            alRealizar={(elegida) => setAccion({ tipo: "realizar", mascota: elegida })}
+            alReprogramar={(elegida) => setAccion({ tipo: "reprogramar", mascota: elegida })}
+            alAsignar={(elegida) => setAccion({ tipo: "responsable", mascota: elegida })}
+          />
+        ))}
       </div>
-      <FiltrosMascotas
-        filtros={filtros}
-        alCambiar={setFiltros}
-        errorRango={validarRango(filtros)}
-        mostrarFiltros={mostrarFiltros}
-        alAlternarFiltros={() =>
-        setMostrarFiltros((anterior) => !anterior)
-        }
-      />
-      <MensajeError mensaje={error} />
+    );
+  }
+
+  return (
+    <section className="flex w-full flex-col gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold sm:text-3xl">Mis mascotas</h1>
+        <Boton texto="Agregar mascota" alClic={() => setAccion({ tipo: "nueva" })} />
+      </div>
+
+      {/* Celular: una columna. Pantalla grande: los filtros a la izquierda y lo demás a la derecha */}
+      <div className="grid gap-4 lg:grid-cols-[16rem_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:gap-x-6">
+        <BuscadorMascotas
+          filtros={filtros}
+          alCambiar={setFiltros}
+          mostrarFiltros={mostrarFiltros}
+          alAlternarFiltros={() => setMostrarFiltros((anterior) => !anterior)}
+          idPanelFiltros={ID_PANEL_FILTROS}
+          clase="lg:col-start-2"
+        />
+        <FiltrosMascotas
+          id={ID_PANEL_FILTROS}
+          filtros={filtros}
+          alCambiar={setFiltros}
+          errorRango={validarRango(filtros)}
+          mostrar={mostrarFiltros}
+          clase="lg:sticky lg:top-4 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:max-h-[calc(100dvh-2rem)] lg:self-start lg:overflow-y-auto"
+        />
+        <div className="flex min-w-0 flex-col gap-4 lg:col-start-2">
+          <ResumenFiltros
+            cantidad={mascotas.length}
+            cargando={cargando}
+            filtros={filtros}
+            alCambiar={setFiltros}
+          />
+          <MensajeError mensaje={error} />
+          {renderizarLista()}
+        </div>
+      </div>
+
       <MensajeExito mensaje={exito} />
 
-      {mascotaReprogramar && (
-        <form
-          onSubmit={guardarReprogramacion}
-          noValidate
-          className="flex flex-col gap-3 rounded-xl border border-arena bg-white p-4"
-          >
-           <h3 className="text-xl font-bold">
-             Reprogramar cuidado de {mascotaReprogramar.nombre}
-            </h3>  
-
-            <p className="text-sm text-grisazulado">
-              Cuidado: {mascotaReprogramar.cuidado}
-            </p>
-
-            <p className="text-sm text-grisazulado">
-      Fecha actual: {formatearFecha(mascotaReprogramar.fechaCuidado)}
-    </p>
-
-    <MensajeError mensaje={errorReprogramacion} />
-
-    <label htmlFor="nuevaFecha" className="font-semibold">
-      Nueva fecha
-    </label>
-
-    <input
-      id="nuevaFecha"
-      type="date"
-      value={nuevaFecha}
-      min={fechaHoy()}
-      onChange={(e) => setNuevaFecha(e.target.value)}
-      aria-invalid={errorReprogramacion ? true : undefined}
-      className="rounded-lg border border-arena px-3 py-2"
-    />
-
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="submit"
-          disabled={guardandoReprogramacion}
-          className="rounded-lg bg-menta-oscuro px-4 py-2 font-semibold text-white disabled:opacity-50"
-        >
-          {guardandoReprogramacion ? "Guardando..." : "Guardar fecha"}
-        </button>
-
-          <button
-            type="button"
-            onClick={cerrarReprogramacion}
-              disabled={guardandoReprogramacion}
-              className="rounded-lg border border-arena px-4 py-2 font-semibold"
-              >
-                Cancelar
-              </button>
-             </div>
-        </form>            
+      {accion?.tipo === "nueva" && (
+        <Dialogo titulo="Nueva mascota" alCerrar={cerrarAccion}>
+          <FormularioMascota mascotaEditar={null} alGuardar={alGuardar} alCancelar={cerrarAccion} />
+        </Dialogo>
       )}
 
-      {formularioAbierto && (
-        <FormularioMascota
-          key={mascotaEditar?.id ?? "nueva"}
-          mascotaEditar={mascotaEditar}
-          alGuardar={alGuardar}
-          alCancelar={() => setFormularioAbierto(false)}
+      {accion?.tipo === "editar" && (
+        <Dialogo
+          titulo={`Editar datos de ${accion.mascota.nombre}`}
+          alCerrar={cerrarAccion}
+        >
+          <FormularioMascota
+            mascotaEditar={accion.mascota}
+            alGuardar={alGuardar}
+            alCancelar={cerrarAccion}
+          />
+        </Dialogo>
+      )}
+
+      {accion?.tipo === "reprogramar" && (
+        <Dialogo titulo={`Reprogramar cuidado de ${accion.mascota.nombre}`} alCerrar={cerrarAccion}>
+          <FormularioReprogramar mascota={accion.mascota} alGuardar={alGuardar} alCancelar={cerrarAccion} />
+        </Dialogo>
+      )}
+
+      {accion?.tipo === "responsable" && (
+        <Dialogo titulo={`Responsable del cuidado de ${accion.mascota.nombre}`} alCerrar={cerrarAccion}>
+          <FormularioResponsable mascota={accion.mascota} alGuardar={alGuardar} alCancelar={cerrarAccion} />
+        </Dialogo>
+      )}
+
+      {accion?.tipo === "realizar" && (
+        <DialogoConfirmar
+          titulo="¿Marcar como realizado?"
+          mensaje={`${accion.mascota.cuidado} de ${accion.mascota.nombre}. Después ya no podrás editarlo ni reprogramarlo.${
+            accion.mascota.proximaFecha
+              ? ` Se programará el próximo para el ${formatearFecha(accion.mascota.proximaFecha)}.`
+              : ""
+          }`}
+          textoConfirmar="Marcar como realizado"
+          alCerrar={cerrarAccion}
+          alConfirmar={() =>
+            ejecutar(
+              () => marcarRealizado(accion.mascota.id),
+              `El cuidado de ${accion.mascota.nombre} se marcó como realizado${
+                accion.mascota.proximaFecha
+                  ? `. Próximo cuidado: ${formatearFecha(accion.mascota.proximaFecha)}`
+                  : ""
+              }`
+            )
+          }
         />
       )}
 
-      {cargando ? (
-        <p>Cargando...</p>
-      ) : mascotas.length === 0 ? (
-        filtrosActivos(filtros).length > 0 ? (
-          <div className="flex flex-col gap-2 rounded-xl border border-arena bg-white p-4 text-neutral-900">
-            <p className="font-semibold">Ningún cuidado coincide con los filtros.</p>
-            <p className="text-sm">
-              Prueba con otros filtros o quítalos para ver todos tus cuidados.
-            </p>
-            <div>
-              <Boton
-                variante="secundario"
-                texto="Limpiar filtros"
-                alClic={() => setFiltros(FILTROS_VACIOS)}
-              />
-            </div>
-          </div>
-        ) : (
-          <p>Aún no tienes mascotas. ¡Agrega la primera!</p>
-        )
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-           {[...mascotas].sort((a, b) => Number(a.estado === "realizado") - Number(b.estado === "realizado")).map((mascota) => (
-            <TarjetaMascota
-              key={mascota.id}
-              mascota={mascota}
-              alEditar={abrirEdicion}
-              alEliminar={borrar}
-              alRealizar={realizar}
-              alReprogramar={abrirReprogramacion}
-              alAsignar={asignar}
-            />
-          ))}
-        </div>
+      {accion?.tipo === "eliminar" && (
+        <DialogoConfirmar
+          titulo="¿Eliminar este cuidado?"
+          mensaje={`${accion.mascota.cuidado} de ${accion.mascota.nombre}, del ${formatearFecha(accion.mascota.fechaCuidado)}. ${
+            accion.mascota.proximaFecha ? "Dejará de repetirse. " : ""
+          }Esta acción no se puede deshacer.`}
+          textoConfirmar="Eliminar"
+          peligroso
+          alCerrar={cerrarAccion}
+          alConfirmar={() =>
+            ejecutar(
+              () => eliminarMascota(accion.mascota.id),
+              `El cuidado de ${accion.mascota.nombre} se eliminó con éxito`
+            )
+          }
+        />
       )}
     </section>
   );
