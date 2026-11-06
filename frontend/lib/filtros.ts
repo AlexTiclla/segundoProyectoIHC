@@ -22,6 +22,13 @@ export const FILTROS_VACIOS: FiltrosPantalla = {
      hasta: "",
 };
 
+// Al entrar a la pantalla se muestran solo los cuidados pendientes,
+// en vez de todos, para que lo primero que se vea sea lo que falta hacer.
+export const FILTROS_INICIALES: FiltrosPantalla = {
+     ...FILTROS_VACIOS,
+     estado: "pendiente",
+};
+
 function formatear(fecha: Date): string {
   const mes = String(fecha.getMonth() + 1).padStart(2, "0");
   const dia = String(fecha.getDate()).padStart(2, "0");

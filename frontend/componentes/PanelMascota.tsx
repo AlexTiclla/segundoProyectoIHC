@@ -13,6 +13,7 @@ import {
 } from "@/lib/api";
 import {
   aParametros,
+  FILTROS_INICIALES,
   FILTROS_VACIOS,
   filtrosActivos,
   validarRango,
@@ -37,7 +38,7 @@ export default function PanelMascotas() {
   const [nuevaFecha, setNuevaFecha] = useState("");
   const [guardandoReprogramacion, setGuardandoReprogramacion] = useState(false);
   const [errorReprogramacion, setErrorReprogramacion] = useState("");
-  const [filtros, setFiltros] = useState<FiltrosPantalla>(FILTROS_VACIOS);
+  const [filtros, setFiltros] = useState<FiltrosPantalla>(FILTROS_INICIALES);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const filtrosRef = useRef(filtros);
   const peticionActual = useRef(0);
