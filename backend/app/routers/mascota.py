@@ -25,7 +25,7 @@ def filtrar(nombre:str|None=None,estado:Literal["pendiente","realizado"]| None =
 
 @router.get("/{mascota_id}", response_model=MascotaSalida)
 def obtener(mascota_id: int, sesion:Session=Depends(obtener_sesion), usuario:Usuario=Depends(obtener_usuario_actual)):
-    return mascota_servicio.obtener_propia(sesion,mascota_id,usuario.id)
+    return mascota_servicio.obtener(sesion,mascota_id,usuario.id)
 
 
 @router.put("/{mascota_id}", response_model=MascotaSalida)

@@ -13,7 +13,6 @@ import { formatearFecha } from "@/lib/fechas";
 import {
   aParametros,
   FILTROS_INICIALES,
-  FILTROS_VACIOS,
   filtrosActivos,
   validarRango,
   type FiltrosPantalla,
@@ -43,16 +42,8 @@ export default function PanelMascotas() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [exito, setExito] = useState("");
-<<<<<<< HEAD
-  const [mascotaReprogramar, setMascotaReprogramar] = useState<Mascota | null>(null);
-  const [nuevaFecha, setNuevaFecha] = useState("");
-  const [guardandoReprogramacion, setGuardandoReprogramacion] = useState(false);
-  const [errorReprogramacion, setErrorReprogramacion] = useState("");
-  const [filtros, setFiltros] = useState<FiltrosPantalla>(FILTROS_INICIALES);
-=======
   const [accion, setAccion] = useState<Accion | null>(null);
-  const [filtros, setFiltros] = useState<FiltrosPantalla>(FILTROS_VACIOS);
->>>>>>> a4023191239d79870092cb5c5f73a6561ac78067
+  const [filtros, setFiltros] = useState<FiltrosPantalla>(FILTROS_INICIALES);
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
   const filtrosRef = useRef(filtros);
   const peticionActual = useRef(0);

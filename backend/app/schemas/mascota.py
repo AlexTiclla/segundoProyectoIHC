@@ -52,6 +52,10 @@ class MascotaSalida(BaseModel):
     estado:str
     usuario_id:int  
     responsable_nombre: str | None = None
+    propietario_nombre: str
+    permiso: str
+    realizado_por_nombre: str | None = None
+    realizado_en: date | None = None
     intervalo_cantidad: int | None = None
     intervalo_unidad: str | None = None
     proxima_fecha: date | None = None

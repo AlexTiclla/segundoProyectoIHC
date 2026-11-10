@@ -98,6 +98,9 @@ export type Reprogramacion = {
   alcance: string;
 };
 
+// Lo que el usuario puede hacer con un cuidado: el propio, o el de otra cuenta que lo comparte
+export type Permiso = "propietario" | "consulta" | "gestion";
+
 export type Mascota ={
   id: number;
   nombre: string;
@@ -107,6 +110,10 @@ export type Mascota ={
   fechaCuidado: string;
   estado:string;
   responsableNombre: string | null;
+  propietarioNombre: string;
+  permiso: Permiso;
+  realizadoPorNombre: string | null;
+  realizadoEn: string | null;
   intervaloCantidad: number | null;
   intervaloUnidad: string | null;
   proximaFecha: string | null;
@@ -117,7 +124,7 @@ export type Mascota ={
 
 export type DatosMascota = Omit<
   Mascota,
-  "id" | "estado" | "responsableNombre" | "proximaFecha" | "proximasFechas" | "fechaOriginal" | "reprogramaciones"
+  | "id" | "estado" | "responsableNombre" | "propietarioNombre" | "permiso" | "realizadoPorNombre" | "realizadoEn" | "proximaFecha" | "proximasFechas" | "fechaOriginal" | "reprogramaciones"
 >;
 
 type MascotaRespuesta ={
@@ -130,6 +137,10 @@ type MascotaRespuesta ={
   estado: string;
   usuario_id: number;
   responsable_nombre: string | null;
+  propietario_nombre: string;
+  permiso: Permiso;
+  realizado_por_nombre: string | null;
+  realizado_en: string | null;
   intervalo_cantidad: number | null;
   intervalo_unidad: string | null;
   proxima_fecha: string | null;
@@ -145,7 +156,7 @@ type MascotaRespuesta ={
 };
 
 function convertirMascota(datos: MascotaRespuesta): Mascota {
- return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado, responsableNombre: datos.responsable_nombre, intervaloCantidad: datos.intervalo_cantidad, intervaloUnidad: datos.intervalo_unidad, proximaFecha: datos.proxima_fecha, proximasFechas: datos.proximas_fechas, fechaOriginal: datos.fecha_original, reprogramaciones: datos.reprogramaciones.map((r) => ({ fechaAnterior: r.fecha_anterior, fechaNueva: r.fecha_nueva, diferenciaDias: r.diferencia_dias, motivo: r.motivo, alcance: r.alcance })), };
+ return {id:datos.id, nombre: datos.nombre, sexo: datos.sexo, especie: datos.especie,cuidado: datos.cuidado, fechaCuidado: datos.fecha_cuidado, estado:datos.estado, responsableNombre: datos.responsable_nombre, propietarioNombre: datos.propietario_nombre, permiso: datos.permiso, realizadoPorNombre: datos.realizado_por_nombre, realizadoEn: datos.realizado_en, intervaloCantidad: datos.intervalo_cantidad, intervaloUnidad: datos.intervalo_unidad, proximaFecha: datos.proxima_fecha, proximasFechas: datos.proximas_fechas, fechaOriginal: datos.fecha_original, reprogramaciones: datos.reprogramaciones.map((r) => ({ fechaAnterior: r.fecha_anterior, fechaNueva: r.fecha_nueva, diferenciaDias: r.diferencia_dias, motivo: r.motivo, alcance: r.alcance })), };
 }
 
 function cuerpoMascota(datos: DatosMascota) {
@@ -277,4 +288,53 @@ export async function asignarResponsable(id: number, correo: string) {
     metodo: "PATCH",
     cuerpo: { correo }
   });
+}
+
+export type PermisoAcceso = "consulta" | "gestion";
+
+export type Acceso = {
+  id: number;
+  propietarioNombre: string;
+  invitadoNombre: string;
+  invitadoCorreo: string;
+  permiso: PermisoAcceso;
+  estado: "pendiente" | "aceptado" | "rechazado" | "revocado";
+};
+
+type AccesoRespuesta = {
+  id: number;
+  propietario_nombre: string;
+  invitado_nombre: string;
+  invitado_correo: string;
+  permiso: PermisoAcceso;
+  estado: Acceso["estado"];
+};
+
+function convertirAcceso(datos: AccesoRespuesta): Acceso {
+  return {
+    id: datos.id,
+    propietarioNombre: datos.propietario_nombre,
+    invitadoNombre: datos.invitado_nombre,
+    invitadoCorreo: datos.invitado_correo,
+    permiso: datos.permiso,
+    estado: datos.estado,
+  };
+}
+
+export async function invitar(correo: string, permiso: PermisoAcceso) {
+  await pedir<AccesoRespuesta>("/accesos", { metodo: "POST", cuerpo: { correo, permiso } });
+}
+
+export async function listarEnviados() {
+  const datos = await pedir<AccesoRespuesta[]>("/accesos/enviados");
+  return datos.map(convertirAcceso);
+}
+
+export async function listarRecibidos() {
+  const datos = await pedir<AccesoRespuesta[]>("/accesos/recibidos");
+  return datos.map(convertirAcceso);
+}
+
+export async function responderAcceso(id: number, accion: "aceptar" | "rechazar" | "revocar") {
+  await pedir<AccesoRespuesta>(`/accesos/${id}/${accion}`, { metodo: "PATCH" });
 }

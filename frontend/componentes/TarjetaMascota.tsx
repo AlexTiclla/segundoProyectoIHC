@@ -21,6 +21,8 @@ export default function TarjetaMascota({
   alAsignar
 }: Props) {
   const realizado = mascota.estado === "realizado";
+  const propia = mascota.permiso === "propietario";
+  const puedeGestionar = mascota.permiso !== "consulta";
   const dias = diasHasta(mascota.fechaCuidado);
   const atrasado = !realizado && dias < 0;
   const recurrencia = textoRecurrencia(mascota.intervaloCantidad, mascota.intervaloUnidad);
@@ -56,10 +58,13 @@ export default function TarjetaMascota({
             {mascota.especie} · {mascota.sexo}
           </p>
         </div>
-        <MenuAcciones
-          etiqueta={`Más acciones de ${mascota.cuidado} de ${mascota.nombre}`}
-          opciones={opcionesMenu}
-        />
+        {/* Eliminar y asignar responsable son solo del propietario */}
+        {propia && (
+          <MenuAcciones
+            etiqueta={`Más acciones de ${mascota.cuidado} de ${mascota.nombre}`}
+            opciones={opcionesMenu}
+          />
+        )}
       </div>
 
       <p className={`self-start rounded-full px-3 py-1 text-sm font-semibold ${estado.color}`}>
@@ -79,6 +84,16 @@ export default function TarjetaMascota({
         <p className="mt-1 break-words text-sm text-grisazulado">
           Responsable: {mascota.responsableNombre || "sin asignar"}
         </p>
+        {!propia && (
+          <p className="break-words text-sm text-grisazulado">
+            Compartido por {mascota.propietarioNombre} · {mascota.permiso === "gestion" ? "Gestión" : "Consulta"}
+          </p>
+        )}
+        {realizado && mascota.realizadoPorNombre && mascota.realizadoEn && (
+          <p className="break-words text-sm text-grisazulado">
+            Realizado por {mascota.realizadoPorNombre} el {formatearFecha(mascota.realizadoEn)}
+          </p>
+        )}
       </div>
 
       {mascota.reprogramaciones.length > 0 && (
@@ -102,7 +117,7 @@ export default function TarjetaMascota({
         </div>
       )}
 
-      {!realizado && (
+      {!realizado && puedeGestionar && (
         <div className="mt-auto flex flex-col gap-2">
           <Boton
             texto="Editar datos"
