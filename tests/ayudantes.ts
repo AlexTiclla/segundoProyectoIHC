@@ -1,4 +1,4 @@
-import { expect, type Page, type TestInfo } from '@playwright/test';
+import { expect, type Browser, type Page, type TestInfo } from '@playwright/test';
 
 // Semilla de las pruebas: cada prueba crea su propia cuenta y sus propios datos.
 // Así no depende de lo que ya exista en la base y puede correr en paralelo.
@@ -76,4 +76,25 @@ export async function abrirMenu(page: Page, nombre: string, opcion: string) {
   const laTarjeta = tarjeta(page, nombre);
   await laTarjeta.getByRole('button', { name: /^Más acciones/ }).click();
   await laTarjeta.getByRole('button', { name: opcion }).click();
+}
+
+// Otra persona en su propio navegador: un contexto aparte, con su cuenta y su sesión
+export async function abrirComo(browser: Browser, testInfo: TestInfo, nombre: string) {
+  const contexto = await browser.newContext({ baseURL: testInfo.project.use.baseURL });
+  const page = await contexto.newPage();
+  const cuenta = await crearCuenta(page, testInfo, nombre);
+  await iniciarSesion(page, cuenta.correo);
+  return { page, cuenta };
+}
+
+// Deja un acceso ya aceptado por la API, para las pruebas que no son del flujo de invitar. Devuelve su id.
+export async function compartirCon(propietario: Page, invitado: { page: Page; cuenta: Cuenta }, permiso: 'consulta' | 'gestion') {
+  const invitacion = await propietario.request.post('/api/accesos', {
+    data: { correo: invitado.cuenta.correo, permiso },
+  });
+  expect(invitacion.status()).toBe(201);
+  const { id } = await invitacion.json();
+  const respuesta = await invitado.page.request.patch(`/api/accesos/${id}/aceptar`);
+  expect(respuesta.status()).toBe(200);
+  return id as number;
 }

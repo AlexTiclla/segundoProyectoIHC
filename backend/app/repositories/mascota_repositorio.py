@@ -1,8 +1,18 @@
 from datetime import date
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
+from app.models.acceso import Acceso, ACEPTADO
 from app.models.mascota import Mascota, REALIZADO
 from app.models.reprogramacion import Reprogramacion
+
+
+# Los cuidados propios y los de quienes compartieron su lista con este usuario
+def _visibles(usuario_id: int):
+    propietarios = select(Acceso.propietario_id).where(
+        Acceso.invitado_id == usuario_id,
+        Acceso.estado == ACEPTADO,
+    )
+    return or_(Mascota.usuario_id == usuario_id, Mascota.usuario_id.in_(propietarios))
 
 
 def buscar_por_id(session: Session, mascota_id: int) -> Mascota | None:
@@ -19,7 +29,7 @@ def buscar_por_usuario(
     usuario_id: int,
 ) -> list[Mascota]:
     consulta = select(Mascota).where(
-        Mascota.usuario_id == usuario_id,
+        _visibles(usuario_id),
         Mascota.eliminada.is_(False),
     )
     return session.scalars(consulta).all()
@@ -78,15 +88,21 @@ def eliminar(session: Session, mascota: Mascota) -> None:
     session.commit()
 
 
-def cambiar_estado(
+def marcar_realizada(
     session: Session,
     mascota: Mascota,
-    estado: str,
+    usuario_id: int,
 ) -> Mascota:
-    mascota.estado = estado
+    _registrar_realizacion(mascota, usuario_id)
     session.commit()
     session.refresh(mascota)
     return mascota
+
+
+def _registrar_realizacion(mascota: Mascota, usuario_id: int) -> None:
+    mascota.estado = REALIZADO
+    mascota.realizado_por_id = usuario_id
+    mascota.realizado_en = date.today()
 
 
 # Un solo commit: el cuidado no puede quedar realizado sin su siguiente ocurrencia.
@@ -94,6 +110,7 @@ def realizar_y_programar(
     session: Session,
     mascota: Mascota,
     proxima_fecha: date,
+    usuario_id: int,
 ) -> tuple[Mascota, Mascota]:
     siguiente = Mascota(
         nombre=mascota.nombre,
@@ -106,7 +123,7 @@ def realizar_y_programar(
         intervalo_cantidad=mascota.intervalo_cantidad,
         intervalo_unidad=mascota.intervalo_unidad,
     )
-    mascota.estado = REALIZADO
+    _registrar_realizacion(mascota, usuario_id)
     session.add(siguiente)
     session.commit()
     session.refresh(mascota)
@@ -161,7 +178,7 @@ def filtrar_por_usuario(
     fecha_hasta: date | None = None,
 ) -> list[Mascota]:
     consulta = select(Mascota).where(
-        Mascota.usuario_id == usuario_id,
+        _visibles(usuario_id),
         Mascota.eliminada.is_(False),
     )
 

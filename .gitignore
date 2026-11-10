@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-.claude/
-=======
 # Reglas para todo el repositorio.
 # Lo propio de cada parte está en backend/.gitignore y frontend/.gitignore.
 
@@ -17,7 +14,6 @@
 node_modules/
 .pnpm-store/
 
->>>>>>> a4023191239d79870092cb5c5f73a6561ac78067
 # Playwright
 /test-results/
 /playwright-report/

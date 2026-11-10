@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from '@playwright/test';
 
-import { agregarMascota, entrarConCuentaNueva, tarjeta, textoUnico } from './ayudantes';
+import { abrirComo, agregarMascota, compartirCon, entrarConCuentaNueva, tarjeta, textoUnico } from './ayudantes';
 
 async function revisarConAxe(page: Page) {
   const resultado = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
@@ -23,6 +23,15 @@ test('La lista y el historial no tienen fallas de accesibilidad', async ({ page 
 
   await page.getByRole('link', { name: 'Historial' }).click();
   await expect(page.getByRole('listitem').first()).toBeVisible();
+  await revisarConAxe(page);
+});
+
+test('La pantalla Compartir no tiene fallas de accesibilidad', async ({ page, browser }, testInfo) => {
+  await entrarConCuentaNueva(page, testInfo);
+  await compartirCon(page, await abrirComo(browser, testInfo, 'Juan Gestor'), 'gestion');
+
+  await page.getByRole('link', { name: 'Compartir' }).click();
+  await expect(page.getByText('Estado: Aceptado')).toBeVisible();
   await revisarConAxe(page);
 });
 

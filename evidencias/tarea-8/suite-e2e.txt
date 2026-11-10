@@ -1,0 +1,907 @@
+
+Running 104 tests using 6 workers
+
+  ✓    1 [chromium] › tests/accesibilidad.spec.ts:12:3 › /ingresar no tiene fallas de accesibilidad (971ms)
+  ✓    2 [chromium] › tests/accesibilidad.spec.ts:12:3 › /recuperar no tiene fallas de accesibilidad (960ms)
+  ✓    5 [chromium] › tests/accesibilidad.spec.ts:12:3 › /registro no tiene fallas de accesibilidad (961ms)
+  ✓    3 [chromium] › tests/accesibilidad.spec.ts:38:1 › El formulario abierto no tiene fallas de accesibilidad (1.7s)
+  ✓    7 [chromium] › tests/accesibilidad.spec.ts:49:1 › Los botones de una tarjeta miden al menos 44 px (1.2s)
+  ✓    6 [chromium] › tests/accesibilidad.spec.ts:29:1 › La pantalla Compartir no tiene fallas de accesibilidad (2.3s)
+  ✓   10 [chromium] › tests/acceso.spec.ts:29:1 › Ana no puede registrar un correo que ya existe (644ms)
+  ✓    4 [chromium] › tests/accesibilidad.spec.ts:19:1 › La lista y el historial no tienen fallas de accesibilidad (2.3s)
+  ✓   11 [chromium] › tests/acceso.spec.ts:43:1 › Ana ve un error si su contraseña es incorrecta (855ms)
+  ✓    9 [chromium] › tests/acceso.spec.ts:12:1 › Ana crea su cuenta e ingresa (2.1s)
+  ✓   15 [chromium] › tests/acceso.spec.ts:100:3 › Sin sesión, /inicio lleva al login (274ms)
+  ✓   16 [chromium] › tests/acceso.spec.ts:100:3 › Sin sesión, /historial lleva al login (302ms)
+  ✓   14 [chromium] › tests/acceso.spec.ts:89:1 › Ana cierra sesión y ya no puede volver a su lista (1.1s)
+  ✓   13 [chromium] › tests/acceso.spec.ts:72:1 › Ana ve un error si escribe un código de recuperación equivocado (1.3s)
+  ✓   19 [chromium] › tests/cuidados.spec.ts:14:1 › Ana edita los datos de un cuidado (1.2s)
+  ✓   20 [chromium] › tests/cuidados.spec.ts:29:1 › Ana no puede dejar el nombre vacío al editar (1.1s)
+  ✓   12 [chromium] › tests/acceso.spec.ts:52:1 › Ana recupera su contraseña con el código (2.8s)
+  ✓   22 [chromium] › tests/cuidados.spec.ts:57:1 › Ana no puede reprogramar a una fecha pasada (1.1s)
+  ✓   21 [chromium] › tests/cuidados.spec.ts:41:1 › Ana reprograma un cuidado (1.2s)
+  ✓   23 [chromium] › tests/cuidados.spec.ts:70:1 › Ana asigna a otra persona como responsable (1.4s)
+  ✓   18 [chromium] › tests/cuidados-compartidos.spec.ts:96:1 › Quien consulta no modifica y solo Ana administra los accesos (3.5s)
+  ✓   24 [chromium] › tests/cuidados.spec.ts:90:1 › Ana ve un error si el responsable no tiene cuenta (1.2s)
+  ✘    8 [chromium] › tests/accesibilidad.spec.ts:66:1 › Marcar como realizado toma menos de 3 toques (6.3s)
+  ✓   26 [chromium] › tests/cuidados.spec.ts:122:1 › Ana cancela al marcar como realizado y el cuidado sigue pendiente (1.2s)
+  ✓   28 [chromium] › tests/cuidados.spec.ts:149:1 › Ana cancela al eliminar y el cuidado sigue en la lista (1.1s)
+  ✓   29 [chromium] › tests/flujo-principal.spec.ts:7:1 › Ana registra una mascota y la ve en su lista (2.0s)
+  ✘   25 [chromium] › tests/cuidados.spec.ts:103:1 › Ana marca un cuidado como realizado y sigue así al recargar (6.3s)
+  ✓   32 [chromium] › tests/flujo-principal.spec.ts:50:1 › Ana filtra por tipo de cuidado y limpia los filtros (2.7s)
+  ✘   27 [chromium] › tests/cuidados.spec.ts:134:1 › Ana elimina un cuidado y no vuelve al recargar (6.2s)
+  ✓   17 [chromium] › tests/cuidados-compartidos.spec.ts:30:1 › Ana comparte sus cuidados: Juan gestiona, Eva consulta, y al revocar queda quién lo realizó (10.2s)
+  ✘   30 [chromium] › tests/flujo-principal.spec.ts:19:1 › Ana ve qué corregir si envía el formulario vacío (5.8s)
+  ✘   31 [chromium] › tests/flujo-principal.spec.ts:35:1 › Ana no puede crear un cuidado con fecha pasada (6.0s)
+  ✓   34 [chromium] › tests/flujo-principal.spec.ts:74:1 › Ana usa un filtro sin resultados y ve el aviso (1.8s)
+  ✓   36 [chromium] › tests/historial.spec.ts:24:1 › Una cuenta nueva ve el historial vacío (936ms)
+  ✘   33 [chromium] › tests/historial.spec.ts:5:1 › Ana ve en el historial lo que hizo, con lo último primero (6.0s)
+  ✓   37 [chromium] › tests/recurrentes.spec.ts:68:1 › Una vacuna cada año vuelve el mismo día del año siguiente (5.2s)
+  ✘   38 [chromium] › tests/recurrentes.spec.ts:104:1 › Ana no puede guardar una repetición de 0 días (5.9s)
+  ✘   40 [chromium] › tests/recurrentes.spec.ts:121:1 › Un cuidado que no se repite no genera otra tarjeta (6.1s)
+  ✓   43 [chromium] › tests/recurrentes.spec.ts:163:1 › El formulario con repetición no tiene fallas de accesibilidad (1.3s)
+  ✘   35 [chromium] › tests/recurrentes.spec.ts:43:1 › Ana realiza un baño cada 7 días y aparece la próxima fecha correcta (10.1s)
+  ✓   46 [chromium] › tests/reprogramar.spec.ts:121:1 › Sin motivo no se reprograma (1.1s)
+  ✘   41 [chromium] › tests/recurrentes.spec.ts:133:1 › Ana edita un cuidado a "No se repite" y la serie se detiene (6.3s)
+  ✘   42 [chromium] › tests/recurrentes.spec.ts:151:1 › Al eliminar un cuidado recurrente se avisa que dejará de repetirse (6.0s)
+  ✘   39 [chromium] › tests/recurrentes.spec.ts:85:1 › El historial guarda cada vez que se realiza (10.6s)
+  ✓   50 [chromium] › tests/visual.spec.ts:12:1 › La pantalla de ingreso se ve igual (346ms)
+  ✓   47 [chromium] › tests/reprogramar.spec.ts:136:1 › La misma fecha no cuenta como cambio (1.1s)
+  ✓   51 [chromium] › tests/visual.spec.ts:18:1 › La pantalla de registro se ve igual (432ms)
+  ✓   48 [chromium] › tests/reprogramar.spec.ts:148:1 › Un cuidado que no se repite no pregunta qué fechas mover (1.2s)
+  ✓   53 [firefox] › tests/accesibilidad.spec.ts:12:3 › /ingresar no tiene fallas de accesibilidad (1.4s)
+  ✓   54 [firefox] › tests/accesibilidad.spec.ts:12:3 › /registro no tiene fallas de accesibilidad (1.5s)
+  ✓   55 [firefox] › tests/accesibilidad.spec.ts:12:3 › /recuperar no tiene fallas de accesibilidad (734ms)
+  ✓   49 [chromium] › tests/reprogramar.spec.ts:159:1 › El formulario de reprogramar no tiene fallas de accesibilidad (5.5s)
+  ✓   56 [firefox] › tests/accesibilidad.spec.ts:19:1 › La lista y el historial no tienen fallas de accesibilidad (2.4s)
+  ✓   57 [firefox] › tests/accesibilidad.spec.ts:29:1 › La pantalla Compartir no tiene fallas de accesibilidad (2.2s)
+  ✘   52 [chromium] › tests/visual.spec.ts:24:1 › La lista vacía se ve igual (5.8s)
+  ✘   45 [chromium] › tests/reprogramar.spec.ts:79:1 › Mover también las siguientes desplaza solo las pendientes y mantiene el historial (10.4s)
+  ✓   59 [firefox] › tests/accesibilidad.spec.ts:49:1 › Los botones de una tarjeta miden al menos 44 px (1.4s)
+  ✓   63 [firefox] › tests/acceso.spec.ts:43:1 › Ana ve un error si su contraseña es incorrecta (1.1s)
+  ✓   58 [firefox] › tests/accesibilidad.spec.ts:38:1 › El formulario abierto no tiene fallas de accesibilidad (2.5s)
+  ✓   62 [firefox] › tests/acceso.spec.ts:29:1 › Ana no puede registrar un correo que ya existe (1.7s)
+  ✓   61 [firefox] › tests/acceso.spec.ts:12:1 › Ana crea su cuenta e ingresa (2.9s)
+  ✓   65 [firefox] › tests/acceso.spec.ts:72:1 › Ana ve un error si escribe un código de recuperación equivocado (1.5s)
+  ✓   67 [firefox] › tests/acceso.spec.ts:100:3 › Sin sesión, /inicio lleva al login (431ms)
+  ✓   66 [firefox] › tests/acceso.spec.ts:89:1 › Ana cierra sesión y ya no puede volver a su lista (1.3s)
+  ✘   44 [chromium] › tests/reprogramar.spec.ts:58:1 › Mover solo esta fecha conserva las demás (15.2s)
+  ✓   68 [firefox] › tests/acceso.spec.ts:100:3 › Sin sesión, /historial lleva al login (489ms)
+  ✓   64 [firefox] › tests/acceso.spec.ts:52:1 › Ana recupera su contraseña con el código (2.7s)
+  ✓   71 [firefox] › tests/cuidados.spec.ts:29:1 › Ana no puede dejar el nombre vacío al editar (1.6s)
+  ✓   72 [firefox] › tests/cuidados.spec.ts:14:1 › Ana edita los datos de un cuidado (2.3s)
+  ✓   70 [firefox] › tests/cuidados-compartidos.spec.ts:96:1 › Quien consulta no modifica y solo Ana administra los accesos (3.9s)
+  ✓   75 [firefox] › tests/cuidados.spec.ts:70:1 › Ana asigna a otra persona como responsable (1.9s)
+  ✓   76 [firefox] › tests/cuidados.spec.ts:90:1 › Ana ve un error si el responsable no tiene cuenta (1.4s)
+  ✘   60 [firefox] › tests/accesibilidad.spec.ts:66:1 › Marcar como realizado toma menos de 3 toques (10.9s)
+  ✓   73 [firefox] › tests/cuidados.spec.ts:41:1 › Ana reprograma un cuidado (5.9s)
+  ✓   74 [firefox] › tests/cuidados.spec.ts:57:1 › Ana no puede reprogramar a una fecha pasada (5.8s)
+  ✓   79 [firefox] › tests/cuidados.spec.ts:149:1 › Ana cancela al eliminar y el cuidado sigue en la lista (1.4s)
+  ✓   69 [firefox] › tests/cuidados-compartidos.spec.ts:30:1 › Ana comparte sus cuidados: Juan gestiona, Eva consulta, y al revocar queda quién lo realizó (9.4s)
+  ✓   81 [firefox] › tests/flujo-principal.spec.ts:7:1 › Ana registra una mascota y la ve en su lista (1.9s)
+  ✓   78 [firefox] › tests/cuidados.spec.ts:122:1 › Ana cancela al marcar como realizado y el cuidado sigue pendiente (5.9s)
+  ✓   84 [firefox] › tests/flujo-principal.spec.ts:50:1 › Ana filtra por tipo de cuidado y limpia los filtros (2.1s)
+  ✓   85 [firefox] › tests/flujo-principal.spec.ts:74:1 › Ana usa un filtro sin resultados y ve el aviso (1.6s)
+  ✓   87 [firefox] › tests/historial.spec.ts:24:1 › Una cuenta nueva ve el historial vacío (1.0s)
+  ✘   82 [firefox] › tests/flujo-principal.spec.ts:19:1 › Ana ve qué corregir si envía el formulario vacío (6.0s)
+  ✘   80 [firefox] › tests/cuidados.spec.ts:134:1 › Ana elimina un cuidado y no vuelve al recargar (7.3s)
+  ✘   83 [firefox] › tests/flujo-principal.spec.ts:35:1 › Ana no puede crear un cuidado con fecha pasada (6.2s)
+  ✘   77 [firefox] › tests/cuidados.spec.ts:103:1 › Ana marca un cuidado como realizado y sigue así al recargar (10.7s)
+  ✓   89 [firefox] › tests/recurrentes.spec.ts:68:1 › Una vacuna cada año vuelve el mismo día del año siguiente (6.5s)
+  ✘   86 [firefox] › tests/historial.spec.ts:5:1 › Ana ve en el historial lo que hizo, con lo último primero (10.6s)
+  ✘   91 [firefox] › tests/recurrentes.spec.ts:104:1 › Ana no puede guardar una repetición de 0 días (6.8s)
+  ✘   88 [firefox] › tests/recurrentes.spec.ts:43:1 › Ana realiza un baño cada 7 días y aparece la próxima fecha correcta (10.7s)
+  ✓   95 [firefox] › tests/recurrentes.spec.ts:163:1 › El formulario con repetición no tiene fallas de accesibilidad (2.1s)
+  ✘   90 [firefox] › tests/recurrentes.spec.ts:85:1 › El historial guarda cada vez que se realiza (11.6s)
+  ✘   92 [firefox] › tests/recurrentes.spec.ts:121:1 › Un cuidado que no se repite no genera otra tarjeta (11.2s)
+  ✘   94 [firefox] › tests/recurrentes.spec.ts:151:1 › Al eliminar un cuidado recurrente se avisa que dejará de repetirse (6.9s)
+  ✘   93 [firefox] › tests/recurrentes.spec.ts:133:1 › Ana edita un cuidado a "No se repite" y la serie se detiene (11.0s)
+  ✓   98 [firefox] › tests/reprogramar.spec.ts:121:1 › Sin motivo no se reprograma (6.3s)
+  ✓  102 [firefox] › tests/visual.spec.ts:12:1 › La pantalla de ingreso se ve igual (467ms)
+  ✓   99 [firefox] › tests/reprogramar.spec.ts:136:1 › La misma fecha no cuenta como cambio (6.3s)
+  ✓  103 [firefox] › tests/visual.spec.ts:18:1 › La pantalla de registro se ve igual (484ms)
+  ✓  100 [firefox] › tests/reprogramar.spec.ts:148:1 › Un cuidado que no se repite no pregunta qué fechas mover (6.0s)
+  ✘   97 [firefox] › tests/reprogramar.spec.ts:79:1 › Mover también las siguientes desplaza solo las pendientes y mantiene el historial (10.7s)
+  ✓  101 [firefox] › tests/reprogramar.spec.ts:159:1 › El formulario de reprogramar no tiene fallas de accesibilidad (6.5s)
+  ✘  104 [firefox] › tests/visual.spec.ts:24:1 › La lista vacía se ve igual (5.8s)
+  ✘   96 [firefox] › tests/reprogramar.spec.ts:58:1 › Mover solo esta fecha conserva las demás (16.0s)
+
+
+  1) [chromium] › tests/accesibilidad.spec.ts:66:1 › Marcar como realizado toma menos de 3 toques ──
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432312454021chromium' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432312454021chromium' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432312454021chromium' }) }).getByText('Realizado', { exact: true })
+
+
+      75 |   toques += 1;
+      76 |
+    > 77 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+         |                                                                               ^
+      78 |   expect(toques).toBeLessThanOrEqual(3);
+      79 | });
+      80 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/accesibilidad.spec.ts:77:79
+
+    Error Context: test-results/accesibilidad-Marcar-como-realizado-toma-menos-de-3-toques-chromium/error-context.md
+
+  2) [chromium] › tests/cuidados.spec.ts:103:1 › Ana marca un cuidado como realizado y sigue así al recargar 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432312948839chromium' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432312948839chromium' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432312948839chromium' }) }).getByText('Realizado', { exact: true })
+
+
+      110 |
+      111 |   await expect(page.getByText(`El cuidado de ${nombre} se marcó como realizado`)).toBeVisible();
+    > 112 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+          |                                                                               ^
+      113 |
+      114 |   await page.reload();
+      115 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/cuidados.spec.ts:112:79
+
+    Error Context: test-results/cuidados-Ana-marca-un-cuid-013c6-ado-y-sigue-así-al-recargar-chromium/error-context.md
+
+  3) [chromium] › tests/cuidados.spec.ts:134:1 › Ana elimina un cuidado y no vuelve al recargar ────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      144 |
+      145 |   await page.reload();
+    > 146 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+          |                                                           ^
+      147 | });
+      148 |
+      149 | test('Ana cancela al eliminar y el cuidado sigue en la lista', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/cuidados.spec.ts:146:59
+
+    Error Context: test-results/cuidados-Ana-elimina-un-cuidado-y-no-vuelve-al-recargar-chromium/error-context.md
+
+  4) [chromium] › tests/flujo-principal.spec.ts:19:1 › Ana ve qué corregir si envía el formulario vacío 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      21 |
+      22 |   // Vacío: la pantalla explica qué hacer para empezar
+    > 23 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+         |                                                           ^
+      24 |
+      25 |   await page.getByRole('button', { name: 'Agregar mascota' }).click();
+      26 |   await page.getByRole('button', { name: 'Crear mascota' }).click();
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/flujo-principal.spec.ts:23:59
+
+    Error Context: test-results/flujo-principal-Ana-ve-qué-9a09a-i-envía-el-formulario-vacío-chromium/error-context.md
+
+  5) [chromium] › tests/flujo-principal.spec.ts:35:1 › Ana no puede crear un cuidado con fecha pasada 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      45 |   await expect(page.getByText('La fecha no puede ser anterior a hoy')).toBeVisible();
+      46 |   await page.getByRole('button', { name: 'Cancelar' }).click();
+    > 47 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+         |                                                           ^
+      48 | });
+      49 |
+      50 | test('Ana filtra por tipo de cuidado y limpia los filtros', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/flujo-principal.spec.ts:47:59
+
+    Error Context: test-results/flujo-principal-Ana-no-pue-cd779-un-cuidado-con-fecha-pasada-chromium/error-context.md
+
+  6) [chromium] › tests/historial.spec.ts:5:1 › Ana ve en el historial lo que hizo, con lo último primero 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432313600465chromium' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432313600465chromium' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432313600465chromium' }) }).getByText('Realizado', { exact: true })
+
+
+      10 |   await tarjeta(page, nombre).getByRole('button', { name: 'Marcar como realizado' }).click();
+      11 |   await page.getByRole('dialog').getByRole('button', { name: 'Marcar como realizado' }).click();
+    > 12 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+         |                                                                               ^
+      13 |
+      14 |   await page.getByRole('link', { name: 'Historial' }).click();
+      15 |   await expect(page.getByRole('heading', { name: 'Historial de acciones' })).toBeVisible();
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/historial.spec.ts:12:79
+
+    Error Context: test-results/historial-Ana-ve-en-el-his-1116b--hizo-con-lo-último-primero-chromium/error-context.md
+
+  7) [chromium] › tests/recurrentes.spec.ts:43:1 › Ana realiza un baño cada 7 días y aparece la próxima fecha correcta 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky179432313709708chromium' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky179432313709708chromium' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky179432313709708chromium' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      55 |
+      56 |   await expect(page.getByText(`Próximo cuidado: ${proxima}`)).toBeVisible();
+    > 57 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      58 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toHaveCount(1);
+      59 |   await expect(pendiente(page, nombre)).toContainText(proxima);
+      60 |   await expect(pendiente(page, nombre)).toContainText('Pendiente · en 7 días');
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:57:39
+
+    Error Context: test-results/recurrentes-Ana-realiza-un-6416f-e-la-próxima-fecha-correcta-chromium/error-context.md
+
+  8) [chromium] › tests/recurrentes.spec.ts:85:1 › El historial guarda cada vez que se realiza ─────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323138199101chromium' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323138199101chromium' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323138199101chromium' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      89 |
+      90 |   await marcarRealizado(page, nombre);
+    > 91 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      92 |   await marcarRealizado(page, nombre);
+      93 |   await expect(tarjeta(page, nombre)).toHaveCount(3);
+      94 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:91:39
+
+    Error Context: test-results/recurrentes-El-historial-guarda-cada-vez-que-se-realiza-chromium/error-context.md
+
+  9) [chromium] › tests/recurrentes.spec.ts:104:1 › Ana no puede guardar una repetición de 0 días ──
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      116 |   await expect(page.getByText('Escribe un número entero de 1 a 365')).toBeVisible();
+      117 |   await page.getByRole('dialog').getByRole('button', { name: 'Cancelar' }).click();
+    > 118 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+          |                                                           ^
+      119 | });
+      120 |
+      121 | test('Un cuidado que no se repite no genera otra tarjeta', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:118:59
+
+    Error Context: test-results/recurrentes-Ana-no-puede-guardar-una-repetición-de-0-días-chromium/error-context.md
+
+  10) [chromium] › tests/recurrentes.spec.ts:121:1 › Un cuidado que no se repite no genera otra tarjeta 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432313818082chromium' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432313818082chromium' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna179432313818082chromium' }) }).getByText('Realizado', { exact: true })
+
+
+      127 |   await marcarRealizado(page, nombre);
+      128 |
+    > 129 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+          |                                                                               ^
+      130 |   await expect(tarjeta(page, nombre)).toHaveCount(1);
+      131 | });
+      132 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:129:79
+
+    Error Context: test-results/recurrentes-Un-cuidado-que-326df-pite-no-genera-otra-tarjeta-chromium/error-context.md
+
+  11) [chromium] › tests/recurrentes.spec.ts:133:1 › Ana edita un cuidado a "No se repite" y la serie se detiene 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323142411111chromium' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323142411111chromium' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323142411111chromium' }) }).getByText('Realizado', { exact: true })
+
+
+      145 |   await expect(tarjeta(page, nombre).getByText(/^Se repite/)).toBeHidden();
+      146 |   await marcarRealizado(page, nombre);
+    > 147 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+          |                                                                               ^
+      148 |   await expect(tarjeta(page, nombre)).toHaveCount(1);
+      149 | });
+      150 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:147:79
+
+    Error Context: test-results/recurrentes-Ana-edita-un-c-29e2e-epite-y-la-serie-se-detiene-chromium/error-context.md
+
+  12) [chromium] › tests/recurrentes.spec.ts:151:1 › Al eliminar un cuidado recurrente se avisa que dejará de repetirse 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      158 |   await page.getByRole('dialog').getByRole('button', { name: 'Eliminar' }).click();
+      159 |
+    > 160 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+          |                                                           ^
+      161 | });
+      162 |
+      163 | test('El formulario con repetición no tiene fallas de accesibilidad', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:160:59
+
+    Error Context: test-results/recurrentes-Al-eliminar-un-a34ab-isa-que-dejará-de-repetirse-chromium/error-context.md
+
+  13) [chromium] › tests/reprogramar.spec.ts:58:1 › Mover solo esta fecha conserva las demás ───────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323144713131chromium' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323144713131chromium' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323144713131chromium' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      74 |   await page.getByRole('dialog').getByRole('button', { name: 'Marcar como realizado' }).click();
+      75 |   await expect(pendiente(page, nombre)).toContainText(fechaEnPantalla(fechaConDias(7)));
+    > 76 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      77 | });
+      78 |
+      79 | test('Mover también las siguientes desplaza solo las pendientes y mantiene el historial', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/reprogramar.spec.ts:76:39
+
+    Error Context: test-results/reprogramar-Mover-solo-esta-fecha-conserva-las-demás-chromium/error-context.md
+
+  14) [chromium] › tests/reprogramar.spec.ts:79:1 › Mover también las siguientes desplaza solo las pendientes y mantiene el historial 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323145566122chromium' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323145566122chromium' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323145566122chromium' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      85 |   await tarjeta(page, nombre).getByRole('button', { name: 'Marcar como realizado' }).click();
+      86 |   await page.getByRole('dialog').getByRole('button', { name: 'Marcar como realizado' }).click();
+    > 87 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      88 |   const realizado = tarjeta(page, nombre).filter({ has: page.getByText('Realizado', { exact: true }) });
+      89 |
+      90 |   await reprogramar(page, nombre, 10, 'Vamos de viaje', 'Esta y las siguientes');
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/reprogramar.spec.ts:87:39
+
+    Error Context: test-results/reprogramar-Mover-también--77298-tes-y-mantiene-el-historial-chromium/error-context.md
+
+  15) [chromium] › tests/visual.spec.ts:24:1 › La lista vacía se ve igual ──────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      24 | test('La lista vacía se ve igual', async ({ page }, testInfo) => {
+      25 |   await entrarConCuentaNueva(page, testInfo);
+    > 26 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+         |                                                           ^
+      27 |   await compararPantalla(page, 'lista-vacia.png');
+      28 | });
+      29 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/visual.spec.ts:26:59
+
+    Error Context: test-results/visual-La-lista-vacía-se-ve-igual-chromium/error-context.md
+
+  16) [firefox] › tests/accesibilidad.spec.ts:66:1 › Marcar como realizado toma menos de 3 toques ──
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323155428183firefox' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323155428183firefox' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323155428183firefox' }) }).getByText('Realizado', { exact: true })
+
+
+      75 |   toques += 1;
+      76 |
+    > 77 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+         |                                                                               ^
+      78 |   expect(toques).toBeLessThanOrEqual(3);
+      79 | });
+      80 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/accesibilidad.spec.ts:77:79
+
+    Error Context: test-results/accesibilidad-Marcar-como-realizado-toma-menos-de-3-toques-firefox/error-context.md
+
+  17) [firefox] › tests/cuidados.spec.ts:103:1 › Ana marca un cuidado como realizado y sigue así al recargar 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323165128237firefox' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323165128237firefox' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323165128237firefox' }) }).getByText('Realizado', { exact: true })
+
+
+      110 |
+      111 |   await expect(page.getByText(`El cuidado de ${nombre} se marcó como realizado`)).toBeVisible();
+    > 112 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+          |                                                                               ^
+      113 |
+      114 |   await page.reload();
+      115 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/cuidados.spec.ts:112:79
+
+    Error Context: test-results/cuidados-Ana-marca-un-cuid-013c6-ado-y-sigue-así-al-recargar-firefox/error-context.md
+
+  18) [firefox] › tests/cuidados.spec.ts:134:1 › Ana elimina un cuidado y no vuelve al recargar ────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      144 |
+      145 |   await page.reload();
+    > 146 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+          |                                                           ^
+      147 | });
+      148 |
+      149 | test('Ana cancela al eliminar y el cuidado sigue en la lista', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/cuidados.spec.ts:146:59
+
+    Error Context: test-results/cuidados-Ana-elimina-un-cuidado-y-no-vuelve-al-recargar-firefox/error-context.md
+
+  19) [firefox] › tests/flujo-principal.spec.ts:19:1 › Ana ve qué corregir si envía el formulario vacío 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      21 |
+      22 |   // Vacío: la pantalla explica qué hacer para empezar
+    > 23 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+         |                                                           ^
+      24 |
+      25 |   await page.getByRole('button', { name: 'Agregar mascota' }).click();
+      26 |   await page.getByRole('button', { name: 'Crear mascota' }).click();
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/flujo-principal.spec.ts:23:59
+
+    Error Context: test-results/flujo-principal-Ana-ve-qué-9a09a-i-envía-el-formulario-vacío-firefox/error-context.md
+
+  20) [firefox] › tests/flujo-principal.spec.ts:35:1 › Ana no puede crear un cuidado con fecha pasada 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      45 |   await expect(page.getByText('La fecha no puede ser anterior a hoy')).toBeVisible();
+      46 |   await page.getByRole('button', { name: 'Cancelar' }).click();
+    > 47 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+         |                                                           ^
+      48 | });
+      49 |
+      50 | test('Ana filtra por tipo de cuidado y limpia los filtros', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/flujo-principal.spec.ts:47:59
+
+    Error Context: test-results/flujo-principal-Ana-no-pue-cd779-un-cuidado-con-fecha-pasada-firefox/error-context.md
+
+  21) [firefox] › tests/historial.spec.ts:5:1 › Ana ve en el historial lo que hizo, con lo último primero 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna17943231715022011firefox' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna17943231715022011firefox' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna17943231715022011firefox' }) }).getByText('Realizado', { exact: true })
+
+
+      10 |   await tarjeta(page, nombre).getByRole('button', { name: 'Marcar como realizado' }).click();
+      11 |   await page.getByRole('dialog').getByRole('button', { name: 'Marcar como realizado' }).click();
+    > 12 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+         |                                                                               ^
+      13 |
+      14 |   await page.getByRole('link', { name: 'Historial' }).click();
+      15 |   await expect(page.getByRole('heading', { name: 'Historial de acciones' })).toBeVisible();
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/historial.spec.ts:12:79
+
+    Error Context: test-results/historial-Ana-ve-en-el-his-1116b--hizo-con-lo-último-primero-firefox/error-context.md
+
+  22) [firefox] › tests/recurrentes.spec.ts:43:1 › Ana realiza un baño cada 7 días y aparece la próxima fecha correcta 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky17943231740622215firefox' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky17943231740622215firefox' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky17943231740622215firefox' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      55 |
+      56 |   await expect(page.getByText(`Próximo cuidado: ${proxima}`)).toBeVisible();
+    > 57 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      58 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toHaveCount(1);
+      59 |   await expect(pendiente(page, nombre)).toContainText(proxima);
+      60 |   await expect(pendiente(page, nombre)).toContainText('Pendiente · en 7 días');
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:57:39
+
+    Error Context: test-results/recurrentes-Ana-realiza-un-6416f-e-la-próxima-fecha-correcta-firefox/error-context.md
+
+  23) [firefox] › tests/recurrentes.spec.ts:85:1 › El historial guarda cada vez que se realiza ─────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323176354261firefox' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323176354261firefox' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323176354261firefox' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      89 |
+      90 |   await marcarRealizado(page, nombre);
+    > 91 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      92 |   await marcarRealizado(page, nombre);
+      93 |   await expect(tarjeta(page, nombre)).toHaveCount(3);
+      94 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:91:39
+
+    Error Context: test-results/recurrentes-El-historial-guarda-cada-vez-que-se-realiza-firefox/error-context.md
+
+  24) [firefox] › tests/recurrentes.spec.ts:104:1 › Ana no puede guardar una repetición de 0 días ──
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      116 |   await expect(page.getByText('Escribe un número entero de 1 a 365')).toBeVisible();
+      117 |   await page.getByRole('dialog').getByRole('button', { name: 'Cancelar' }).click();
+    > 118 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+          |                                                           ^
+      119 | });
+      120 |
+      121 | test('Un cuidado que no se repite no genera otra tarjeta', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:118:59
+
+    Error Context: test-results/recurrentes-Ana-no-puede-guardar-una-repetición-de-0-días-firefox/error-context.md
+
+  25) [firefox] › tests/recurrentes.spec.ts:121:1 › Un cuidado que no se repite no genera otra tarjeta 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323177490281firefox' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323177490281firefox' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Luna1794323177490281firefox' }) }).getByText('Realizado', { exact: true })
+
+
+      127 |   await marcarRealizado(page, nombre);
+      128 |
+    > 129 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+          |                                                                               ^
+      130 |   await expect(tarjeta(page, nombre)).toHaveCount(1);
+      131 | });
+      132 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:129:79
+
+    Error Context: test-results/recurrentes-Un-cuidado-que-326df-pite-no-genera-otra-tarjeta-firefox/error-context.md
+
+  26) [firefox] › tests/recurrentes.spec.ts:133:1 › Ana edita un cuidado a "No se repite" y la serie se detiene 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323181392253firefox' }) }).getByText('Realizado', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323181392253firefox' }) }).getByText('Realizado', { exact: true }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323181392253firefox' }) }).getByText('Realizado', { exact: true })
+
+
+      145 |   await expect(tarjeta(page, nombre).getByText(/^Se repite/)).toBeHidden();
+      146 |   await marcarRealizado(page, nombre);
+    > 147 |   await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+          |                                                                               ^
+      148 |   await expect(tarjeta(page, nombre)).toHaveCount(1);
+      149 | });
+      150 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:147:79
+
+    Error Context: test-results/recurrentes-Ana-edita-un-c-29e2e-epite-y-la-serie-se-detiene-firefox/error-context.md
+
+  27) [firefox] › tests/recurrentes.spec.ts:151:1 › Al eliminar un cuidado recurrente se avisa que dejará de repetirse 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      158 |   await page.getByRole('dialog').getByRole('button', { name: 'Eliminar' }).click();
+      159 |
+    > 160 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+          |                                                           ^
+      161 | });
+      162 |
+      163 | test('El formulario con repetición no tiene fallas de accesibilidad', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/recurrentes.spec.ts:160:59
+
+    Error Context: test-results/recurrentes-Al-eliminar-un-a34ab-isa-que-dejará-de-repetirse-firefox/error-context.md
+
+  28) [firefox] › tests/reprogramar.spec.ts:58:1 › Mover solo esta fecha conserva las demás ────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323186234311firefox' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323186234311firefox' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323186234311firefox' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      74 |   await page.getByRole('dialog').getByRole('button', { name: 'Marcar como realizado' }).click();
+      75 |   await expect(pendiente(page, nombre)).toContainText(fechaEnPantalla(fechaConDias(7)));
+    > 76 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      77 | });
+      78 |
+      79 | test('Mover también las siguientes desplaza solo las pendientes y mantiene el historial', async ({ page }, testInfo) => {
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/reprogramar.spec.ts:76:39
+
+    Error Context: test-results/reprogramar-Mover-solo-esta-fecha-conserva-las-demás-firefox/error-context.md
+
+  29) [firefox] › tests/reprogramar.spec.ts:79:1 › Mover también las siguientes desplaza solo las pendientes y mantiene el historial 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323186493302firefox' }) })
+    Expected: 2
+    Received: 1
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323186493302firefox' }) }) with timeout 5000ms
+      - waiting for getByRole('article').filter({ has: getByRole('heading', { name: 'Rocky1794323186493302firefox' }) })
+        14 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      85 |   await tarjeta(page, nombre).getByRole('button', { name: 'Marcar como realizado' }).click();
+      86 |   await page.getByRole('dialog').getByRole('button', { name: 'Marcar como realizado' }).click();
+    > 87 |   await expect(tarjeta(page, nombre)).toHaveCount(2);
+         |                                       ^
+      88 |   const realizado = tarjeta(page, nombre).filter({ has: page.getByText('Realizado', { exact: true }) });
+      89 |
+      90 |   await reprogramar(page, nombre, 10, 'Vamos de viaje', 'Esta y las siguientes');
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/reprogramar.spec.ts:87:39
+
+    Error Context: test-results/reprogramar-Mover-también--77298-tes-y-mantiene-el-historial-firefox/error-context.md
+
+  30) [firefox] › tests/visual.spec.ts:24:1 › La lista vacía se ve igual ───────────────────────────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Aún no tienes mascotas.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Aún no tienes mascotas.') with timeout 5000ms
+      - waiting for getByText('Aún no tienes mascotas.')
+
+
+      24 | test('La lista vacía se ve igual', async ({ page }, testInfo) => {
+      25 |   await entrarConCuentaNueva(page, testInfo);
+    > 26 |   await expect(page.getByText('Aún no tienes mascotas.')).toBeVisible();
+         |                                                           ^
+      27 |   await compararPantalla(page, 'lista-vacia.png');
+      28 | });
+      29 |
+        at /home/alex/Documents/interaccion_hombre_computador/segundoProyectoIHC/tests/visual.spec.ts:26:59
+
+    Error Context: test-results/visual-La-lista-vacía-se-ve-igual-firefox/error-context.md
+
+  30 failed
+    [chromium] › tests/accesibilidad.spec.ts:66:1 › Marcar como realizado toma menos de 3 toques ───
+    [chromium] › tests/cuidados.spec.ts:103:1 › Ana marca un cuidado como realizado y sigue así al recargar 
+    [chromium] › tests/cuidados.spec.ts:134:1 › Ana elimina un cuidado y no vuelve al recargar ─────
+    [chromium] › tests/flujo-principal.spec.ts:19:1 › Ana ve qué corregir si envía el formulario vacío 
+    [chromium] › tests/flujo-principal.spec.ts:35:1 › Ana no puede crear un cuidado con fecha pasada 
+    [chromium] › tests/historial.spec.ts:5:1 › Ana ve en el historial lo que hizo, con lo último primero 
+    [chromium] › tests/recurrentes.spec.ts:43:1 › Ana realiza un baño cada 7 días y aparece la próxima fecha correcta 
+    [chromium] › tests/recurrentes.spec.ts:85:1 › El historial guarda cada vez que se realiza ──────
+    [chromium] › tests/recurrentes.spec.ts:104:1 › Ana no puede guardar una repetición de 0 días ───
+    [chromium] › tests/recurrentes.spec.ts:121:1 › Un cuidado que no se repite no genera otra tarjeta 
+    [chromium] › tests/recurrentes.spec.ts:133:1 › Ana edita un cuidado a "No se repite" y la serie se detiene 
+    [chromium] › tests/recurrentes.spec.ts:151:1 › Al eliminar un cuidado recurrente se avisa que dejará de repetirse 
+    [chromium] › tests/reprogramar.spec.ts:58:1 › Mover solo esta fecha conserva las demás ─────────
+    [chromium] › tests/reprogramar.spec.ts:79:1 › Mover también las siguientes desplaza solo las pendientes y mantiene el historial 
+    [chromium] › tests/visual.spec.ts:24:1 › La lista vacía se ve igual ────────────────────────────
+    [firefox] › tests/accesibilidad.spec.ts:66:1 › Marcar como realizado toma menos de 3 toques ────
+    [firefox] › tests/cuidados.spec.ts:103:1 › Ana marca un cuidado como realizado y sigue así al recargar 
+    [firefox] › tests/cuidados.spec.ts:134:1 › Ana elimina un cuidado y no vuelve al recargar ──────
+    [firefox] › tests/flujo-principal.spec.ts:19:1 › Ana ve qué corregir si envía el formulario vacío 
+    [firefox] › tests/flujo-principal.spec.ts:35:1 › Ana no puede crear un cuidado con fecha pasada 
+    [firefox] › tests/historial.spec.ts:5:1 › Ana ve en el historial lo que hizo, con lo último primero 
+    [firefox] › tests/recurrentes.spec.ts:43:1 › Ana realiza un baño cada 7 días y aparece la próxima fecha correcta 
+    [firefox] › tests/recurrentes.spec.ts:85:1 › El historial guarda cada vez que se realiza ───────
+    [firefox] › tests/recurrentes.spec.ts:104:1 › Ana no puede guardar una repetición de 0 días ────
+    [firefox] › tests/recurrentes.spec.ts:121:1 › Un cuidado que no se repite no genera otra tarjeta 
+    [firefox] › tests/recurrentes.spec.ts:133:1 › Ana edita un cuidado a "No se repite" y la serie se detiene 
+    [firefox] › tests/recurrentes.spec.ts:151:1 › Al eliminar un cuidado recurrente se avisa que dejará de repetirse 
+    [firefox] › tests/reprogramar.spec.ts:58:1 › Mover solo esta fecha conserva las demás ──────────
+    [firefox] › tests/reprogramar.spec.ts:79:1 › Mover también las siguientes desplaza solo las pendientes y mantiene el historial 
+    [firefox] › tests/visual.spec.ts:24:1 › La lista vacía se ve igual ─────────────────────────────
+  74 passed (1.3m)

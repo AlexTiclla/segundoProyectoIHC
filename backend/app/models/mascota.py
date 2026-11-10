@@ -28,6 +28,11 @@ class Mascota(Base):
     intervalo_unidad: Mapped[str | None] = mapped_column(String(10), nullable=True)
     # Desde dónde se cuentan las siguientes ocurrencias. Vacía: desde fecha_cuidado.
     fecha_base: Mapped[date | None] = mapped_column(Date, nullable=True)
+    # Quién la marcó como realizada y cuándo. Se conserva aunque luego se revoque su acceso.
+    realizado_por_id: Mapped[int | None] = mapped_column(ForeignKey("usuarios.id"), nullable=True)
+    realizado_en: Mapped[date | None] = mapped_column(Date, nullable=True)
+    # Qué puede hacer con ella quien la consulta. El servicio lo fija por cada consulta.
+    permiso = "propietario"
     # relacion
     usuario = relationship(
         "Usuario",
@@ -39,11 +44,20 @@ class Mascota(Base):
         "Usuario",
         foreign_keys=[responsable_id]
     )
+    realizado_por = relationship("Usuario", foreign_keys=[realizado_por_id])
     historial=relationship("Historial", back_populates="mascota")
     reprogramaciones = relationship(Reprogramacion, order_by=Reprogramacion.id)
     @property
     def responsable_nombre(self):
         return self.responsable.nombre_completo if self.responsable else None
+
+    @property
+    def propietario_nombre(self):
+        return self.usuario.nombre_completo
+
+    @property
+    def realizado_por_nombre(self):
+        return self.realizado_por.nombre_completo if self.realizado_por else None
 
     # La fecha que tenía antes de la primera reprogramación
     @property
