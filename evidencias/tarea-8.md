@@ -4,7 +4,7 @@ Clase 20, *Arquitectura de información*. Proyecto: **Mascota al Día**.
 
 - **Integrantes:** Alex Ticlla Choque y Gabriel Antony Choque Benavides
 - **Funcionalidad asignada:** Mascota al Día · Cuidados compartidos. El responsable invita a otra cuenta, que acepta o rechaza; asigna un permiso de consulta o de gestión y puede revocarlo; solo el responsable administra accesos; cada cuidado realizado conserva autor y fecha, incluso tras revocar el acceso.
-- **Commit:** _se completa al hacer el commit_ (el cambio está en la rama `feat/cuidados-compartidos`).
+- **Commit:** `8bd5816` (`feat: cuidados compartidos con permisos de consulta y gestión`), en la rama `feat/cuidados-compartidos`.
 
 ## Funcionalidad
 
