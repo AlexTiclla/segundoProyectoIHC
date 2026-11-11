@@ -338,3 +338,33 @@ export async function listarRecibidos() {
 export async function responderAcceso(id: number, accion: "aceptar" | "rechazar" | "revocar") {
   await pedir<AccesoRespuesta>(`/accesos/${id}/${accion}`, { metodo: "PATCH" });
 }
+
+// Analítica: cuántos cuidados se abren y cuántos se completan
+export type EventoAnalitica = "cuidado_abierto" | "cuidado_completado";
+
+// El mismo cuidado (mismo id de mascota) debe viajar con el mismo flujo_id
+// en sus dos eventos para que el panel pueda contar el % que termina.
+export function flujoIdDeCuidado(mascotaId: number): string {
+  return `00000000-0000-4000-8000-${mascotaId.toString(16).padStart(12, "0")}`;
+}
+
+export async function registrarEvento(evento: EventoAnalitica, flujoId: string, recurrente?: boolean) {
+  try {
+    await pedir<{ id: number }>("/analitica/eventos", {
+      metodo: "POST",
+      cuerpo: { evento, flujo_id: flujoId, props: { recurrente: recurrente ?? null } },
+    });
+  } catch {
+    // Un fallo al registrar el evento no debe interrumpir el flujo real de la persona.
+  }
+}
+
+export type ResumenAnalitica = {
+  iniciados: number;
+  completados: number;
+  porcentaje: number;
+};
+
+export async function obtenerResumenAnalitica() {
+  return pedir<ResumenAnalitica>("/analitica/resumen");
+}

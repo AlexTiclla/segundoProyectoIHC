@@ -6,7 +6,9 @@ import {
   ErrorApi,
   eliminarMascota,
   filtrarMascotas,
+  flujoIdDeCuidado,
   marcarRealizado,
+  registrarEvento,
   type Mascota,
 } from "@/lib/api";
 import { formatearFecha } from "@/lib/fechas";
@@ -230,7 +232,11 @@ export default function PanelMascotas() {
           alCerrar={cerrarAccion}
           alConfirmar={() =>
             ejecutar(
-              () => marcarRealizado(accion.mascota.id),
+              async () => {
+                const realizada = await marcarRealizado(accion.mascota.id);
+                registrarEvento("cuidado_completado", flujoIdDeCuidado(accion.mascota.id), Boolean(accion.mascota.intervaloUnidad));
+                return realizada;
+              },
               `El cuidado de ${accion.mascota.nombre} se marcó como realizado${
                 accion.mascota.proximaFecha
                   ? `. Próximo cuidado: ${formatearFecha(accion.mascota.proximaFecha)}`

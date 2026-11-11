@@ -2,7 +2,14 @@
 
 import { useState, type FormEvent } from "react";
 
-import { actualizarMascota, crearMascota, ErrorApi, type Mascota } from "@/lib/api";
+import {
+  actualizarMascota,
+  crearMascota,
+  ErrorApi,
+  flujoIdDeCuidado,
+  registrarEvento,
+  type Mascota,
+} from "@/lib/api";
 import { CUIDADOS, ESPECIES, NO_SE_REPITE, REPETICIONES } from "@/lib/constantes";
 import {
   fechaHoy,
@@ -78,7 +85,8 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
       if (mascotaEditar) {
         await actualizarMascota(mascotaEditar.id, datos);
       } else {
-        await crearMascota(datos);
+        const creada = await crearMascota(datos);
+        registrarEvento("cuidado_abierto", flujoIdDeCuidado(creada.id), Boolean(repeticion));
       }
       alGuardar(mascotaEditar ? "Mascota actualizada con éxito" : "Mascota creada con éxito"); // le avisa al Panel que ya terminó
     } catch (error) {
