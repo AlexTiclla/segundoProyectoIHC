@@ -1,13 +1,12 @@
 # Feedback a otro proyecto — Clase 19
 
-- **Nombre completo del evaluador:** [Completar nombre y apellidos]
-- **Mi grupo y caso de estudio:** [Completar grupo] — Mascota al Día
-- **Grupo y caso de estudio evaluado:** [Completar grupo] — Planazo
-- **Integrantes del proyecto evaluado:** [Completar nombres]
-- **URL de la app evaluada:** [Completar URL]
-- **URL del repositorio evaluado:** [Completar URL]
+- **Nombre completo del evaluador:** Gabriel Antony Choque Benavides
+- **Mi grupo y caso de estudio:** Gabriel Antony Choque Benavides y  Ticlla Choque Alex — Mascota al Día
+- **Grupo y caso de estudio evaluado:** Erick Raul Teran Tabera — Planazo
+- **Integrantes del proyecto evaluado:** Erick Raul Teran Tabera-Moises sisteneros
+- **URL del repositorio evaluado:** https://github.com/moises-cisneros/Proyecto2IHC
 - **Fecha de evaluación:** 3 de noviembre de 2026
-- **Versión/commit probado:** [Completar si está disponible]
+- **Versión/commit probado:** 
 
 ## Primera impresión
 
