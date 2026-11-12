@@ -5,7 +5,14 @@ from typing import Literal
 from app.base_datos import obtener_sesion
 from app.dependencias import obtener_usuario_actual
 from app.models.usuario import Usuario
-from app.schemas.mascota import MascotaEntrada, MascotaActualizada, MascotaSalida, MascotaReprogramar, ResponsableEntrada
+from app.schemas.mascota import (
+    MascotaEntrada,
+    MascotaActualizada,
+    MascotaSalida,
+    MascotaReprogramar,
+    ResponsableEntrada,
+    MascotaOmitir,
+)
 from app.services import mascota_servicio 
 
 router = APIRouter(prefix = "/mascotas", tags = ["Mascotas"])
@@ -57,4 +64,20 @@ def asignar_responsable(
         mascota_id,
         datos.correo,
         usuario.id
+    )
+@router.patch(
+    "/{mascota_id}/omitir",
+    response_model=MascotaSalida
+)
+def omitir(
+    mascota_id: int,
+    datos: MascotaOmitir,
+    sesion: Session = Depends(obtener_sesion),
+    usuario: Usuario = Depends(obtener_usuario_actual)
+):
+    return mascota_servicio.omitir_cuidado(
+        sesion,
+        mascota_id,
+        usuario.id,
+        datos.motivo
     )

@@ -25,6 +25,7 @@ import Dialogo from "./Dialogo";
 import DialogoConfirmar from "./DialogoConfirmar";
 import FiltrosMascotas from "./FiltrosMascotas";
 import FormularioMascota from "./FormularioMascota";
+import FormularioOmitir from "./FormularioOmitir";
 import FormularioReprogramar from "./FormularioReprogramar";
 import FormularioResponsable from "./FormularioResponsable";
 import MensajeError from "./MensajeError";
@@ -35,7 +36,16 @@ import TarjetaMascota from "./TarjetaMascota";
 // Qué ventana está abierta en este momento
 type Accion =
   | { tipo: "nueva" }
-  | { tipo: "editar" | "reprogramar" | "responsable" | "eliminar" | "realizar"; mascota: Mascota };
+  | {
+      tipo:
+        | "editar"
+        | "reprogramar"
+        | "responsable"
+        | "eliminar"
+        | "realizar"
+        | "omitir";
+      mascota: Mascota;
+    };
 
 const ID_PANEL_FILTROS = "panel-filtros-mascotas";
 
@@ -67,7 +77,9 @@ export default function PanelMascotas() {
       setError("");
     } catch (e) {
       if (numero !== peticionActual.current) return;
-      setError(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado");
+      setError(
+        e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado",
+      );
     } finally {
       if (numero === peticionActual.current) setCargando(false);
     }
@@ -110,7 +122,9 @@ export default function PanelMascotas() {
       await cargar();
     } catch (e) {
       setAccion(null);
-      setError(e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado");
+      setError(
+        e instanceof ErrorApi ? e.message : "Ocurrió un error inesperado",
+      );
     }
   }
 
@@ -123,7 +137,9 @@ export default function PanelMascotas() {
       return (
         <div className="rounded-xl border border-arena bg-white p-6">
           <p className="font-semibold">
-            {hayFiltros ? "Ningún cuidado coincide con los filtros." : "Aún no tienes mascotas."}
+            {hayFiltros
+              ? "Ningún cuidado coincide con los filtros."
+              : "Aún no tienes mascotas."}
           </p>
           <p className="text-sm text-grisazulado">
             {hayFiltros
@@ -139,11 +155,24 @@ export default function PanelMascotas() {
           <TarjetaMascota
             key={mascota.id}
             mascota={mascota}
-            alEditar={(elegida) => setAccion({ tipo: "editar", mascota: elegida })}
-            alEliminar={(elegida) => setAccion({ tipo: "eliminar", mascota: elegida })}
-            alRealizar={(elegida) => setAccion({ tipo: "realizar", mascota: elegida })}
-            alReprogramar={(elegida) => setAccion({ tipo: "reprogramar", mascota: elegida })}
-            alAsignar={(elegida) => setAccion({ tipo: "responsable", mascota: elegida })}
+            alEditar={(elegida) =>
+              setAccion({ tipo: "editar", mascota: elegida })
+            }
+            alEliminar={(elegida) =>
+              setAccion({ tipo: "eliminar", mascota: elegida })
+            }
+            alRealizar={(elegida) =>
+              setAccion({ tipo: "realizar", mascota: elegida })
+            }
+            alReprogramar={(elegida) =>
+              setAccion({ tipo: "reprogramar", mascota: elegida })
+            }
+            alAsignar={(elegida) =>
+              setAccion({ tipo: "responsable", mascota: elegida })
+            }
+            alOmitir={(elegida) =>
+              setAccion({ tipo: "omitir", mascota: elegida })
+            }
           />
         ))}
       </div>
@@ -154,7 +183,10 @@ export default function PanelMascotas() {
     <section className="flex w-full flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold sm:text-3xl">Mis mascotas</h1>
-        <Boton texto="Agregar mascota" alClic={() => setAccion({ tipo: "nueva" })} />
+        <Boton
+          texto="Agregar mascota"
+          alClic={() => setAccion({ tipo: "nueva" })}
+        />
       </div>
 
       {/* Celular: una columna. Pantalla grande: los filtros a la izquierda y lo demás a la derecha */}
@@ -191,7 +223,11 @@ export default function PanelMascotas() {
 
       {accion?.tipo === "nueva" && (
         <Dialogo titulo="Nueva mascota" alCerrar={cerrarAccion}>
-          <FormularioMascota mascotaEditar={null} alGuardar={alGuardar} alCancelar={cerrarAccion} />
+          <FormularioMascota
+            mascotaEditar={null}
+            alGuardar={alGuardar}
+            alCancelar={cerrarAccion}
+          />
         </Dialogo>
       )}
 
@@ -209,14 +245,28 @@ export default function PanelMascotas() {
       )}
 
       {accion?.tipo === "reprogramar" && (
-        <Dialogo titulo={`Reprogramar cuidado de ${accion.mascota.nombre}`} alCerrar={cerrarAccion}>
-          <FormularioReprogramar mascota={accion.mascota} alGuardar={alGuardar} alCancelar={cerrarAccion} />
+        <Dialogo
+          titulo={`Reprogramar cuidado de ${accion.mascota.nombre}`}
+          alCerrar={cerrarAccion}
+        >
+          <FormularioReprogramar
+            mascota={accion.mascota}
+            alGuardar={alGuardar}
+            alCancelar={cerrarAccion}
+          />
         </Dialogo>
       )}
 
       {accion?.tipo === "responsable" && (
-        <Dialogo titulo={`Responsable del cuidado de ${accion.mascota.nombre}`} alCerrar={cerrarAccion}>
-          <FormularioResponsable mascota={accion.mascota} alGuardar={alGuardar} alCancelar={cerrarAccion} />
+        <Dialogo
+          titulo={`Responsable del cuidado de ${accion.mascota.nombre}`}
+          alCerrar={cerrarAccion}
+        >
+          <FormularioResponsable
+            mascota={accion.mascota}
+            alGuardar={alGuardar}
+            alCancelar={cerrarAccion}
+          />
         </Dialogo>
       )}
 
@@ -234,19 +284,34 @@ export default function PanelMascotas() {
             ejecutar(
               async () => {
                 const realizada = await marcarRealizado(accion.mascota.id);
-                registrarEvento("cuidado_completado", flujoIdDeCuidado(accion.mascota.id), Boolean(accion.mascota.intervaloUnidad));
+                registrarEvento(
+                  "cuidado_completado",
+                  flujoIdDeCuidado(accion.mascota.id),
+                  Boolean(accion.mascota.intervaloUnidad),
+                );
                 return realizada;
               },
               `El cuidado de ${accion.mascota.nombre} se marcó como realizado${
                 accion.mascota.proximaFecha
                   ? `. Próximo cuidado: ${formatearFecha(accion.mascota.proximaFecha)}`
                   : ""
-              }`
+              }`,
             )
           }
         />
       )}
-
+      {accion?.tipo === "omitir" && (
+        <Dialogo
+          titulo={`Omitir cuidado de ${accion.mascota.nombre}`}
+          alCerrar={cerrarAccion}
+        >
+          <FormularioOmitir
+            mascota={accion.mascota}
+            alGuardar={alGuardar}
+            alCancelar={cerrarAccion}
+          />
+        </Dialogo>
+      )}
       {accion?.tipo === "eliminar" && (
         <DialogoConfirmar
           titulo="¿Eliminar este cuidado?"
@@ -259,7 +324,7 @@ export default function PanelMascotas() {
           alConfirmar={() =>
             ejecutar(
               () => eliminarMascota(accion.mascota.id),
-              `El cuidado de ${accion.mascota.nombre} se eliminó con éxito`
+              `El cuidado de ${accion.mascota.nombre} se eliminó con éxito`,
             )
           }
         />

@@ -212,3 +212,73 @@ def filtrar_por_usuario(
     )
 
     return session.scalars(consulta).all()
+
+def omitir(
+    session: Session,
+    mascota: Mascota,
+    motivo: str,
+    proxima_fecha: date | None
+) -> tuple[Mascota, Mascota | None]:
+
+    mascota.estado = "omitido"
+    mascota.motivo_omision = motivo
+
+    siguiente = None
+
+    if proxima_fecha is not None:
+        siguiente = Mascota(
+            nombre=mascota.nombre,
+            sexo=mascota.sexo,
+            especie=mascota.especie,
+            cuidado=mascota.cuidado,
+            fecha_cuidado=proxima_fecha,
+            usuario_id=mascota.usuario_id,
+            responsable_id=mascota.responsable_id,
+            intervalo_cantidad=mascota.intervalo_cantidad,
+            intervalo_unidad=mascota.intervalo_unidad,
+        )
+
+        session.add(siguiente)
+
+    session.commit()
+    session.refresh(mascota)
+
+    if siguiente is not None:
+        session.refresh(siguiente)
+
+    return mascota, siguiente
+
+def omitir(
+    session: Session,
+    mascota: Mascota,
+    motivo: str,
+    proxima_fecha: date | None
+) -> tuple[Mascota, Mascota | None]:
+
+    mascota.estado = "omitido"
+    mascota.motivo_omision = motivo
+
+    siguiente = None
+
+    if proxima_fecha is not None:
+        siguiente = Mascota(
+            nombre=mascota.nombre,
+            sexo=mascota.sexo,
+            especie=mascota.especie,
+            cuidado=mascota.cuidado,
+            fecha_cuidado=proxima_fecha,
+            usuario_id=mascota.usuario_id,
+            responsable_id=mascota.responsable_id,
+            intervalo_cantidad=mascota.intervalo_cantidad,
+            intervalo_unidad=mascota.intervalo_unidad,
+        )
+
+        session.add(siguiente)
+
+    session.commit()
+    session.refresh(mascota)
+
+    if siguiente is not None:
+        session.refresh(siguiente)
+
+    return mascota, siguiente

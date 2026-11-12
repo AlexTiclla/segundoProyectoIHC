@@ -30,7 +30,14 @@ class MascotaReprogramar(BaseModel):
     fecha_cuidado: date
     motivo: str = Field(max_length=200)
     alcance: Literal["solo_esta", "futuras"] = "solo_esta"
+#Esto es para Omitir desde el frontend para que llegue al backedn
+class MascotaOmitir(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
 
+    motivo: str = Field(
+        min_length=1,
+        max_length=200
+    )
 class ReprogramacionSalida(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -50,6 +57,8 @@ class MascotaSalida(BaseModel):
     cuidado: str
     fecha_cuidado:date
     estado:str
+    vencido: bool
+    motivo_omision: str | None = None
     usuario_id:int  
     responsable_nombre: str | None = None
     propietario_nombre: str
