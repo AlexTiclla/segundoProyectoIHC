@@ -7,6 +7,7 @@ from app.recurrencia import fechas_siguientes
 
 PENDIENTE = "pendiente"
 REALIZADO = "realizado" 
+OMITIDO = "omitido"
 
 class Mascota(Base):
     __tablename__ = "mascotas"
@@ -31,6 +32,10 @@ class Mascota(Base):
     # Quién la marcó como realizada y cuándo. Se conserva aunque luego se revoque su acceso.
     realizado_por_id: Mapped[int | None] = mapped_column(ForeignKey("usuarios.id"), nullable=True)
     realizado_en: Mapped[date | None] = mapped_column(Date, nullable=True)
+    motivo_omision: Mapped[str | None] = mapped_column(
+        String(200),
+        nullable=True
+    )
     # Qué puede hacer con ella quien la consulta. El servicio lo fija por cada consulta.
     permiso = "propietario"
     # relacion
@@ -67,7 +72,7 @@ class Mascota(Base):
     # Las siguientes ocurrencias: se calculan, no se guardan hasta que les toca
     @property
     def proximas_fechas(self) -> list[date]:
-        if self.estado == REALIZADO or not self.intervalo_cantidad or not self.intervalo_unidad:
+        if self.estado != PENDIENTE or not self.intervalo_cantidad or not self.intervalo_unidad:
             return []
         return fechas_siguientes(
             self.fecha_base or self.fecha_cuidado,
@@ -81,3 +86,11 @@ class Mascota(Base):
     def proxima_fecha(self) -> date | None:
         fechas = self.proximas_fechas
         return fechas[0] if fechas else None
+    # FUNCION PARA PONER COMO VENCIDO UN CUIDADO
+    @property
+    def vencido(self) -> bool:
+        return (
+            self.estado == PENDIENTE
+            and self.fecha_cuidado < date.today()
+            and not self.eliminada
+        )

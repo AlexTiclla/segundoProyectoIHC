@@ -85,7 +85,7 @@ def listar_mascotas(session:Session, usuario_id: int):
 
 def actualizar_mascota(session:Session, mascota_id:int, datos: MascotaActualizada, usuario_id: int):
     mascota = _obtener_con_permiso(session,mascota_id,usuario_id,PUEDEN_GESTIONAR)
-    if mascota.estado == "realizado":
+    if mascota.estado != "pendiente":
         raise ErrorDeNegocio("Este cuidado ya fue realizado, por eso no se puede editar",400)
     _validar_intervalo(datos.intervalo_cantidad,datos.intervalo_unidad)
     mascota = repo.actualizar(session,mascota,datos.nombre,datos.sexo,datos.especie,datos.cuidado,datos.intervalo_cantidad,datos.intervalo_unidad)
@@ -111,8 +111,11 @@ def eliminar_mascota(session:Session, mascota_id:int, usuario_id: int):
 
 def marcar_realizado(session:Session,mascota_id:int, usuario_id:int):
     mascota = _obtener_con_permiso(session,mascota_id,usuario_id,PUEDEN_GESTIONAR)
-    if mascota.estado == "realizado":
-        raise ErrorDeNegocio("Este cuidado ya está marcado como realizado",400)
+    if mascota.estado != "pendiente":
+        raise ErrorDeNegocio(
+            "Este cuidado ya está finalizado y no puede marcarse como realizado",
+            400
+        )
     proxima_fecha = mascota.proxima_fecha
     if proxima_fecha is None:
         siguiente = None
@@ -139,7 +142,7 @@ def marcar_realizado(session:Session,mascota_id:int, usuario_id:int):
 
 def reprogramar_cuidado(session:Session,mascota_id:int,usuario_id:int,nueva_fecha:date,motivo:str,alcance:str=SOLO_ESTA):
     mascota = _obtener_con_permiso(session,mascota_id,usuario_id,PUEDEN_GESTIONAR)
-    if(mascota.estado == "realizado"):
+    if(mascota.estado != "pendiente"):
         raise ErrorDeNegocio("Este cuidado ya fue realizado, por eso no se puede reprogramar",400)
     if nueva_fecha < date.today():
         raise ErrorDeNegocio("La nueva fecha no puede ser anterior a hoy", 400)
@@ -187,7 +190,7 @@ def asignar_responsable(
 ):
     mascota = _obtener_propia(session, mascota_id, usuario_id)
 
-    if mascota.estado == "realizado":
+    if mascota.estado != "pendiente":
         raise ErrorDeNegocio("El cuidado ya fue realizado", 400)
 
     responsable = repo_usuario.buscar_por_correo(
@@ -205,4 +208,60 @@ def asignar_responsable(
         usuario_id,
         mascota.id,
     )
+    return mascota
+
+def omitir_cuidado(
+    session: Session,
+    mascota_id: int,
+    usuario_id: int,
+    motivo: str
+):
+    mascota = _obtener_con_permiso(
+        session,
+        mascota_id,
+        usuario_id,
+        PUEDEN_GESTIONAR
+    )
+
+    if not mascota.vencido:
+        raise ErrorDeNegocio(
+            "Solo se pueden omitir cuidados vencidos",
+            400
+        )
+
+    motivo = motivo.strip()
+
+    if not motivo:
+        raise ErrorDeNegocio(
+            "Debes indicar el motivo de la omisión",
+            400
+        )
+
+    proxima_fecha = mascota.proxima_fecha
+
+    mascota, siguiente = repo.omitir(
+        session,
+        mascota,
+        motivo,
+        proxima_fecha
+    )
+
+    historial_servicio.registrar(
+        session,
+        "omitir",
+        f"Se omitió el cuidado de '{mascota.nombre}'. Motivo: {motivo}",
+        usuario_id,
+        mascota.id
+    )
+
+    if siguiente is not None:
+        historial_servicio.registrar(
+            session,
+            "programar",
+            f"Se programó el próximo cuidado de '{siguiente.nombre}' "
+            f"para el {proxima_fecha.isoformat()}.",
+            usuario_id,
+            siguiente.id
+        )
+
     return mascota
