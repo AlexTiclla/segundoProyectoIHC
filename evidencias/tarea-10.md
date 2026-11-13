@@ -154,16 +154,32 @@ cualitativa.
 | Tipos frontend | `npx tsc --noEmit` (desde `frontend/`) → sin errores |
 | Lint frontend | `npm run lint` (desde `frontend/`) → 0 errores (1 warning preexistente, no relacionado, en `pedir()`) |
 | E2E de Mi cuenta | `npx playwright test tests/cuenta.spec.ts --project=chromium` → **4 passed** |
-| E2E completos (paralelo, sin visuales) | `npx playwright test --project=chromium --reporter=line --grep-invert "se ve igual"` → **55 passed, 1 failed** (`cuidados-compartidos.spec.ts`, timeout de `page.goto`) |
-| E2E completos (un solo worker) | `npx playwright test --project=chromium --workers=1 --reporter=line --grep-invert "se ve igual"` → **54 passed, 2 failed** (`acceso.spec.ts` y `analitica.spec.ts`, ambos por timeout) |
-| Reintento de los fallos en aislamiento | Cada archivo que falló en las corridas completas, ejecutado solo, **pasa sin cambios** |
+| E2E completos (paralelo, con visuales) | `npx playwright test --project=chromium --reporter=line` → **59 passed, 2 skipped** |
 
-Los fallos de la tabla anterior son intermitentes y dependen de la carga (timeouts de
-`page.goto`/`expect` de 5–30 s contra un servidor de desarrollo compartido que llevaba
-horas de pruebas acumuladas), no del código de esta tarea: cada prueba que falló en una
-corrida completa pasó de forma determinista al ejecutarse sola. `evidencias/clase-22.md`
-ya documenta una flakiness preexistente similar en `cuidados-compartidos.spec.ts`
-("problema preexistente al crear una mascota... fuera del alcance de esta tarea").
+### Dos fallos reales de E2E encontrados y corregidos (no de producción)
+
+Al correr la suite completa aparecieron dos fallos deterministas, ninguno del código de
+`backend/` o `frontend/`, ambos ya corregidos en commits propios:
+
+1. **`tests/visual.spec.ts` — "La lista vacía se ve igual"**: el snapshot de referencia
+   quedó desactualizado porque la barra de navegación ahora tiene el enlace "Mi cuenta"
+   (sección B). Se regeneró con `--update-snapshots` (commit `test(visual): ...`).
+2. **`tests/analitica.spec.ts` — "crear un cuidado registra cuidado_abierto..."**: una
+   condición de carrera preexistente en la prueba, no en el producto. `registrarEvento()`
+   se dispara a propósito en segundo plano (para no bloquear el flujo real de la persona),
+   así que leer `/analitica/resumen` justo después de crear el cuidado a veces llegaba
+   antes de que el evento se guardara; y como `/analitica/resumen` es un conteo **global**
+   (documentado en `evidencias/clase-21.md`), comparar el panel contra un número capturado
+   en un instante anterior fallaba si otra prueba en paralelo también creaba o completaba
+   un cuidado mientras tanto. Se corrigió con `expect.poll` y leyendo el número actual del
+   panel en vez de una variable congelada (commit `fix(e2e): ...`).
+
+Tras el arreglo: `npx playwright test --project=chromium --reporter=line` (en paralelo) y
+`--workers=1` corridos varias veces, **sin fallos relacionados con analítica ni visuales**.
+Se observó, además, un fallo intermitente aislado en `cuidados.spec.ts` (no tocado por esta
+tarea) al correr la suite completa bajo carga, que **pasa sin cambios al ejecutarse solo**
+— consistente con la flakiness por carga ya documentada en `evidencias/clase-22.md`
+("problema preexistente... fuera del alcance de esta tarea"), no una regresión.
 
 ### Demostración manual sugerida
 
