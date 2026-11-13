@@ -75,7 +75,9 @@ export default function PanelAccesos() {
       <div>
         <h1 className="text-2xl font-bold sm:text-3xl">Compartir cuidados</h1>
         <p className="text-sm text-grisazulado">
-          Invita a otra cuenta a ver o gestionar todos tus cuidados. Tú decides hasta cuándo.
+          Invita a otra cuenta a ver o gestionar todos tus cuidados, incluidos los que agregues
+          después. El acceso empieza cuando la otra persona acepta la invitación, y tú puedes
+          revocarlo cuando quieras.
         </p>
       </div>
 
@@ -97,7 +99,7 @@ export default function PanelAccesos() {
           opciones={OPCIONES_PERMISO}
           valor={permiso}
           alCambiar={setPermiso}
-          ayuda="Consulta: solo ve tus cuidados. Gestión: también los edita, reprograma y marca como realizados."
+          ayuda="Consulta: solo ve los cuidados, sin poder modificarlos. Gestión: además los edita, reprograma, marca como realizados y puede omitir cuidados vencidos. Cubre todos los cuidados compartidos, también los futuros."
         />
         <Boton texto="Invitar" clase="self-start" />
       </form>
