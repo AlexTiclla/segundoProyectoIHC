@@ -3,7 +3,7 @@
 - **Integrantes:** Alex Ticlla Choque y Gabriel Antony Choque Benavides
 - **Proyecto:** Mascota al Día
 - **Fecha:** 12 de noviembre de 2026
-- **Modalidad:** con IA
+- **Modalidad:** sin IA
 
 ## Consigna
 

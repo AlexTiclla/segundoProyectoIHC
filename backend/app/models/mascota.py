@@ -90,6 +90,7 @@ class Mascota(Base):
     @property
     def vencido(self) -> bool:
         return (
+            # No se guarda en la base. Es pendiente, con fecha anterior a hoy y sin eliminar.
             self.estado == PENDIENTE
             and self.fecha_cuidado < date.today()
             and not self.eliminada
