@@ -6,6 +6,8 @@ type Props = {
   cargando?: boolean;
   deshabilitado?: boolean;
   href?: string;
+  // Para un enlace que descarga un archivo: usa <a download>, no la navegación de Next.
+  descargar?: boolean;
   variante?: "primario" | "secundario" | "texto" | "peligro";
   alClic?: () => void;
   clase?: string;
@@ -24,11 +26,20 @@ export default function Boton({
   cargando = false,
   deshabilitado = false,
   href,
+  descargar = false,
   variante = "primario",
   alClic,
   clase = "",
 }: Props) {
   const clases = `inline-flex min-h-11 items-center justify-center rounded-lg px-4 py-2 text-center font-semibold disabled:cursor-not-allowed disabled:opacity-60 ${estilos[variante]} ${clase}`;
+
+  if (href && descargar) {
+    return (
+      <a href={href} download className={clases}>
+        {texto}
+      </a>
+    );
+  }
 
   if (href) {
     return (

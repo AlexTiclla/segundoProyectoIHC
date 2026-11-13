@@ -94,6 +94,15 @@ export async function salir() {
   await pedir<{ mensaje: string }>("/auth/salir", { metodo: "POST" });
 }
 
+export async function eliminarCuenta() {
+  await pedir<{ mensaje: string }>("/auth/cuenta", { metodo: "DELETE" });
+}
+
+// Para un <a href> de descarga: no pasa por pedir() porque la respuesta no es JSON.
+export function urlMisDatos(formato: "json" | "csv") {
+  return `/api/auth/mis-datos?formato=${formato}`;
+}
+
 export async function solicitarRecuperacion(correo: string) {
   return pedir<{ mensaje: string; codigo: string | null }>("/auth/recuperar", {
     metodo: "POST",
