@@ -16,6 +16,7 @@ type Props = {
   alRealizar: (mascota: Mascota) => void;
   alReprogramar: (mascota: Mascota) => void;
   alAsignar: (mascota: Mascota) => void;
+  // No omite aquí. Avisa al panel para que abra el formulario del motivo.
   alOmitir: (mascota: Mascota) => void;
 };
 
@@ -130,12 +131,6 @@ export default function TarjetaMascota({
           <p className="break-words text-sm text-grisazulado">
             Compartido por {mascota.propietarioNombre} ·{" "}
             {mascota.permiso === "gestion" ? "Gestión" : "Consulta"}
-          </p>
-        )}
-        {realizado && mascota.realizadoPorNombre && mascota.realizadoEn && (
-          <p className="break-words text-sm text-grisazulado">
-            Realizado por {mascota.realizadoPorNombre} el{" "}
-            {formatearFecha(mascota.realizadoEn)}
           </p>
         )}
         {realizado && mascota.realizadoPorNombre && mascota.realizadoEn && (

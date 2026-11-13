@@ -222,30 +222,33 @@ def omitir_cuidado(
         usuario_id,
         PUEDEN_GESTIONAR
     )
-
+    # Si no esta marcada como vencida, entonces no se puede omitir.
     if not mascota.vencido:
         raise ErrorDeNegocio(
             "Solo se pueden omitir cuidados vencidos",
             400
         )
-
+    # se limpia el motivo para evitar espacios, innecesarios y caracteres especiales.
     motivo = motivo.strip()
 
+    # Si no se indica el motivo, entonces no se puede omitir.
     if not motivo:
         raise ErrorDeNegocio(
             "Debes indicar el motivo de la omisión",
             400
         )
 
+    # se guarda la proxima fecha de las mascota.
     proxima_fecha = mascota.proxima_fecha
 
+    # se guarda la mascota y la siguiente fecha.
     mascota, siguiente = repo.omitir(
         session,
         mascota,
         motivo,
         proxima_fecha
     )
-
+    # se registar el historial de la omision, con el nombre, motivo y usuario.
     historial_servicio.registrar(
         session,
         "omitir",
@@ -253,8 +256,9 @@ def omitir_cuidado(
         usuario_id,
         mascota.id
     )
-
+    # si siguiente tiene valor, es decir hay una fecha en la variable siguiente.
     if siguiente is not None:
+        # se programa el proximo cuidado con el nombre, fecha y usuario.
         historial_servicio.registrar(
             session,
             "programar",
