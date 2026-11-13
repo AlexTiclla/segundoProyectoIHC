@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.usuario import Usuario
+from app.utilidades import ahora_utc
 
 
 def buscar_por_correo(sesion: Session, correo: str) -> Usuario | None:
@@ -39,3 +40,19 @@ def actualizar_contrasena(sesion: Session, usuario: Usuario, contrasena_hash: st
     usuario.codigo_recuperacion_hash = None
     usuario.codigo_expira_en = None
     sesion.commit()
+
+
+# No borra la fila: las mascotas, el historial y los accesos la siguen referenciando.
+# Libera el correo y deja una contraseña irrecuperable para que la cuenta no se pueda
+# volver a usar, conservando el nombre visible como "Usuario eliminado".
+def anonimizar(sesion: Session, usuario: Usuario, contrasena_hash_irrecuperable: str) -> Usuario:
+    usuario.nombre_completo = "Usuario eliminado"
+    usuario.correo = f"usuario-eliminado-{usuario.id}@mascotaaldia.invalid"
+    usuario.contrasena_hash = contrasena_hash_irrecuperable
+    usuario.codigo_recuperacion_hash = None
+    usuario.codigo_expira_en = None
+    usuario.eliminado = True
+    usuario.eliminado_en = ahora_utc()
+    sesion.commit()
+    sesion.refresh(usuario)
+    return usuario

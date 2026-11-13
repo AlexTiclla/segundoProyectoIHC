@@ -33,7 +33,11 @@ def registrar(sesion: Session, datos: RegistroEntrada) -> Usuario:
 
 def autenticar(sesion: Session, datos: IngresoEntrada) -> Usuario:
     usuario = repositorio.buscar_por_correo(sesion, datos.correo)
-    if usuario is None or not verificar_contrasena(datos.contrasena, usuario.contrasena_hash):
+    if (
+        usuario is None
+        or usuario.eliminado
+        or not verificar_contrasena(datos.contrasena, usuario.contrasena_hash)
+    ):
         raise ErrorDeNegocio("Correo o contraseña incorrectos", 401)
     return usuario
 
@@ -41,7 +45,9 @@ def autenticar(sesion: Session, datos: IngresoEntrada) -> Usuario:
 def usuario_desde_token(sesion: Session, token: str | None) -> Usuario:
     usuario_id = leer_token(token) if token else None
     usuario = repositorio.buscar_por_id(sesion, usuario_id) if usuario_id else None
-    if usuario is None:
+    # Una cuenta eliminada no puede seguir usando una cookie que ya tenía: el JWT
+    # no tiene estado propio, así que esta es la única forma de invalidarla.
+    if usuario is None or usuario.eliminado:
         raise ErrorDeNegocio("No has iniciado sesión", 401)
     return usuario
 
