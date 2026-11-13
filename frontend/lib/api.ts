@@ -440,8 +440,12 @@ export async function responderAcceso(
   await pedir<AccesoRespuesta>(`/accesos/${id}/${accion}`, { metodo: "PATCH" });
 }
 
-// Analítica: cuántos cuidados se abren y cuántos se completan
-export type EventoAnalitica = "cuidado_abierto" | "cuidado_completado";
+// Analítica: cuántos cuidados se abren y cuántos se completan, y eventos de la cuenta
+export type EventoAnalitica =
+  | "cuidado_abierto"
+  | "cuidado_completado"
+  | "cuenta_eliminacion_iniciada"
+  | "cuenta_eliminacion_exito";
 
 // El mismo cuidado (mismo id de mascota) debe viajar con el mismo flujo_id
 // en sus dos eventos para que el panel pueda contar el % que termina.
