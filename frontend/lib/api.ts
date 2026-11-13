@@ -22,6 +22,9 @@ export class ErrorApi extends Error {
 type Opciones = {
   metodo?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   cuerpo?: unknown;
+  // Para llamadas de fondo (p. ej. analítica): un 401 no debe sacar a la persona
+  // de la pantalla en la que está, solo fallar en silencio.
+  silencioso?: boolean;
 };
 
 async function pedir<T>(ruta: string, opciones: Opciones = {}): Promise<T> {
@@ -47,6 +50,7 @@ async function pedir<T>(ruta: string, opciones: Opciones = {}): Promise<T> {
     if (
       respuesta.status === 401 &&
       !ruta.startsWith("/auth/") &&
+      !opciones.silencioso &&
       typeof window !== "undefined"
     ) {
       window.location.assign("/ingresar?sesion=vencida");
@@ -466,6 +470,9 @@ export async function registrarEvento(
         flujo_id: flujoId,
         props: { recurrente: recurrente ?? null },
       },
+      // Puede llamarse justo después de que la sesión terminó (p. ej. al eliminar
+      // la cuenta): un 401 aquí no debe sacar a la persona de la pantalla.
+      silencioso: true,
     });
   } catch {
     // Un fallo al registrar el evento no debe interrumpir el flujo real de la persona.
