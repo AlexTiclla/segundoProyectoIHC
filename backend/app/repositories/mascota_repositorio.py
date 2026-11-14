@@ -35,6 +35,13 @@ def buscar_por_usuario(
     return session.scalars(consulta).all()
 
 
+# Para exportar los propios datos: incluye también las eliminadas lógicamente,
+# porque el derecho a los propios datos no depende de lo que ya no se muestra en la app.
+def buscar_todas_por_propietario(session: Session, usuario_id: int) -> list[Mascota]:
+    consulta = select(Mascota).where(Mascota.usuario_id == usuario_id)
+    return session.scalars(consulta).all()
+
+
 def crear(
     session: Session,
     nombre: str,

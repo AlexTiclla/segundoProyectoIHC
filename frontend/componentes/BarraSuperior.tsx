@@ -4,7 +4,7 @@ import BotonSalir from "./BotonSalir";
 
 type Props = {
   nombreUsuario: string;
-  actual: "mascotas" | "historial" | "compartir" | "analitica";
+  actual: "mascotas" | "historial" | "compartir" | "analitica" | "cuenta";
 };
 
 const enlaces = [
@@ -12,6 +12,7 @@ const enlaces = [
   { clave: "historial", texto: "Historial", href: "/historial" },
   { clave: "compartir", texto: "Compartir", href: "/compartir" },
   { clave: "analitica", texto: "Analítica", href: "/analitica" },
+  { clave: "cuenta", texto: "Mi cuenta", href: "/cuenta" },
 ];
 
 export default function BarraSuperior({ nombreUsuario, actual }: Props) {

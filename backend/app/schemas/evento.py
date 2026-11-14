@@ -16,7 +16,9 @@ class EventoEntrada(BaseModel):
 
     evento: Literal[
         "cuidado_abierto",
-        "cuidado_completado"
+        "cuidado_completado",
+        "cuenta_eliminacion_iniciada",
+        "cuenta_eliminacion_exito"
     ]
 
     flujo_id: UUID
