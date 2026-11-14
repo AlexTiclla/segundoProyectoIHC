@@ -210,7 +210,27 @@ Objetivo explícito del checkpoint: inventario + archivo de tokens con una panta
 3. Commit(s) separados: uno para Figma (actualizar este plan con el link/estado), uno para `globals.css` + la pantalla migrada, uno para el inventario.
 4. Lunes 16/11, 23:59: no se olvida la Tarea 10 (ya entregada según el historial de git de esta rama) — este plan no la toca.
 
-### Etapa 3 — Resto de componentes (6–11 de §4)
+### Etapa 3 — Resto de componentes (6–11 de §4) — ✅ completada 14/11
+
+**Resultado** (página `02 · Componentes`, cada uno en su bloque con rótulos de variantes):
+- **Diálogo**: Tipo (confirmación, peligro, formulario) × Estado (reposo, guardando) = 5. Cancelar y Confirmar con el mismo Botón y el mismo tamaño. El Confirmar es una instancia expuesta (se le cambia el texto desde la pantalla). La variante formulario tiene un hueco intercambiable (`INSTANCE_SWAP`) que se llena con los componentes de la sección Formularios.
+- **Tarjeta de mascota**: Permiso (propietario, gestión, consulta) × Estado (pendiente, vencido, realizado, omitido) = 12, armada con instancias de Insignia, Botón y Menú de acciones.
+- **Tarjeta de cuidado compartido** (nuevo): Tipo (enviado, recibido) × Estado (pendiente, aceptado, rechazado, revocado) = 8.
+- **Barra superior**: 5 variantes según la sección actual, armada con la pieza **Enlace de navegación** (normal, hover, actual) y el Logo en versión texto.
+- **Menú de acciones**: cerrado, hover y abierto, con la pieza **Opción de menú** (normal/peligrosa × reposo/hover).
+- **Mensaje de aviso**: error, éxito, advertencia y flotante. Se agregaron éxito y advertencia porque el código los usa en línea en ingreso y recuperación.
+- **Piezas de pantalla**: Filtro activo, Registro de historial, Métrica, Tarjeta de beneficio y Área de texto.
+- **Formularios**: de mascota (nueva/editar), reprogramar, responsable y omitir, armados solo con instancias.
+- **Fundaciones agregadas**:
+  - 5 estilos de texto: `titulo-pagina` 30/36, `subtitulo`, `cuerpo-fuerte`, `enlace-pequeno` y `metrica`.
+  - 3 estilos de sombra (`sombra/sm`, `lg`, `xl`) con los valores de Tailwind v4.
+  - Una variante `Versión=Texto` del Logo, porque el código hoy muestra solo el wordmark.
+  - Un estado `ayuda` en el Campo de selección.
+- **Correcciones** detectadas al construir:
+  - La repetición de la tarjeta decía "cada 1 año"; `textoRecurrencia()` produce "cada año".
+  - El estado `ayuda` clonado no tenía enlazadas sus propiedades de texto.
+
+**Plan original de la etapa:**
 1. Diálogo (genérico + confirmación, con el detalle de "botones del mismo tamaño" ya presente en el código).
 2. Tarjeta de mascota, con sus 3 variantes de permiso × 4 estados (usa la Insignia de estado de la Etapa 2 como sub-componente, no como color repetido).
 3. Tarjeta de cuidado compartido (nuevo).
@@ -219,7 +239,24 @@ Objetivo explícito del checkpoint: inventario + archivo de tokens con una panta
 6. Mensaje de aviso (error/éxito).
 7. Página `02 · Componentes` queda como el "escaparate" fácil de mostrar en los 10 minutos de defensa: todas las variantes y estados visibles de un vistazo.
 
-### Etapa 4 — Ensamblar las 7 pantallas con los componentes ya creados
+### Etapa 4 — Ensamblar las 7 pantallas con los componentes ya creados — ✅ completada 14/11
+
+**Resultado: 42 pantallas de escritorio (1280 px) en las 7 páginas de flujo.** Cada página tiene un encabezado con la ruta y el `.tsx` de origen, y cada pantalla lleva un rótulo numerado. Todo el contenido son instancias de componentes. Los únicos nodos sueltos son textos de página (títulos y descripciones), los contenedores de maquetación y el rectángulo del velo, enlazado a `color/velo`.
+
+| Página | Pantallas |
+|---|---|
+| `03 · Flujo 1 · Landing` | 1: inicio público |
+| `04 · Flujo 2 · Autenticación` | 12, en tres filas. **Ingresar** (6): reposo, errores de validación, credenciales incorrectas, enviando, cuenta creada, sesión vencida. **Registro** (3): reposo, errores, correo ya registrado. **Recuperar** (3): pedir código, cambiar contraseña con código simulado, contraseña actualizada |
+| `05 · Flujo 3 · Mascotas` | 13. **Estados de la lista** (6): con datos, cargando, sin mascotas, filtros sin resultados, menú abierto, cuidado realizado. **Diálogos** (7): nueva mascota, editar, reprogramar, asignar responsable, confirmar realizado, omitir con motivo, confirmar eliminación |
+| `06 · Flujo 4 · Historial` | 4: con datos, cargando, vacío, error |
+| `07 · Flujo 5 · Compartir` | 5: con datos, sin invitaciones, correo inválido, invitación enviada, error del servidor |
+| `08 · Flujo 6 · Analítica` | 3: con datos, cargando, error |
+| `09 · Flujo 7 · Mi cuenta` | 4: reposo, confirmación honesta, eliminando, error al eliminar |
+
+Todos los textos son los reales del código: mensajes de validación de `lib/validaciones.ts`, errores del backend (`auth_servicio.py`, `acceso_servicio.py`), descripciones del historial (`mascota_servicio.py`) y textos de días de `lib/fechas.ts`.
+
+**Plan original de la etapa:**
+
 Orden sugerido (de menor a mayor esfuerzo, para asegurar cobertura si el tiempo se acorta):
 1. Autenticación (3 pantallas simples).
 2. Landing (1 pantalla).
@@ -231,13 +268,37 @@ Orden sugerido (de menor a mayor esfuerzo, para asegurar cobertura si el tiempo 
 
 Cada pantalla se arma **insertando instancias** de los componentes de la Etapa 2–3, nunca dibujando rectángulos/texto sueltos — es literalmente lo que pide "las pantallas se arman con ellos".
 
-### Etapa 5 — Tokens en código, completos
+### Etapa 5 — Tokens en código, completos — ✅ completada 14/11
+
+**Resultado:**
+- Se reemplazaron las 56 clases de color fijo que quedaban en 17 archivos de `frontend/componentes`. `grep` ya no encuentra colores fijos ni hex en `frontend/app` ni en `frontend/componentes`.
+- Verificado con estilos computados en el navegador (detalle en el inventario, §3).
+- `tsc`, `lint` y `npm run build` correctos.
+- E2E en chromium: 58 pasan y 2 se omiten. Un fallo de `cuidados-compartidos` por tiempo de espera pasa 6/6 al repetirlo aislado.
+- Tabla componente ↔ archivo en [`docs/tabla-componentes.md`](tabla-componentes.md), enlazada desde el `README.md`.
+
+**Plan original de la etapa:**
 1. Revisar **todo** el código tocado durante el proyecto (no solo la pantalla de la Etapa 2) y reemplazar cualquier clase de color cruda de Tailwind (`red-*`, `amber-*`, `green-*`, `neutral-*`, y cualquier otra que aparezca) por las variables semánticas del `@theme inline`.
 2. Completar la **tabla componente ↔ archivo** (plantilla en §6.3) en el repo (`docs/` o `README.md`, según se prefiera), con los nombres ya verificados contra los nombres reales usados en Figma.
 3. Confirmar con `npx tsc --noEmit` y `npm run build` (frontend) que nada se rompió.
 4. Commit: `refactor(frontend): tokens semanticos sin colores fijos` (+ el commit de la tabla).
 
-### Etapa 6 — Pulido y ensayo de la defensa (antes del 18/11 23:59)
+### Etapa 6 — Pulido y ensayo de la defensa (antes del 18/11 23:59) — ✅ parte de diseño completada 14/11
+
+**Resultado:**
+- **Página `00 · Portada`**: resume el sistema en una sola vista: logo, las 24 variables de color, la escala tipográfica, una instancia de cada uno de los 11 componentes con su archivo `.tsx`, el índice de los 7 flujos con su cantidad de pantallas y los enlaces a la documentación del repo.
+- **Lámina de Fundaciones** completada con los 15 estilos de texto y la sección de sombras.
+- **Revisión visual** de cada página con capturas. Se corrigieron: el botón apretado en la tarjeta, el recorte del anillo de foco, el conteo de estilos de la portada y los textos sin enlazar del Campo de selección.
+- **Queda en manos del grupo** (no es trabajo de diseño): ensayar la explicación del sistema, cerrar el repositorio antes del miércoles 18/11 a las 23:59 y enviar el usuario de prueba a `bjvtamayo78@gmail.com`.
+
+**Guion corto para la defensa:**
+1. Portada.
+2. Fundaciones: variable `color/peligro` ↔ `--color-peligro`.
+3. Componentes: Botón con sus 20 variantes y la Tarjeta de mascota.
+4. Un flujo completo, por ejemplo Mi cuenta con la confirmación honesta.
+5. `globals.css` y la tabla componente ↔ archivo.
+
+**Plan original de la etapa:**
 1. Revisar con `get_screenshot` cada página del archivo de Figma; corregir inconsistencias visuales.
 2. Verificar que la página `00 · Portada` resume el sistema en una sola vista (paleta, tipografía, logo, grid de componentes) — es lo primero que se enseña en los 10 minutos.
 3. Ensayar la explicación de "cómo se armó" (nombres de variables, cómo cada pantalla usa componentes) para las 2 preguntas sobre el código del fork.
@@ -274,7 +335,7 @@ Cada pantalla se arma **insertando instancias** de los componentes de la Etapa 2
 | Menú de acciones | `frontend/componentes/MenuAcciones.tsx` | `color/arena`, `color/menta-claro`, `color/peligro` |
 | Mensaje de aviso | `frontend/componentes/MensajeError.tsx`, `MensajeExito.tsx` | `color/peligro(-fondo, -borde)`; el éxito flotante usa `color/tinta` + `color/blanco` |
 
-*(Se deja como plantilla: se completa/ajusta con lo que realmente se termine usando en cada componente a medida que avanzan las etapas.)*
+*(Plantilla original. La versión final y completa, con variantes, estados, piezas auxiliares y formularios, está en [`docs/tabla-componentes.md`](tabla-componentes.md).)*
 
 ## 7. Fuera del alcance detallado de este plan
 

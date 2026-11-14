@@ -1,7 +1,15 @@
 {
   "archivo": "https://www.figma.com/design/Pq8Q35LoYXwrKROyiItaCe/Mascota-Dia",
   "fileKey": "Pq8Q35LoYXwrKROyiItaCe",
-  "etapasCompletas": ["etapa-0", "etapa-1", "etapa-2"],
+  "etapasCompletas": [
+    "etapa-0",
+    "etapa-1",
+    "etapa-2",
+    "etapa-3",
+    "etapa-4",
+    "etapa-5",
+    "etapa-6"
+  ],
   "paginas": {
     "00 · Portada": "0:1",
     "01 · Fundaciones": "9:2",
@@ -69,7 +77,12 @@
     "tipografia/boton": "S:04ed07fc871aabb02b0b4dbc9b75cfa826906af9,",
     "tipografia/etiqueta": "S:4464836375589169987179ee82c9b93ffe85b65e,",
     "tipografia/ayuda": "S:bb5200eb6c07180f1ba669eed372bd03cf7350ae,",
-    "tipografia/enlace": "S:b51b848f9973accf890958f3a0a6fc019a9923f8,"
+    "tipografia/enlace": "S:b51b848f9973accf890958f3a0a6fc019a9923f8,",
+    "tipografia/titulo-pagina": "S:755bcdfab63256caaf7b73aa2f267c526918a300,",
+    "tipografia/subtitulo": "S:c97df1ab4aa611bb6aae114db3a0849b5b3dacb9,",
+    "tipografia/cuerpo-fuerte": "S:14b81b6e8c82c337457764f8611d1f60846d2628,",
+    "tipografia/enlace-pequeno": "S:bf67dee95f2900feec3b528471449b6f31f563d0,",
+    "tipografia/metrica": "S:1293661e40cbe8897413ddd9ab5d85b6bdfea2b2,"
   },
   "nodos": {
     "Logo (component set)": "11:19",
@@ -86,6 +99,91 @@
     "Campo de texto (component set)": "21:29",
     "Bloque · Campo de texto": "21:30",
     "Campo de selección (component set)": "21:99",
-    "Bloque · Campo de selección": "21:100"
+    "Bloque · Campo de selección": "21:100",
+    "Logo · Versión=Texto": "46:25",
+    "Mensaje de aviso (component set)": "47:14",
+    "Opción de menú (component set)": "47:30",
+    "Menú de acciones (component set)": "47:58",
+    "Enlace de navegación (component set)": "48:14",
+    "Barra superior (component set)": "48:116",
+    "Tarjeta de mascota (component set)": "49:259",
+    "Tarjeta de cuidado compartido (component set)": "50:136",
+    "Contenido de diálogo (componente)": "50:146",
+    "Diálogo (component set)": "50:188",
+    "Campo de selección · Estado=ayuda": "51:104",
+    "Filtro activo (component set)": "51:118",
+    "Registro de historial (componente)": "51:119",
+    "Métrica (component set)": "51:132",
+    "Tarjeta de beneficio (componente)": "51:133",
+    "Área de texto (component set)": "51:149",
+    "Formulario de mascota (component set)": "53:205",
+    "Formulario reprogramar (componente)": "53:206",
+    "Formulario responsable (componente)": "53:233",
+    "Formulario omitir (componente)": "53:245",
+    "Portada": "60:2",
+    "Fundaciones · Sección Sombras": "60:354"
+  },
+  "estilosSombra": {
+    "sombra/sm": "S:d7e48d3ceb9c039f097badfc38588afeeaa0b4e4,",
+    "sombra/lg": "S:05302f8a05713fada04268e8dd927cb1d7aa7952,",
+    "sombra/xl": "S:fe9da6fc525946a9ec83c3ae2e64dfd274a263c0,"
+  },
+  "pantallas": {
+    "03 · Flujo 1 · Landing": [
+      "54:317"
+    ],
+    "04 · Flujo 2 · Autenticación": [
+      "54:6",
+      "54:29",
+      "54:54",
+      "54:79",
+      "54:102",
+      "54:127",
+      "54:153",
+      "54:186",
+      "54:221",
+      "54:257",
+      "54:274",
+      "54:305"
+    ],
+    "05 · Flujo 3 · Mascotas": [
+      "59:2",
+      "59:253",
+      "59:336",
+      "59:421",
+      "59:514",
+      "59:734",
+      "59:954",
+      "59:1114",
+      "59:1273",
+      "59:1384",
+      "59:1473",
+      "59:1551",
+      "59:1637"
+    ],
+    "06 · Flujo 4 · Historial": [
+      "58:2",
+      "58:64",
+      "58:90",
+      "58:116"
+    ],
+    "07 · Flujo 5 · Compartir": [
+      "57:2",
+      "57:81",
+      "57:127",
+      "57:196",
+      "57:275"
+    ],
+    "08 · Flujo 6 · Analítica": [
+      "58:149",
+      "58:193",
+      "58:219"
+    ],
+    "09 · Flujo 7 · Mi cuenta": [
+      "56:2",
+      "56:46",
+      "56:95",
+      "56:144"
+    ]
   }
 }
