@@ -62,6 +62,23 @@ Esto **es** el hallazgo central que pide el checkpoint del 17/11 ("inventario co
 
 No hay ningún componente de "éxito" (`MensajeExito.tsx`) con color propio declarado como token tampoco — usa una clase aparte que hay que revisar al leerlo en detalle durante el inventario.
 
+> **Actualización (Etapa 1, 14/11) — inventario real con `grep` sobre `frontend/app` y `frontend/componentes`.** Hay más colores crudos que los de la tabla anterior, y la tabla de tokens definitiva quedó así (creada en Figma, colección `Color`, modo `Claro`):
+>
+> | Color crudo hoy | Dónde | Token que lo reemplaza |
+> |---|---|---|
+> | `bg-white` (25 usos), `text-white` (4) | tarjetas, campos, diálogos, botón primario/peligro, chip seleccionado | `color/blanco` `#ffffff` |
+> | `backdrop:bg-black/40` | `Dialogo.tsx` | `color/velo` `#000000` al 40 % |
+> | `red-700` (texto, botón) y `red-600` (borde de campo con error) | `Boton.tsx`, `CampoTexto.tsx`, `CampoSeleccion.tsx`, `MenuAcciones.tsx`, `MensajeError.tsx` | `color/peligro` `#b91c1c` — **se unifican** los dos rojos en uno (inconsistencia resuelta) |
+> | `red-800` (hover), `red-900` (texto insignia Vencido) | `Boton.tsx`, `TarjetaMascota.tsx` | `color/peligro-profundo` `#991b1b` |
+> | `red-100` | insignia Vencido | `color/peligro-suave` `#fee2e2` |
+> | `red-50` | `MensajeError.tsx`, hover de opción peligrosa | `color/peligro-fondo` `#fef2f2` |
+> | `red-300` | borde de `MensajeError.tsx` y de la tarjeta vencida | `color/peligro-borde` `#fca5a5` |
+> | `amber-900` / `amber-100` / `amber-50` / `amber-300` | insignia Pendiente; avisos de `FormularioIngreso.tsx` y `FormularioRecuperar.tsx` | `color/advertencia` / `-suave` / `-fondo` / `-borde` |
+> | `emerald-800/50/300` (avisos) **y** `green-900/100` (insignia Realizado) | `FormularioIngreso.tsx`, `FormularioRecuperar.tsx`, `TarjetaMascota.tsx` | `color/exito` / `-suave` / `-fondo` / `-borde` — **se unifican** dos verdes distintos para el mismo significado (inconsistencia resuelta) |
+> | `neutral-800/600/200/100/50` | insignia Omitido, campo deshabilitado, tarjeta finalizada | **No se crea familia "neutral"**: se reutiliza la paleta que ya existe (`tinta` sobre `arena` para Omitido, `grisazulado` sobre `fondo` para deshabilitado, `fondo` para tarjeta finalizada). Los grises puros de Tailwind no pertenecen a la paleta menta/arena del proyecto (inconsistencia resuelta). |
+>
+> Resultado: **24 variables** (los 9 de `globals.css` + 15 nuevos). Cada una tiene `codeSyntax` WEB `var(--color-<nombre>)`, una descripción de uso y scopes explícitos (nunca "todos").
+
 **Otra inconsistencia de inventario:** `BuscadorMascotas.tsx` tiene un `<input type="search">` escrito a mano con su propio `border-contorno`/padding en vez de reusar `CampoTexto.tsx`, y la fila de cada invitación en `PanelAccesos.tsx` es un `<li>` de marcado suelto en vez de un componente propio (mientras que `TarjetaMascota.tsx` sí es un componente) — ambas cosas se documentan en el inventario de la Etapa 2 y se resuelven del lado de Figma creando el componente que falta (`Tarjeta de cuidado compartido`, ver §4).
 
 ### 2.3 Tipografía actual (`frontend/app/layout.tsx:1-14`, `globals.css:13-14`)
@@ -78,6 +95,8 @@ No hay ningún componente de "éxito" (`MensajeExito.tsx`) con color propio decl
 | `tipografia/cuerpo` | 16px, normal | Texto de párrafo general |
 | `tipografia/etiqueta` | 14px, medium/semibold (`text-sm font-semibold`) | Labels de campo, botones pequeños |
 | `tipografia/ayuda` | 14px, normal, color `grisazulado` (`text-sm text-grisazulado`) | Texto de ayuda y metadatos |
+
+> **Actualización (Etapa 1):** la escala definitiva creada en Figma tiene **9 estilos** (Geist, `letterSpacing` 0, alturas de línea de Tailwind): `titulo-1` Bold 48/48, `titulo-2` Bold 24/32, `titulo-3` Bold 20/28, `titulo-4` Bold 18/28, `cuerpo` Regular 16/24, `cuerpo-medio` Medium 16/24 (etiquetas de campo), `boton` SemiBold 16/24, `etiqueta` SemiBold 14/20, `ayuda` Regular 14/20. Se separaron `cuerpo-medio` y `boton` porque el código usa `font-medium` en etiquetas y `font-semibold` en botones y navegación. Los títulos responsivos (`text-2xl sm:text-3xl`) se diseñan con su tamaño de escritorio y se anotan en la pantalla.
 
 ### 2.4 Logo
 
@@ -146,12 +165,14 @@ Cada etapa es acumulativa y cierra con un commit propio y, cuando aplica, una ca
 
 4. Commit: `docs(figma): crear archivo y estructura del sistema de diseño` (este `.md` con el link y los IDs de página).
 
-### Etapa 1 — Fundaciones: variables, tipografía y logo (objetivo: lista antes del 17/11)
-1. Crear las **variables de color** de la tabla §2.1 (colores base) **y** las semánticas de §2.2 (`peligro`, `advertencia`, `exito`, `neutral`, cada una con su variante `-fondo`), con los nombres exactos que luego se calcan en código.
-2. Crear los **estilos de texto** de la tabla §2.3.
-3. Diseñar el **logo** (wordmark + ícono opcional) en la página de Fundaciones.
-4. Verificar con `get_screenshot` que la página de Fundaciones se ve coherente.
-5. Commit: `docs(figma): fundaciones del sistema (color, tipografia, logo)`.
+### Etapa 1 — Fundaciones: variables, tipografía y logo — ✅ completada 14/11
+1. ✅ **Variables de color**: colección `Color` (modo `Claro`) con 24 variables — ver la tabla actualizada en §2.2. Antes se buscó con `get_libraries` + `search_design_system`: el archivo no tenía librerías ni tokens, y los kits comunitarios disponibles (Material 3, iOS…) no calzan con la paleta del código, así que se construyó desde `globals.css`.
+2. ✅ **Estilos de texto**: 9 estilos `tipografia/*` en Geist (ver §2.3).
+3. ✅ **Logo**: componente `Logo` con variantes `Versión=Completo` (huella + "Mascota al Día", 180×40) y `Versión=Ícono` (40×40). Huella blanca (`color/blanco`) sobre cuadrado redondeado `color/menta-oscuro`; wordmark Geist Bold 18 en `color/menta-profundo`, igual que el enlace de marca de `BarraSuperior.tsx`. Contraste blanco sobre `menta-oscuro` ≈ 4,9:1 (AA).
+4. ✅ **Lámina "Fundaciones"** (página `01 · Fundaciones`, 1280 px de ancho): logo, las 24 muestras agrupadas (marca, superficies y texto, peligro, advertencia, éxito) con nombre de variable, token CSS, hex y uso, y la escala tipográfica con su clase Tailwind de origen. Todo enlazado a variables y estilos, sin un solo hex suelto.
+5. ✅ Verificado con `get_screenshot`. Se encontró y corrigió un defecto: la unión de óvalos de la huella había quedado con el gris por defecto de Figma (`#d9d9d9`) sin variable; ahora está enlazada a `color/blanco`.
+6. IDs de todo lo creado en [`docs/figma-registro-ids.json`](figma-registro-ids.json) (para retomar si se corta la sesión).
+7. Commit: `docs(figma): fundaciones del sistema (color, tipografia, logo)`.
 
 Esta etapa por sí sola, si no se avanza nada más, ya cubre "paleta y tipografía iguales a las del proyecto" y "logo" del rubro — es la de mayor prioridad si el tiempo aprieta.
 
@@ -160,7 +181,7 @@ Objetivo explícito del checkpoint: inventario + archivo de tokens con una panta
 
 1. **En Figma:** construir los componentes 1–5 de §4 (Botón, Campo de texto, Campo de selección, Chip, Insignia de estado) con todas sus variantes/estados como *component properties*, usando las variables de la Etapa 1 (nada de hex sueltos dentro del componente).
 2. **En código (en paralelo, mismo repo):**
-   - Agregar a `frontend/app/globals.css` las variables semánticas nuevas (`--color-peligro`, `--color-peligro-fondo`, `--color-advertencia`, `--color-advertencia-fondo`, `--color-exito`, `--color-exito-fondo`, `--color-neutral`, `--color-neutral-fondo`) dentro del bloque `@theme inline`, con los mismos nombres que las variables de Figma (`color/peligro` → `--color-peligro` → clase utilitaria `peligro`).
+   - Agregar a `frontend/app/globals.css` las 15 variables nuevas de §2.2 (`--color-blanco`, `--color-velo`, `--color-peligro`, `--color-peligro-profundo`, `--color-peligro-suave`, `--color-peligro-fondo`, `--color-peligro-borde`, y las cuatro de `advertencia` y de `exito`) dentro del bloque `@theme inline`, con los mismos nombres y valores que las variables de Figma (`color/peligro` → `--color-peligro` → clase utilitaria `bg-peligro`/`text-peligro`).
    - Elegir **una pantalla** para dejarla sin colores fijos (candidata: **Mi cuenta**, `PanelCuenta.tsx` + `MensajeError.tsx`, porque es chica y su único color crudo es el `peligro` del botón de eliminar y del mensaje de error — fácil de verificar al 100%). Reemplazar ahí todas las clases `red-*` por las nuevas clases semánticas.
    - Redactar `docs/inventario-interfaz.md` (o una sección en `evidencias/clase-23.md`, según lo que pida el profesor ese día) con la tabla de inconsistencias de §2.2 y §2.3, más lo que se vaya encontrando al construir.
 3. Commit(s) separados: uno para Figma (actualizar este plan con el link/estado), uno para `globals.css` + la pantalla migrada, uno para el inventario.
@@ -203,7 +224,7 @@ Cada pantalla se arma **insertando instancias** de los componentes de la Etapa 2
 
 ### 6.1 En Figma
 - Archivo "Mascota al Día" en el equipo "Grupo IHC", con las páginas: Portada, Fundaciones, Componentes, y una por cada uno de los 7 flujos.
-- Variables de color (9 base + 8 semánticas) y estilos de tipografía (6), nombradas exactamente como en §2.
+- Variables de color (9 base + 15 nuevas = 24) y estilos de tipografía (9), nombradas exactamente como en §2. ✅
 - Logo.
 - 11 componentes con sus variantes y estados (§4).
 - Las 7 pantallas armadas solo con instancias de esos componentes.
@@ -219,16 +240,16 @@ Cada pantalla se arma **insertando instancias** de los componentes de la Etapa 2
 | Componente (Figma) | Archivo en el código | Variables/tokens que usa |
 |---|---|---|
 | Botón | `frontend/componentes/Boton.tsx` | `color/menta-oscuro`, `color/menta-profundo`, `color/contorno`, `color/tinta`, `color/peligro` |
-| Campo de texto | `frontend/componentes/CampoTexto.tsx` | `color/contorno`, `color/peligro`, `color/neutral`, `color/neutral-fondo` |
+| Campo de texto | `frontend/componentes/CampoTexto.tsx` | `color/blanco`, `color/contorno`, `color/peligro`, `color/fondo` + `color/grisazulado` (deshabilitado) |
 | Campo de selección | `frontend/componentes/CampoSeleccion.tsx` | `color/contorno`, `color/peligro` |
 | Chip | `frontend/componentes/Chip.tsx` | `color/menta-oscuro`, `color/contorno`, `color/menta-claro` |
-| Insignia de estado | `frontend/componentes/TarjetaMascota.tsx` | `color/advertencia(-fondo)`, `color/peligro(-fondo)`, `color/exito(-fondo)`, `color/neutral(-fondo)` |
+| Insignia de estado | `frontend/componentes/TarjetaMascota.tsx` | `color/advertencia(-suave)`, `color/peligro-profundo` + `color/peligro-suave`, `color/exito(-suave)`, `color/tinta` + `color/arena` (omitido) |
 | Diálogo | `frontend/componentes/Dialogo.tsx`, `DialogoConfirmar.tsx` | `color/menta-profundo` (foco), `color/peligro` |
 | Tarjeta de mascota | `frontend/componentes/TarjetaMascota.tsx` | `color/arena`, `color/peligro`, `color/grisazulado` |
 | Tarjeta de cuidado compartido | `frontend/componentes/PanelAccesos.tsx` | `color/arena`, `color/grisazulado` |
 | Barra superior | `frontend/componentes/BarraSuperior.tsx` | `color/arena`, `color/menta-claro`, `color/menta-profundo` |
 | Menú de acciones | `frontend/componentes/MenuAcciones.tsx` | `color/arena`, `color/menta-claro`, `color/peligro` |
-| Mensaje de aviso | `frontend/componentes/MensajeError.tsx`, `MensajeExito.tsx` | `color/peligro(-fondo)`, `color/exito(-fondo)` |
+| Mensaje de aviso | `frontend/componentes/MensajeError.tsx`, `MensajeExito.tsx` | `color/peligro(-fondo, -borde)`; el éxito flotante usa `color/tinta` + `color/blanco` |
 
 *(Se deja como plantilla: se completa/ajusta con lo que realmente se termine usando en cada componente a medida que avanzan las etapas.)*
 

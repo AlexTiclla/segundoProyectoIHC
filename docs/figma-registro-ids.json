@@ -1,0 +1,61 @@
+{
+  "archivo": "https://www.figma.com/design/Pq8Q35LoYXwrKROyiItaCe/Mascota-Dia",
+  "fileKey": "Pq8Q35LoYXwrKROyiItaCe",
+  "etapasCompletas": ["etapa-0", "etapa-1"],
+  "paginas": {
+    "00 · Portada": "0:1",
+    "01 · Fundaciones": "9:2",
+    "02 · Componentes": "9:3",
+    "03 · Flujo 1 · Landing": "9:4",
+    "04 · Flujo 2 · Autenticación": "9:5",
+    "05 · Flujo 3 · Mascotas": "9:6",
+    "06 · Flujo 4 · Historial": "9:7",
+    "07 · Flujo 5 · Compartir": "9:8",
+    "08 · Flujo 6 · Analítica": "9:9",
+    "09 · Flujo 7 · Mi cuenta": "9:10"
+  },
+  "colecciones": { "Color": "VariableCollectionId:10:2", "Color/modo Claro": "10:0" },
+  "variables": {
+    "color/fondo": "VariableID:10:3",
+    "color/blanco": "VariableID:10:4",
+    "color/menta-claro": "VariableID:10:5",
+    "color/menta": "VariableID:10:6",
+    "color/arena": "VariableID:10:7",
+    "color/contorno": "VariableID:10:8",
+    "color/grisazulado": "VariableID:10:9",
+    "color/menta-oscuro": "VariableID:10:10",
+    "color/menta-profundo": "VariableID:10:11",
+    "color/tinta": "VariableID:10:12",
+    "color/velo": "VariableID:10:13",
+    "color/peligro": "VariableID:10:14",
+    "color/peligro-profundo": "VariableID:10:15",
+    "color/peligro-suave": "VariableID:10:16",
+    "color/peligro-fondo": "VariableID:10:17",
+    "color/peligro-borde": "VariableID:10:18",
+    "color/advertencia": "VariableID:10:19",
+    "color/advertencia-suave": "VariableID:10:20",
+    "color/advertencia-fondo": "VariableID:10:21",
+    "color/advertencia-borde": "VariableID:10:22",
+    "color/exito": "VariableID:10:23",
+    "color/exito-suave": "VariableID:10:24",
+    "color/exito-fondo": "VariableID:10:25",
+    "color/exito-borde": "VariableID:10:26"
+  },
+  "estilosTexto": {
+    "tipografia/titulo-1": "S:9fe56e7b88cab575f2275911d283b812d08007db,",
+    "tipografia/titulo-2": "S:e9c1fc9fffcfeb55fbb9f7caddce436d8d9a1361,",
+    "tipografia/titulo-3": "S:459a8eb376055d751b4fdd80b3a0c75967fc672c,",
+    "tipografia/titulo-4": "S:7cbda267a36b9f0d6a6efecc4c4c48fd2db4a69f,",
+    "tipografia/cuerpo": "S:414a5b11b64102d2b423aa28dd92d38b1ec98047,",
+    "tipografia/cuerpo-medio": "S:7311ffe697015444d5c66c17076037444a90e8a2,",
+    "tipografia/boton": "S:04ed07fc871aabb02b0b4dbc9b75cfa826906af9,",
+    "tipografia/etiqueta": "S:4464836375589169987179ee82c9b93ffe85b65e,",
+    "tipografia/ayuda": "S:bb5200eb6c07180f1ba669eed372bd03cf7350ae,"
+  },
+  "nodos": {
+    "Logo (component set)": "11:19",
+    "Logo · Versión=Completo": "11:2",
+    "Logo · Versión=Ícono": "11:11",
+    "Lámina Fundaciones": "13:2"
+  }
+}
