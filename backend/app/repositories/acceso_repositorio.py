@@ -1,6 +1,6 @@
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
-from app.models.acceso import Acceso, ACEPTADO, PENDIENTE
+from app.models.acceso import Acceso, ACEPTADO, PENDIENTE, REVOCADO
 
 
 def crear(session: Session, propietario_id: int, invitado_id: int, permiso: str) -> Acceso:
@@ -60,3 +60,15 @@ def cambiar_estado(session: Session, acceso: Acceso, estado: str) -> Acceso:
     session.commit()
     session.refresh(acceso)
     return acceso
+
+
+# Al eliminar una cuenta: revoca tanto lo que compartió como lo que recibió.
+# No se borra ningún acceso, igual que al revocar uno solo.
+def revocar_todos_de_usuario(session: Session, usuario_id: int) -> None:
+    consulta = select(Acceso).where(
+        or_(Acceso.propietario_id == usuario_id, Acceso.invitado_id == usuario_id),
+        Acceso.estado.in_([PENDIENTE, ACEPTADO]),
+    )
+    for acceso in session.scalars(consulta).all():
+        acceso.estado = REVOCADO
+    session.commit()

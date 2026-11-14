@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import String
+from sqlalchemy import Boolean, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.base_datos import Base
 from app.utilidades import ahora_utc
@@ -14,6 +14,9 @@ class Usuario(Base):
     codigo_recuperacion_hash: Mapped[str|None] = mapped_column(String(100),default=None)
     codigo_expira_en: Mapped[datetime|None] = mapped_column(default=None)
     creado_en: Mapped[datetime] = mapped_column(default=ahora_utc)
+    # Se anonimiza en vez de borrarse: los cuidados y accesos ya creados conservan la fila.
+    eliminado: Mapped[bool] = mapped_column(Boolean, default=False)
+    eliminado_en: Mapped[datetime|None] = mapped_column(default=None)
 
     # relacion
     mascotas = relationship(

@@ -10,9 +10,13 @@ import Boton from "./Boton";
 import CampoTexto from "./CampoTexto";
 import MensajeError from "./MensajeError";
 
-type Props = { cuentaCreada?: boolean; sesionVencida?: boolean };
+type Props = { cuentaCreada?: boolean; sesionVencida?: boolean; cuentaEliminada?: boolean };
 
-export default function FormularioIngreso({ cuentaCreada = false, sesionVencida = false }: Props) {
+export default function FormularioIngreso({
+  cuentaCreada = false,
+  sesionVencida = false,
+  cuentaEliminada = false,
+}: Props) {
   const router = useRouter();
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -58,6 +62,14 @@ export default function FormularioIngreso({ cuentaCreada = false, sesionVencida 
           className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900"
         >
           Tu sesión venció. Ingresa de nuevo para continuar.
+        </p>
+      )}
+      {cuentaEliminada && (
+        <p
+          role="status"
+          className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900"
+        >
+          Tu cuenta fue eliminada. Los accesos compartidos quedaron revocados.
         </p>
       )}
       <MensajeError mensaje={errorGeneral} />
