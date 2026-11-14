@@ -5,7 +5,7 @@ export default function MensajeError({ mensaje }: Props) {
   return (
     <p
       role="alert"
-      className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700"
+      className="rounded-lg border border-peligro-borde bg-peligro-fondo p-3 text-sm text-peligro"
     >
       {mensaje}
     </p>

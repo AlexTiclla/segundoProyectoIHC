@@ -10,6 +10,24 @@
   --color-menta-oscuro: #2f7f6b;
   --color-menta-profundo: #266857;
   --color-tinta: #27323a;
+  --color-blanco: #ffffff;
+  --color-velo: rgb(0 0 0 / 0.4); /* fondo detrás de los diálogos */
+
+  /* Estados. Mismos nombres que las variables color/* de Figma. */
+  --color-peligro: #c10007;
+  --color-peligro-profundo: #9f0712;
+  --color-peligro-suave: #ffe2e2;
+  --color-peligro-fondo: #fef2f2;
+  --color-peligro-borde: #ffa2a2;
+  --color-advertencia: #7b3306;
+  --color-advertencia-suave: #fef3c6;
+  --color-advertencia-fondo: #fffbeb;
+  --color-advertencia-borde: #ffd230;
+  --color-exito: #006045;
+  --color-exito-suave: #dcfce7;
+  --color-exito-fondo: #ecfdf5;
+  --color-exito-borde: #5ee9b5;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
