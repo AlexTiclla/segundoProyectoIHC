@@ -125,7 +125,7 @@ Se eligieron 11 para tener margen sobre el mínimo de 10. Cada fila es la futura
 | # | Componente en Figma | Archivo de código | Variantes | Estados |
 |---|---|---|---|---|
 | 1 | Botón | `Boton.tsx` | primario / secundario / texto / peligro | reposo / hover / enfocado / deshabilitado / cargando |
-| 2 | Campo de texto | `CampoTexto.tsx` | texto / email / password (con mostrar‑ocultar) / fecha / número | reposo / enfocado / con ayuda / con error / deshabilitado |
+| 2 | Campo de texto | `CampoTexto.tsx` | booleano `Contraseña` (botón Mostrar); los demás `tipo` se ven igual | reposo / enfocado / con ayuda / con error / deshabilitado |
 | 3 | Campo de selección | `CampoSeleccion.tsx` | con opción "otro" / sin ella | reposo / con error / "otro" expandido (campo de texto visible) |
 | 4 | Chip | `Chip.tsx` | único | no seleccionado / seleccionado / hover / enfocado |
 | 5 | Insignia de estado *(nuevo, formaliza el objeto `estado` inline de `TarjetaMascota.tsx:44-63`)* | `TarjetaMascota.tsx` (a extraer) | — | pendiente (`advertencia`) / vencido (`peligro`) / realizado (`exito`) / omitido (`neutral`) |
@@ -176,7 +176,30 @@ Cada etapa es acumulativa y cierra con un commit propio y, cuando aplica, una ca
 
 Esta etapa por sí sola, si no se avanza nada más, ya cubre "paleta y tipografía iguales a las del proyecto" y "logo" del rubro — es la de mayor prioridad si el tiempo aprieta.
 
-### Etapa 2 — Primeros componentes + checkpoint del 17/11 (Clase 23)
+### Etapa 2 — Primeros componentes + checkpoint del 17/11 (Clase 23) — ✅ completada 14/11
+
+**Resultado:**
+- **Corrección de fidelidad:** el proyecto usa **Tailwind v4**, cuya paleta está en `oklch` y no coincide con los hex de v3 que se usaron en la Etapa 1 (`red-700` es `#c10007` en v4, no `#b91c1c`). Se convirtieron a sRGB los valores reales de `node_modules/tailwindcss/theme.css` y se corrigieron 13 variables y la lámina de Fundaciones. Así Figma y el navegador muestran exactamente el mismo color.
+- **Nuevas variables `Dimensiones`** (11): `espacio/1,2,3,4,6,8`, `radio/lg,xl,2xl,full` y `tamano/control-min` (44 px, el `min-h-11` de todos los controles). Su `codeSyntax` apunta a las variables reales de Tailwind v4 (`calc(var(--spacing) * 4)`, `var(--radius-lg)`).
+- **Nuevo estilo** `tipografia/enlace` (SemiBold 16/24 subrayado), para el botón de variante texto y los enlaces en línea.
+- **5 componentes en la página `02 · Componentes`**, con relleno, borde, padding, separación, radio, alto mínimo y anillo de foco enlazados a variables:
+
+  | Componente | Variantes | Propiedades | Notas |
+  |---|---|---|---|
+  | Botón | Variante (primario, secundario, texto, peligro) × Estado (reposo, hover, enfocado, deshabilitado, cargando) = **20** | `Texto`, `Texto cargando` (= props `texto`/`textoCargando`) | Anillo de foco = `:focus-visible` de `globals.css` (2 px `menta-profundo` con 2 px de separación) |
+  | Chip | Estado (reposo, hover, enfocado, seleccionado) = **4** | `Texto` | Seleccionado añade ✓, no depende solo del color |
+  | Insignia de estado | Estado (pendiente, vencido, realizado, omitido) = **4** | `Días pendiente`, `Días vencido` | Textos de días = `textoDias()` de `lib/fechas.ts` |
+  | Campo de texto | Estado (reposo, enfocado, ayuda, error, deshabilitado) = **5** | `Etiqueta`, `Valor`, `Ayuda`, `Error`, booleano `Contraseña` | `tipo` del código no se modela como variante: la única diferencia visual es el botón Mostrar (booleano) |
+  | Campo de selección | Estado (reposo, enfocado, error, otro) = **4** | `Etiqueta`, `Valor`, `Error` | "otro" anida una instancia real del Campo de texto, igual que el código |
+- **Lecciones de construcción con el MCP**, para las etapas siguientes:
+  1. En un set de variantes, los textos enlazados a la misma propiedad se sincronizan entre variantes (incluido el subrayado). Si el texto varía por variante, se usa una propiedad por variante o un estilo de texto distinto.
+  2. `resize()` deja el eje en `FIXED`; hay que volver a poner `AUTO` después.
+  3. La sombra con `spread` (anillo de foco) necesita "clip content" en el nodo y no puede tener contenedores padre que recorten.
+- **Código:** 15 tokens nuevos en `frontend/app/globals.css`. La pantalla **Mi cuenta** quedó sin colores fijos (13 usos migrados en `Boton`, `BarraSuperior`, `PanelCuenta`, `Dialogo` y `MensajeError`). Verificado en el navegador con estilos computados, más `tsc` y `lint`.
+- **Inventario:** [`docs/inventario-interfaz.md`](inventario-interfaz.md), con 7 inconsistencias de color, 4 de tipografía, 6 de componentes, y formas/elevación.
+
+**Plan original de la etapa** (se mantiene como referencia):
+
 Objetivo explícito del checkpoint: inventario + archivo de tokens con una pantalla sin colores fijos + un componente completo en Figma. Se hace de más (varios componentes, no solo uno) para llegar con margen:
 
 1. **En Figma:** construir los componentes 1–5 de §4 (Botón, Campo de texto, Campo de selección, Chip, Insignia de estado) con todas sus variantes/estados como *component properties*, usando las variables de la Etapa 1 (nada de hex sueltos dentro del componente).

@@ -1,7 +1,7 @@
 {
   "archivo": "https://www.figma.com/design/Pq8Q35LoYXwrKROyiItaCe/Mascota-Dia",
   "fileKey": "Pq8Q35LoYXwrKROyiItaCe",
-  "etapasCompletas": ["etapa-0", "etapa-1"],
+  "etapasCompletas": ["etapa-0", "etapa-1", "etapa-2"],
   "paginas": {
     "00 · Portada": "0:1",
     "01 · Fundaciones": "9:2",
@@ -14,7 +14,25 @@
     "08 · Flujo 6 · Analítica": "9:9",
     "09 · Flujo 7 · Mi cuenta": "9:10"
   },
-  "colecciones": { "Color": "VariableCollectionId:10:2", "Color/modo Claro": "10:0" },
+  "colecciones": {
+    "Color": "VariableCollectionId:10:2",
+    "Color/modo Claro": "10:0",
+    "Dimensiones": "VariableCollectionId:16:17",
+    "Dimensiones/modo Valor": "16:0"
+  },
+  "variablesDimensiones": {
+    "espacio/1": "VariableID:16:18",
+    "espacio/2": "VariableID:16:19",
+    "espacio/3": "VariableID:16:20",
+    "espacio/4": "VariableID:16:21",
+    "espacio/6": "VariableID:16:22",
+    "espacio/8": "VariableID:16:23",
+    "radio/lg": "VariableID:16:24",
+    "radio/xl": "VariableID:16:25",
+    "radio/2xl": "VariableID:16:26",
+    "radio/full": "VariableID:16:27",
+    "tamano/control-min": "VariableID:16:28"
+  },
   "variables": {
     "color/fondo": "VariableID:10:3",
     "color/blanco": "VariableID:10:4",
@@ -50,12 +68,24 @@
     "tipografia/cuerpo-medio": "S:7311ffe697015444d5c66c17076037444a90e8a2,",
     "tipografia/boton": "S:04ed07fc871aabb02b0b4dbc9b75cfa826906af9,",
     "tipografia/etiqueta": "S:4464836375589169987179ee82c9b93ffe85b65e,",
-    "tipografia/ayuda": "S:bb5200eb6c07180f1ba669eed372bd03cf7350ae,"
+    "tipografia/ayuda": "S:bb5200eb6c07180f1ba669eed372bd03cf7350ae,",
+    "tipografia/enlace": "S:b51b848f9973accf890958f3a0a6fc019a9923f8,"
   },
   "nodos": {
     "Logo (component set)": "11:19",
     "Logo · Versión=Completo": "11:2",
     "Logo · Versión=Ícono": "11:11",
-    "Lámina Fundaciones": "13:2"
+    "Lámina Fundaciones": "13:2",
+    "Fila tipografia/enlace (lámina)": "26:17",
+    "Botón (component set)": "17:42",
+    "Bloque · Botón": "17:43",
+    "Chip (component set)": "20:11",
+    "Bloque · Chip": "20:12",
+    "Insignia de estado (component set)": "20:29",
+    "Bloque · Insignia de estado": "20:30",
+    "Campo de texto (component set)": "21:29",
+    "Bloque · Campo de texto": "21:30",
+    "Campo de selección (component set)": "21:99",
+    "Bloque · Campo de selección": "21:100"
   }
 }
