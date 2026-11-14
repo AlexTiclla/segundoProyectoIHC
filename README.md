@@ -76,3 +76,11 @@ El frontend utiliza la siguiente variable de entorno:
 * `URL_BASE`
 
 Esta variable debe configurarse en el archivo `.env`, tomando como referencia el archivo `.env-ejemplo`.
+
+## SISTEMA DE DISEÑO
+
+* **Figma:** [Mascota Dia](https://www.figma.com/design/Pq8Q35LoYXwrKROyiItaCe/Mascota-Dia): portada, fundaciones (logo, paleta, tipografía, sombras), 11 componentes con variantes y estados, y las pantallas de los 7 flujos armadas con esos componentes.
+* **Tokens en el código:** `frontend/app/globals.css` (bloque `@theme inline`), con los mismos nombres que las variables de Figma (`color/peligro` ↔ `--color-peligro`). Ninguna pantalla usa colores fijos.
+* **Tabla componente ↔ archivo:** [docs/tabla-componentes.md](docs/tabla-componentes.md).
+* **Inventario de interfaz e inconsistencias:** [docs/inventario-interfaz.md](docs/inventario-interfaz.md).
+* **Plan y registro de construcción:** [docs/plan-sistema-diseno-figma.md](docs/plan-sistema-diseno-figma.md).
