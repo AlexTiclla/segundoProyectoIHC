@@ -13,7 +13,7 @@ export default function TarjetaAcceso({ titulo, children }: Props) {
       <Link href="/" className="self-center text-lg font-bold text-menta-profundo">
         Mascota al Día
       </Link>
-      <div className="flex flex-col gap-6 rounded-2xl border border-arena bg-white p-6 shadow-sm">
+      <div className="flex flex-col gap-6 rounded-2xl border border-arena bg-blanco p-6 shadow-sm">
         <h1 className="text-2xl font-bold">{titulo}</h1>
         {children}
       </div>

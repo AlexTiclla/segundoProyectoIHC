@@ -65,7 +65,7 @@ export default function FormularioOmitir({
       />
 
       {error && (
-        <p role="alert" className="text-red-700">
+        <p role="alert" className="text-peligro">
           {error}
         </p>
       )}

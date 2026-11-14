@@ -83,7 +83,7 @@ export default function PanelAccesos() {
 
       <MensajeError mensaje={error} />
 
-      <form onSubmit={enviar} noValidate className="flex flex-col gap-4 rounded-xl border border-arena bg-white p-4">
+      <form onSubmit={enviar} noValidate className="flex flex-col gap-4 rounded-xl border border-arena bg-blanco p-4">
         <CampoTexto
           id="correoInvitado"
           etiqueta="Correo de la persona"
@@ -111,7 +111,7 @@ export default function PanelAccesos() {
         {enviados.length === 0 && <p className="text-grisazulado">Todavía no has invitado a nadie.</p>}
         <ul className="flex flex-col gap-3 text-left">
           {enviados.map((acceso) => (
-            <li key={acceso.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-arena bg-white p-4 shadow-sm">
+            <li key={acceso.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-arena bg-blanco p-4 shadow-sm">
               <div className="min-w-0">
                 <p className="break-words font-semibold">{acceso.invitadoNombre}</p>
                 <p className="break-words text-sm text-grisazulado">{acceso.invitadoCorreo}</p>
@@ -138,7 +138,7 @@ export default function PanelAccesos() {
         {recibidos.length === 0 && <p className="text-grisazulado">No tienes invitaciones.</p>}
         <ul className="flex flex-col gap-3 text-left">
           {recibidos.map((acceso) => (
-            <li key={acceso.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-arena bg-white p-4 shadow-sm">
+            <li key={acceso.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-arena bg-blanco p-4 shadow-sm">
               <div className="min-w-0">
                 <p className="break-words font-semibold">{acceso.propietarioNombre}</p>
                 <p className="text-sm">

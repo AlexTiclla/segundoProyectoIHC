@@ -53,8 +53,8 @@ export default function CampoSeleccion({
           onChange={(evento) => alElegir(evento.target.value)}
           aria-invalid={errorSelect ? true : undefined}
           aria-describedby={errorSelect ? `${id}-error` : ayuda ? `${id}-ayuda` : undefined}
-          className={`min-h-11 w-full rounded-lg border bg-white px-3 py-2 text-tinta ${
-            errorSelect ? "border-red-600" : "border-contorno"
+          className={`min-h-11 w-full rounded-lg border bg-blanco px-3 py-2 text-tinta ${
+            errorSelect ? "border-peligro" : "border-contorno"
           }`}
         >
           {!coincidencia && !escribiendo && <option value="">Elige una opción</option>}
@@ -71,7 +71,7 @@ export default function CampoSeleccion({
           </p>
         )}
         {errorSelect && (
-          <p id={`${id}-error`} className="text-sm text-red-700">
+          <p id={`${id}-error`} className="text-sm text-peligro">
             {errorSelect}
           </p>
         )}

@@ -45,10 +45,10 @@ export default function PanelHistorial() {
 
       <MensajeError mensaje={error} />
 
-      {cargando && <p className="rounded-xl border border-arena bg-white p-6">Cargando historial...</p>}
+      {cargando && <p className="rounded-xl border border-arena bg-blanco p-6">Cargando historial...</p>}
 
       {!cargando && !error && registros.length === 0 && (
-        <p className="rounded-xl border border-arena bg-white p-6 text-grisazulado">
+        <p className="rounded-xl border border-arena bg-blanco p-6 text-grisazulado">
           Todavía no hay acciones registradas.
         </p>
       )}
@@ -56,7 +56,7 @@ export default function PanelHistorial() {
       {!cargando && !error && registros.length > 0 && (
         <ol className="flex flex-col gap-3 text-left">
           {registros.map((registro) => (
-            <li key={registro.id} className="rounded-xl border border-arena bg-white p-4 shadow-sm">
+            <li key={registro.id} className="rounded-xl border border-arena bg-blanco p-4 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-bold text-menta-profundo">
                   {etiquetas[registro.tipoAccion] ?? registro.tipoAccion}

@@ -85,7 +85,7 @@ export default function FormularioRecuperar() {
   if (paso === "listo") {
     return (
       <div className="flex flex-col gap-4">
-        <p role="status" className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-emerald-800">
+        <p role="status" className="rounded-lg border border-exito-borde bg-exito-fondo p-3 text-exito">
           Contraseña actualizada. Ya puedes ingresar con la nueva.
         </p>
         <Boton texto="Ir a ingresar" href="/ingresar" />
@@ -97,7 +97,7 @@ export default function FormularioRecuperar() {
     return (
       <form onSubmit={cambiar} noValidate className="flex w-full flex-col gap-4">
         {codigoGenerado ? (
-          <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+          <div className="rounded-lg border border-advertencia-borde bg-advertencia-fondo p-3 text-sm text-advertencia">
             <p>Simulación: como no se envía correo real, tu código es:</p>
             <p className="mt-1 text-2xl font-bold tracking-widest">{codigoGenerado}</p>
             <p className="mt-1">Vence en pocos minutos.</p>

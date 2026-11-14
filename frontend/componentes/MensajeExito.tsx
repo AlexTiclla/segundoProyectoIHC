@@ -6,7 +6,7 @@ export default function MensajeExito({ mensaje }: Props) {
   return (
     <p
       role="status"
-      className="fixed inset-x-4 bottom-4 z-20 mx-auto max-w-md rounded-lg bg-tinta p-4 text-sm font-medium text-white shadow-lg"
+      className="fixed inset-x-4 bottom-4 z-20 mx-auto max-w-md rounded-lg bg-tinta p-4 text-sm font-medium text-blanco shadow-lg"
     >
       {mensaje}
     </p>

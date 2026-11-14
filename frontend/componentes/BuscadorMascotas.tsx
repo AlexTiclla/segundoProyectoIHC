@@ -44,7 +44,7 @@ export default function BuscadorMascotas({
             value={filtros.nombre}
             onChange={(e) => alCambiar({ ...filtros, nombre: e.target.value })}
             placeholder="Escribe un nombre..."
-            className="min-h-11 w-full rounded-lg border border-contorno bg-white px-3 py-2 text-tinta"
+            className="min-h-11 w-full rounded-lg border border-contorno bg-blanco px-3 py-2 text-tinta"
           />
         </div>
 
@@ -54,7 +54,7 @@ export default function BuscadorMascotas({
           aria-expanded={mostrarFiltros}
           aria-controls={idPanelFiltros}
           onClick={alAlternarFiltros}
-          className="flex min-h-11 shrink-0 items-center gap-2 rounded-lg border border-contorno bg-white px-3 py-2 font-semibold hover:bg-menta-claro lg:hidden"
+          className="flex min-h-11 shrink-0 items-center gap-2 rounded-lg border border-contorno bg-blanco px-3 py-2 font-semibold hover:bg-menta-claro lg:hidden"
         >
           Filtros{cantidadEnPanel > 0 && ` (${cantidadEnPanel})`}
           <span aria-hidden="true">{mostrarFiltros ? "▲" : "▼"}</span>

@@ -32,7 +32,7 @@ export default function FiltrosMascotas({ id, filtros, alCambiar, errorRango, mo
     <section
       id={id}
       aria-label="Filtros de cuidados"
-      className={`${mostrar ? "flex" : "hidden"} flex-col gap-6 rounded-xl border border-arena bg-white p-4 lg:flex ${clase}`}
+      className={`${mostrar ? "flex" : "hidden"} flex-col gap-6 rounded-xl border border-arena bg-blanco p-4 lg:flex ${clase}`}
     >
       <GrupoChips
         etiqueta="Tipo de cuidado"

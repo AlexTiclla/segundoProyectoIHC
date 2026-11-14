@@ -30,16 +30,16 @@ export default function PanelAnalitica() {
 
       <MensajeError mensaje={error} />
 
-      {cargando && <p className="rounded-xl border border-arena bg-white p-6">Cargando analítica...</p>}
+      {cargando && <p className="rounded-xl border border-arena bg-blanco p-6">Cargando analítica...</p>}
 
       {!cargando && !error && resumen && (
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-xl border border-arena bg-white p-6">
+          <div className="rounded-xl border border-arena bg-blanco p-6">
             <p className="text-sm font-semibold text-grisazulado">cuidado_abierto</p>
             <p className="text-4xl font-bold text-tinta">{resumen.iniciados}</p>
             <p className="text-sm text-grisazulado">cuidados creados</p>
           </div>
-          <div className="rounded-xl border border-arena bg-white p-6">
+          <div className="rounded-xl border border-arena bg-blanco p-6">
             <p className="text-sm font-semibold text-grisazulado">cuidado_completado</p>
             <p className="text-4xl font-bold text-tinta">{resumen.completados}</p>
             <p className="text-sm text-grisazulado">marcados como realizados</p>

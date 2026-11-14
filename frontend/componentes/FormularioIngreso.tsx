@@ -51,7 +51,7 @@ export default function FormularioIngreso({
       {cuentaCreada && (
         <p
           role="status"
-          className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-800"
+          className="rounded-lg border border-exito-borde bg-exito-fondo p-3 text-sm text-exito"
         >
           Cuenta creada. Ahora inicia sesión.
         </p>
@@ -59,7 +59,7 @@ export default function FormularioIngreso({
       {sesionVencida && (
         <p
           role="status"
-          className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900"
+          className="rounded-lg border border-advertencia-borde bg-advertencia-fondo p-3 text-sm text-advertencia"
         >
           Tu sesión venció. Ingresa de nuevo para continuar.
         </p>
@@ -67,7 +67,7 @@ export default function FormularioIngreso({
       {cuentaEliminada && (
         <p
           role="status"
-          className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900"
+          className="rounded-lg border border-advertencia-borde bg-advertencia-fondo p-3 text-sm text-advertencia"
         >
           Tu cuenta fue eliminada. Los accesos compartidos quedaron revocados.
         </p>

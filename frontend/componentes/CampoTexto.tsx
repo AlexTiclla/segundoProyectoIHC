@@ -51,8 +51,8 @@ export default function CampoTexto({
           disabled={deshabilitado}
           aria-invalid={error ? true : undefined}
           aria-describedby={idDescripcion}
-          className={`min-h-11 w-full rounded-lg border bg-white px-3 py-2 text-tinta disabled:cursor-not-allowed disabled:bg-neutral-100 disabled:text-neutral-600 ${
-            error ? "border-red-600" : "border-contorno"
+          className={`min-h-11 w-full rounded-lg border bg-blanco px-3 py-2 text-tinta disabled:cursor-not-allowed disabled:bg-fondo disabled:text-grisazulado ${
+            error ? "border-peligro" : "border-contorno"
           } ${esContrasena ? "pr-20" : ""}`}
         />
         {esContrasena && (
@@ -71,7 +71,7 @@ export default function CampoTexto({
         </p>
       )}
       {error && (
-        <p id={`${id}-error`} className="text-sm text-red-700">
+        <p id={`${id}-error`} className="text-sm text-peligro">
           {error}
         </p>
       )}
