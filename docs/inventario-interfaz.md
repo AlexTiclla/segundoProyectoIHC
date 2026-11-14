@@ -24,7 +24,7 @@ Los valores de los tokens nuevos son los hex sRGB de la paleta `oklch` de **Tail
 
 | # | Inconsistencia | Dónde | Resolución |
 |---|---|---|---|
-| T1 | No hay escala tipográfica nombrada: cada pantalla elige su clase (`text-sm` ×52, `text-2xl` ×7, `text-lg` ×5, `text-xl` ×4…) | todo el frontend | 10 estilos `tipografia/*` en Figma (Geist), cada uno anotado con su clase Tailwind |
+| T1 | No hay escala tipográfica nombrada: cada pantalla elige su clase (`text-sm` ×52, `text-2xl` ×7, `text-lg` ×5, `text-xl` ×4…) | todo el frontend | 15 estilos `tipografia/*` en Figma (Geist), cada uno anotado con su clase Tailwind |
 | T2 | Los H1 no son iguales entre pantallas: 4 usan `text-2xl sm:text-3xl`, 2 solo `text-2xl` (Mi cuenta y la tarjeta de acceso) | `app/cuenta/page.tsx`, `TarjetaAcceso.tsx` vs. los paneles | Pendiente: unificar en `titulo-2` al ensamblar las pantallas (Etapa 4) |
 | T3 | `Geist Mono` se carga en `layout.tsx` y nunca se usa | `app/layout.tsx`, `globals.css` | Fuera del sistema; candidato a quitarse para ahorrar una descarga de fuente |
 | T4 | "Mostrar/Ocultar" de la contraseña es el único texto `text-sm font-medium` | `CampoTexto.tsx` | En Figma: estilo `ayuda` con peso Medium |
@@ -68,6 +68,32 @@ Comprobación:
 
 Como `Boton`, `Dialogo`, `MensajeError` y `BarraSuperior` son compartidos, la migración ya alcanza también a esas piezas en el resto de pantallas.
 
-## 3. Lo que queda (Etapa 5)
+## 3. Resto de la app (Etapa 5) — resuelto 14/11
 
-Quedan **56 clases de color crudo en 17 archivos**. Los que más tienen son `TarjetaMascota.tsx` (11), `FormularioIngreso.tsx` (9), `FormularioRecuperar.tsx` (6) y `CampoTexto.tsx` (5); el resto son sobre todo `bg-white`. Todos tienen ya su token destino en la tabla 1.1.
+Las **56 clases de color crudo que quedaban en 17 archivos** se reemplazaron por tokens según la tabla 1.1. `grep` sobre `frontend/app` y `frontend/componentes` ya no encuentra ningún color fijo ni hex.
+
+Comprobación en el navegador con `getComputedStyle`:
+
+| Elemento | Estilo computado | Token |
+|---|---|---|
+| Aviso "sesión vencida" | borde `#ffd230`, fondo `#fffbeb`, texto `#7b3306` | `advertencia-*` |
+| Aviso "cuenta creada" | borde `#5ee9b5`, fondo `#ecfdf5`, texto `#006045` | `exito-*` |
+| Campos con error del formulario de mascota | borde y mensaje `#c10007` (antes `red-600` y `red-700`) | `peligro` |
+| Insignia "Pendiente" | fondo `#fef3c6`, texto `#7b3306` | `advertencia-suave`, `advertencia` |
+| Tarjeta de mascota | fondo `#ffffff`, borde `#dde3e0` | `blanco`, `arena` |
+| Aviso flotante | fondo `#27323a`, texto `#ffffff` | `tinta`, `blanco` |
+
+Además:
+- `npx tsc --noEmit`, `npm run lint` (0 errores) y `npm run build` correctos.
+- E2E en chromium: 58 pasan y 2 se omiten. Un fallo de `cuidados-compartidos.spec.ts` por tiempo de espera desapareció al repetirlo aislado (6/6 pasan), así que es inestabilidad bajo carga y no un cambio visual.
+
+Cambios visibles **intencionales** por unificar la paleta:
+- El borde de los campos con error pasa de `red-600` a `peligro` (`red-700`).
+- El texto de la insignia Vencido pasa de `red-900` a `peligro-profundo` (`red-800`), y el de Realizado de `green-900` a `exito` (`emerald-800`).
+- Omitido y el campo deshabilitado usan `arena`/`tinta` y `fondo`/`grisazulado` en lugar de los grises `neutral-*`.
+
+### 3.1 Inconsistencia nueva encontrada al diseñar las pantallas
+
+| # | Inconsistencia | Dónde | Estado |
+|---|---|---|---|
+| C8 | Las dos tarjetas de Mi cuenta tienen borde `contorno` (el del borde de los campos), mientras que todas las demás tarjetas usan `arena` | `PanelCuenta.tsx` | Documentada; en Figma se respeta tal cual está en el código. Candidata a unificar con `arena`. |
