@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.base_datos import obtener_sesion
 from app.config import configuracion
 from app.dependencias import obtener_usuario_actual
+from app.errores import ErrorDeNegocio
 from app.models.usuario import Usuario
 from app.schemas.cuenta import MisDatosSalida
 from app.schemas.usuario import (
@@ -40,6 +41,7 @@ def ingresar(
         value=crear_token(usuario.id),
         max_age=configuracion.minutos_sesion * 60,
         httponly=True,
+        secure=configuracion.cookie_segura,
         samesite="lax",
         path="/",
     )
@@ -53,12 +55,23 @@ def yo(usuario: Usuario = Depends(obtener_usuario_actual)):
 
 @router.post("/salir", response_model=MensajeSalida)
 def salir(respuesta: Response):
-    respuesta.delete_cookie(key=configuracion.nombre_cookie, path="/")
+    respuesta.delete_cookie(
+        key=configuracion.nombre_cookie,
+        path="/",
+        httponly=True,
+        secure=configuracion.cookie_segura,
+        samesite="lax",
+    )
     return {"mensaje": "Sesión cerrada"}
 
 
 @router.post("/recuperar", response_model=RecuperarSalida)
 def recuperar(datos: RecuperarEntrada, sesion: Session = Depends(obtener_sesion)):
+    if not configuracion.recuperacion_simulada:
+        raise ErrorDeNegocio(
+            "La recuperacion de contrasena no esta disponible. Contacta al administrador.",
+            503,
+        )
     codigo = auth_servicio.solicitar_recuperacion(sesion, datos.correo)
     return {
         "mensaje": "Si el correo existe, se generó un código de recuperación",
@@ -101,5 +114,11 @@ def eliminar_cuenta(
     usuario: Usuario = Depends(obtener_usuario_actual),
 ):
     cuenta_servicio.eliminar_cuenta(sesion, usuario.id)
-    respuesta.delete_cookie(key=configuracion.nombre_cookie, path="/")
+    respuesta.delete_cookie(
+        key=configuracion.nombre_cookie,
+        path="/",
+        httponly=True,
+        secure=configuracion.cookie_segura,
+        samesite="lax",
+    )
     return {"mensaje": "Tu cuenta fue eliminada"}
