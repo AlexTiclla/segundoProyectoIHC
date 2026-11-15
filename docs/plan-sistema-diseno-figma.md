@@ -288,6 +288,16 @@ Cada pantalla se arma **insertando instancias** de los componentes de la Etapa 2
 **Resultado:**
 - **Página `00 · Portada`**: resume el sistema en una sola vista: logo, las 24 variables de color, la escala tipográfica, una instancia de cada uno de los 11 componentes con su archivo `.tsx`, el índice de los 7 flujos con su cantidad de pantallas y los enlaces a la documentación del repo.
 - **Lámina de Fundaciones** completada con los 15 estilos de texto y la sección de sombras.
+- **Espaciado en la portada**, después de Tipografía: 6 rectángulos con ancho y alto enlazados a su variable. El nombre de la variable no cambia, para conservar la equivalencia con las clases de Tailwind; las tallas se muestran como rótulo:
+
+  | Talla | Valor | Variable | Clase de Tailwind |
+  |---|---|---|---|
+  | xs | 4 px | `espacio/1` | `p-1` |
+  | s | 8 px | `espacio/2` | `p-2` |
+  | m | 12 px | `espacio/3` | `p-3` |
+  | l | 16 px | `espacio/4` | `p-4` |
+  | xl | 24 px | `espacio/6` | `p-6` |
+  | 2xl | 32 px | `espacio/8` | `p-8` |
 - **Revisión visual** de cada página con capturas. Se corrigieron: el botón apretado en la tarjeta, el recorte del anillo de foco, el conteo de estilos de la portada y los textos sin enlazar del Campo de selección.
 - **Queda en manos del grupo** (no es trabajo de diseño): ensayar la explicación del sistema, cerrar el repositorio antes del miércoles 18/11 a las 23:59 y enviar el usuario de prueba a `bjvtamayo78@gmail.com`.
 
