@@ -1,7 +1,7 @@
 /**
  * Tarea 9 — pruebas E2E para SQLite local.
  * Guardar en: tests/cuidados-vencidos.spec.ts
- * Requiere: backend y frontend activos, backend/.env con URL_BASE_DATOS=sqlite:///./mascotas.db
+ * Requiere: la base SQLite que levanta playwright.config.ts (E2E_RUTA_SQLITE, por defecto backend/e2e.db)
  * Cada prueba crea su propia cuenta y cuidado. Solo modifica la fecha de ese cuidado.
  * NO ejecutar contra bases de datos compartidas o de producción.
  */
@@ -47,7 +47,10 @@ async function encontrarId(page: Page, nombre: string): Promise<number> {
 // Simula el paso del tiempo solo para la fila creada por esta prueba.
 function marcarComoVencido(id: number, diasAtras = 2): void {
   const raiz = process.cwd();
-  const base = path.join(raiz, "backend", "mascotas.db");
+  const base = path.join(
+    raiz,
+    process.env.E2E_RUTA_SQLITE ?? path.join("backend", "e2e.db"),
+  );
   const python = path.join(
     raiz,
     "backend",
