@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './base';
 
 import {
   abrirMenu,
@@ -156,4 +156,36 @@ test('Ana cancela al eliminar y el cuidado sigue en la lista', async ({ page }, 
 
   await expect(page.getByRole('dialog')).toBeHidden();
   await expect(page.getByRole('heading', { name: nombre })).toBeVisible();
+});
+
+test('Ana escribe una especie que no está en la lista y la conserva al editar', async ({ page }, testInfo) => {
+  const nombre = `Copito${textoUnico(testInfo)}`;
+  await entrarConCuentaNueva(page, testInfo);
+
+  await page.getByRole('button', { name: 'Agregar mascota' }).click();
+  await page.getByLabel('Nombre').fill(nombre);
+  await page.getByLabel('Especie', { exact: true }).selectOption('Otra (escribirla)');
+  await page.getByLabel('Especie: escribe cuál').fill('Hurón');
+  await page.getByLabel('Cuidado', { exact: true }).selectOption('Vacuna');
+  await page.getByLabel('Fecha del cuidado').fill(fechaConDias(0));
+  await page.getByRole('button', { name: 'Crear mascota' }).click();
+  await expect(tarjeta(page, nombre)).toContainText('Hurón');
+
+  // Al editar, la especie propia aparece ya escrita en su campo de texto
+  await abrirMenu(page, nombre, 'Editar');
+  await expect(page.getByLabel('Especie', { exact: true })).toHaveValue('__otro__');
+  await expect(page.getByLabel('Especie: escribe cuál')).toHaveValue('Hurón');
+});
+
+test('Un cuidado realizado solo ofrece eliminarlo en su menú', async ({ page }, testInfo) => {
+  const nombre = `Luna${textoUnico(testInfo)}`;
+  await entrarConCuentaNueva(page, testInfo);
+  await agregarMascota(page, nombre);
+  await tarjeta(page, nombre).getByRole('button', { name: 'Marcar como realizado' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Marcar como realizado' }).click();
+  await expect(tarjeta(page, nombre).getByText('Realizado', { exact: true })).toBeVisible();
+
+  await tarjeta(page, nombre).getByRole('button', { name: /^Más acciones/ }).click();
+  await expect(tarjeta(page, nombre).getByRole('button', { name: 'Eliminar' })).toBeVisible();
+  await expect(tarjeta(page, nombre).getByRole('button', { name: /responsable/ })).toHaveCount(0);
 });

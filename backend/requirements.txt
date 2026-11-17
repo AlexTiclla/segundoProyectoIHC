@@ -4,9 +4,12 @@ annotated-types==0.8.0
 anyio==4.15.1
 bcrypt==5.0.0
 certifi==2026.7.22
+chardet==7.7.0
 click==8.5.0
 colorama==0.4.6
+coverage==7.17.3
 detect-installer==0.2.1
+diff_cover==11.0.2
 dnspython==2.8.0
 email-validator==2.3.0
 fastapi==0.142.2

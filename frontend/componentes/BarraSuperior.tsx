@@ -17,7 +17,7 @@ const enlaces = [
 
 export default function BarraSuperior({ nombreUsuario, actual }: Props) {
   return (
-    <header className="border-b border-arena bg-white">
+    <header className="border-b border-arena bg-blanco">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
         <Link href="/inicio" className="text-lg font-bold text-menta-profundo">
           Mascota al Día

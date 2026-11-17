@@ -3,12 +3,19 @@ from fastapi.responses import JSONResponse
 
 from app import models
 from app.base_datos import Base, motor
+from app.config import configuracion
 from app.errores import ErrorDeNegocio
 from app.routers import acceso, analitica, auth, historial, mascota
 from app.models.evento import Evento
 Base.metadata.create_all(bind=motor)
 
-app = FastAPI(title="Mascota al Dia")
+documentacion_habilitada = configuracion.entorno != "produccion"
+app = FastAPI(
+    title="Mascota al Dia",
+    docs_url="/docs" if documentacion_habilitada else None,
+    redoc_url="/redoc" if documentacion_habilitada else None,
+    openapi_url="/openapi.json" if documentacion_habilitada else None,
+)
 app.include_router(auth.router)
 app.include_router(mascota.router)
 app.include_router(historial.router)

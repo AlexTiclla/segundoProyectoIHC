@@ -43,22 +43,22 @@ export default function TarjetaMascota({
 
   let estado = {
     texto: `Pendiente · ${textoDias(dias)}`,
-    color: "bg-amber-100 text-amber-900",
+    color: "bg-advertencia-suave text-advertencia",
   };
   if (realizado) {
     estado = {
       texto: "Realizado",
-      color: "bg-green-100 text-green-900",
+      color: "bg-exito-suave text-exito",
     };
   } else if (omitido) {
     estado = {
       texto: "Omitido",
-      color: "bg-neutral-200 text-neutral-800",
+      color: "bg-arena text-tinta",
     };
   } else if (atrasado) {
     estado = {
       texto: `Vencido · ${textoDias(dias)}`,
-      color: "bg-red-100 text-red-900",
+      color: "bg-peligro-suave text-peligro-profundo",
     };
   }
 
@@ -84,8 +84,8 @@ export default function TarjetaMascota({
   return (
     <article
       className={`flex h-full flex-col gap-3 rounded-xl border p-4 text-left shadow-sm ${
-        atrasado ? "border-red-300" : "border-arena"
-      } ${finalizado ? "bg-neutral-50" : "bg-white"}`}
+        atrasado ? "border-peligro-borde" : "border-arena"
+      } ${finalizado ? "bg-fondo" : "bg-blanco"}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">

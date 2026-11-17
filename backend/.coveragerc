@@ -1,0 +1,8 @@
+# Cobertura del backend mientras corre la suite e2e (ver playwright.config.ts)
+[run]
+source = app
+# uvicorn se detiene con una señal al terminar las pruebas: guardar los datos igual
+sigterm = true
+
+[report]
+show_missing = true

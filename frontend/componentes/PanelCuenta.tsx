@@ -36,7 +36,7 @@ export default function PanelCuenta() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-2xl border border-contorno bg-white p-4 sm:p-6">
+      <section className="rounded-2xl border border-contorno bg-blanco p-4 sm:p-6">
         <h2 className="mb-2 text-lg font-bold">Descargar mis datos</h2>
         <p className="mb-4 text-sm text-grisazulado">
           Incluye tu perfil, tus mascotas, tu historial de acciones y los accesos que
@@ -48,7 +48,7 @@ export default function PanelCuenta() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-contorno bg-white p-4 sm:p-6">
+      <section className="rounded-2xl border border-contorno bg-blanco p-4 sm:p-6">
         <h2 className="mb-2 text-lg font-bold">Eliminar cuenta</h2>
         <p className="mb-4 text-sm text-grisazulado">
           Elimina tu acceso a Mascota al Día de forma permanente.

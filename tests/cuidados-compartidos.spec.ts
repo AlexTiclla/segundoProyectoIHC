@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import { test, expect } from "./base";
 
 import {
   abrirComo,
@@ -185,4 +186,31 @@ test("Quien consulta no modifica y solo Ana administra los accesos", async ({
       .filter({ hasText: "No puedes compartir tus cuidados contigo mismo" }),
   ).toBeVisible();
   await expect(page.getByText("Estado: Aceptado")).toHaveCount(2);
+});
+
+test("Juan rechaza la invitación y no ve los cuidados de Ana", async ({
+  page,
+  browser,
+}, testInfo) => {
+  const nombre = `Luna${textoUnico(testInfo)}`;
+  await entrarConCuentaNueva(page, testInfo);
+  const juan = await abrirComo(browser, testInfo, "Juan Gestor");
+  await agregarMascota(page, nombre);
+  await page.getByRole("link", { name: "Compartir" }).click();
+  await invitar(page, juan.cuenta.correo, "Gestión");
+
+  await juan.page.goto("/compartir");
+  await fila(juan.page, "Ana Prueba")
+    .getByRole("button", { name: "Rechazar" })
+    .click();
+  await expect(juan.page.getByText("Invitación rechazada")).toBeVisible();
+  await expect(fila(juan.page, "Ana Prueba")).toContainText("Estado: Rechazado");
+  await expect(
+    fila(juan.page, "Ana Prueba").getByRole("button", { name: "Aceptar" }),
+  ).toBeHidden();
+
+  await juan.page.goto("/inicio");
+  await expect(juan.page.getByText("Aún no tienes mascotas.")).toBeVisible();
+  await page.reload();
+  await expect(fila(page, "Juan Gestor")).toContainText("Estado: Rechazado");
 });

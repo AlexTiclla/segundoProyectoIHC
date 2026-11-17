@@ -135,7 +135,7 @@ export default function PanelMascotas() {
     if (mascotas.length === 0) {
       const hayFiltros = filtrosActivos(filtros).length > 0;
       return (
-        <div className="rounded-xl border border-arena bg-white p-6">
+        <div className="rounded-xl border border-arena bg-blanco p-6">
           <p className="font-semibold">
             {hayFiltros
               ? "Ningún cuidado coincide con los filtros."

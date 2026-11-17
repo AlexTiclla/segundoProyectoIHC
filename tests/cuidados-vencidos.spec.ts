@@ -1,17 +1,19 @@
 /**
  * Tarea 9 — pruebas E2E para SQLite local.
  * Guardar en: tests/cuidados-vencidos.spec.ts
- * Requiere: backend y frontend activos, backend/.env con URL_BASE_DATOS=sqlite:///./mascotas.db
+ * Requiere: la base SQLite que levanta playwright.config.ts (E2E_RUTA_SQLITE, por defecto backend/e2e.db)
  * Cada prueba crea su propia cuenta y cuidado. Solo modifica la fecha de ese cuidado.
  * NO ejecutar contra bases de datos compartidas o de producción.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { expect, test, type Page } from "@playwright/test";
+import { type Page } from "@playwright/test";
+import { expect, test } from "./base";
 
 import {
   agregarMascota,
+  crearCuidadoPorApi,
   entrarConCuentaNueva,
   fechaConDias,
   tarjeta,
@@ -47,7 +49,10 @@ async function encontrarId(page: Page, nombre: string): Promise<number> {
 // Simula el paso del tiempo solo para la fila creada por esta prueba.
 function marcarComoVencido(id: number, diasAtras = 2): void {
   const raiz = process.cwd();
-  const base = path.join(raiz, "backend", "mascotas.db");
+  const base = path.join(
+    raiz,
+    process.env.E2E_RUTA_SQLITE ?? path.join("backend", "e2e.db"),
+  );
   const python = path.join(
     raiz,
     "backend",
@@ -65,7 +70,7 @@ function marcarComoVencido(id: number, diasAtras = 2): void {
   const codigo = [
     "import sqlite3, sys",
     "bd, ident, fecha = sys.argv[1], int(sys.argv[2]), sys.argv[3]",
-    "conexion = sqlite3.connect(bd)",
+    "conexion = sqlite3.connect(bd, timeout=30)",
     'cursor = conexion.execute("UPDATE mascotas SET fecha_cuidado = ?, fecha_base = ? WHERE id = ? AND estado = ?", (fecha, fecha, ident, "pendiente"))',
     'assert cursor.rowcount == 1, "No se actualizó exactamente un cuidado pendiente"',
     "conexion.commit()",
@@ -171,4 +176,75 @@ test("Tarea 9: realizado tarde registra hoy y mantiene la siguiente fecha planea
   expect(siguiente).toHaveLength(1);
   // Fecha planeada original: hace 2 días; cada 7 días => dentro de 5 días.
   expect(siguiente[0].fecha_cuidado).toBe(fechaConDias(5));
+});
+
+test("omitir un cuidado recurrente vencido deja programada su siguiente fecha", async ({
+  page,
+}, testInfo) => {
+  const nombre = `OmitirSerie${textoUnico(testInfo)}`;
+  await entrarConCuentaNueva(page, testInfo);
+  const id = await crearCuidadoPorApi(page, {
+    nombre,
+    cuidado: "Baño",
+    intervalo_cantidad: 7,
+    intervalo_unidad: "dias",
+  });
+  marcarComoVencido(id, 2);
+  await page.reload();
+
+  await tarjeta(page, nombre)
+    .getByRole("button", { name: "Omitir con motivo" })
+    .click();
+  await page.getByLabel("Motivo de omisión").fill("Estuvimos de viaje");
+  await page.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(page.getByText(`Se omitió el cuidado de ${nombre}`)).toBeVisible();
+
+  // La serie sigue: fecha planeada hace 2 días, cada 7 días => dentro de 5 días
+  const lista = (await (await page.request.get("/api/mascotas")).json()) as MascotaApi[];
+  const siguiente = lista.filter(
+    (item) => item.nombre === nombre && item.estado === "pendiente",
+  );
+  expect(siguiente).toHaveLength(1);
+  expect(siguiente[0].fecha_cuidado).toBe(fechaConDias(5));
+});
+
+test("omitir pide un motivo de verdad y muestra el error si el servidor falla", async ({
+  page,
+}, testInfo) => {
+  const nombre = `OmitirError${textoUnico(testInfo)}`;
+  await entrarConCuentaNueva(page, testInfo);
+  const id = await crearCuidadoPorApi(page, { nombre });
+  marcarComoVencido(id);
+  await page.reload();
+  await tarjeta(page, nombre)
+    .getByRole("button", { name: "Omitir con motivo" })
+    .click();
+  const dialogo = page.getByRole("dialog");
+
+  // Solo espacios no cuenta como motivo
+  await dialogo.getByLabel("Motivo de omisión").fill("   ");
+  await dialogo.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(
+    dialogo.getByRole("alert").filter({ hasText: "Debes indicar el motivo de la omisión." }),
+  ).toBeVisible();
+
+  await page.route("**/api/mascotas/*/omitir", (peticion) =>
+    peticion.fulfill({ status: 500, json: { detail: "No se pudo guardar la omisión" } }),
+  );
+  await dialogo.getByLabel("Motivo de omisión").fill("No pude ir");
+  await dialogo.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(
+    dialogo.getByRole("alert").filter({ hasText: "No se pudo guardar la omisión" }),
+  ).toBeVisible();
+
+  // Una respuesta sin datos tampoco se da por buena
+  await page.unroute("**/api/mascotas/*/omitir");
+  await page.route("**/api/mascotas/*/omitir", (peticion) =>
+    peticion.fulfill({ status: 200, json: null }),
+  );
+  await dialogo.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(
+    dialogo.getByRole("alert").filter({ hasText: "No se pudo omitir el cuidado." }),
+  ).toBeVisible();
+  expect((await obtenerCuidado(page, id)).estado).toBe("pendiente");
 });

@@ -29,7 +29,7 @@ export default function Dialogo({ titulo, alCerrar, children }: Props) {
       ref={dialogo}
       aria-labelledby={idTitulo}
       onClose={alCerrar}
-      className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl bg-white p-6 text-tinta shadow-xl backdrop:bg-black/40"
+      className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-2xl bg-blanco p-6 text-tinta shadow-xl backdrop:bg-velo"
     >
       <h2 id={idTitulo} className="mb-4 text-xl font-bold">
         {titulo}

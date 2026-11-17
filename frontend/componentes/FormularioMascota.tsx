@@ -152,7 +152,7 @@ export default function FormularioMascota({ mascotaEditar, alGuardar, alCancelar
         />
       )}
 
-      <div className="sticky bottom-0 z-10 -mx-2 flex flex-wrap justify-end gap-2 border-t border-arena bg-white px-2 py-3 shadow-sm">
+      <div className="sticky bottom-0 z-10 -mx-2 flex flex-wrap justify-end gap-2 border-t border-arena bg-blanco px-2 py-3 shadow-sm">
         <Boton
           texto="Cancelar"
           variante="secundario"

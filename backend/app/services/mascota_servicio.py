@@ -9,6 +9,7 @@ from app.repositories import acceso_repositorio as repo_acceso
 from app.repositories import mascota_repositorio as repo
 from app.repositories import usuario_repositorio as repo_usuario
 from app.services import historial_servicio
+from app.utilidades import hoy_local
 from datetime import date
 
 PROPIETARIO = "propietario"
@@ -60,8 +61,8 @@ def _validar_intervalo(cantidad:int|None, unidad:str|None):
 def crear_mascota(session:Session, datos: MascotaEntrada, usuario_id: int):
     usuario = repo_usuario.buscar_por_id(session,usuario_id)
     if usuario is None:
-        raise ErrorDeNegocio("No se encontró el usuario",404)
-    if datos.fecha_cuidado < date.today():
+        raise ErrorDeNegocio("No se encontró el usuario",404)  # pragma: no cover - obtener_usuario_actual ya responde 401 si la cuenta no existe o está eliminada
+    if datos.fecha_cuidado < hoy_local():
         raise ErrorDeNegocio("La fecha del cuidado no puede ser anterior a hoy",400)
     _validar_intervalo(datos.intervalo_cantidad,datos.intervalo_unidad)
     mascota = repo.crear(session,datos.nombre,datos.sexo,datos.especie,datos.cuidado,datos.fecha_cuidado,usuario_id,datos.intervalo_cantidad,datos.intervalo_unidad)
@@ -80,7 +81,7 @@ def crear_mascota(session:Session, datos: MascotaEntrada, usuario_id: int):
 def listar_mascotas(session:Session, usuario_id: int):
     usuario = repo_usuario.buscar_por_id(session,usuario_id)
     if usuario is None:
-        raise ErrorDeNegocio("No se encontró el usuario",404)
+        raise ErrorDeNegocio("No se encontró el usuario",404)  # pragma: no cover - obtener_usuario_actual ya responde 401 si la cuenta no existe o está eliminada
     return _con_permiso(session,repo.buscar_por_usuario(session,usuario_id),usuario_id)
 
 def actualizar_mascota(session:Session, mascota_id:int, datos: MascotaActualizada, usuario_id: int):
@@ -144,7 +145,7 @@ def reprogramar_cuidado(session:Session,mascota_id:int,usuario_id:int,nueva_fech
     mascota = _obtener_con_permiso(session,mascota_id,usuario_id,PUEDEN_GESTIONAR)
     if(mascota.estado != "pendiente"):
         raise ErrorDeNegocio("Este cuidado ya fue realizado, por eso no se puede reprogramar",400)
-    if nueva_fecha < date.today():
+    if nueva_fecha < hoy_local():
         raise ErrorDeNegocio("La nueva fecha no puede ser anterior a hoy", 400)
     fecha_anterior = mascota.fecha_cuidado
     if nueva_fecha == fecha_anterior:
@@ -176,7 +177,7 @@ def reprogramar_cuidado(session:Session,mascota_id:int,usuario_id:int,nueva_fech
 def filtrar_mascotas(session:Session,usuario_id:int,nombre:str|None=None,estado:str|None=None,tipo_cuidado:str|None=None,fecha_desde:date|None=None,fecha_hasta:date|None=None):
     usuario = repo_usuario.buscar_por_id(session,usuario_id)
     if usuario is None:
-        raise ErrorDeNegocio("No se encontró el usuario",404)
+        raise ErrorDeNegocio("No se encontró el usuario",404)  # pragma: no cover - obtener_usuario_actual ya responde 401 si la cuenta no existe o está eliminada
     if fecha_desde and fecha_hasta and fecha_desde > fecha_hasta:
         raise ErrorDeNegocio("La fecha inicial no puede ser posterior a la fecha final",400)
     mascotas = repo.filtrar_por_usuario(session,usuario_id,nombre,estado,tipo_cuidado,fecha_desde,fecha_hasta)
@@ -233,7 +234,7 @@ def omitir_cuidado(
 
     # Si no se indica el motivo, entonces no se puede omitir.
     if not motivo:
-        raise ErrorDeNegocio(
+        raise ErrorDeNegocio(  # pragma: no cover - MascotaOmitir ya rechaza con 422 un motivo vacío o de solo espacios
             "Debes indicar el motivo de la omisión",
             400
         )

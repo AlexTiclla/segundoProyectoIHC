@@ -14,10 +14,10 @@ type Props = {
 };
 
 const estilos = {
-  primario: "bg-menta-oscuro text-white hover:bg-menta-profundo",
-  secundario: "border border-contorno bg-white text-tinta hover:bg-menta-claro",
+  primario: "bg-menta-oscuro text-blanco hover:bg-menta-profundo",
+  secundario: "border border-contorno bg-blanco text-tinta hover:bg-menta-claro",
   texto: "text-menta-profundo underline hover:bg-menta-claro",
-  peligro: "bg-red-700 text-white hover:bg-red-800",
+  peligro: "bg-peligro text-blanco hover:bg-peligro-profundo",
 };
 
 export default function Boton({

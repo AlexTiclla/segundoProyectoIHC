@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.models.acceso import Acceso, ACEPTADO
 from app.models.mascota import Mascota, REALIZADO
 from app.models.reprogramacion import Reprogramacion
+from app.utilidades import hoy_local
 
 
 # Los cuidados propios y los de quienes compartieron su lista con este usuario
@@ -109,7 +110,7 @@ def marcar_realizada(
 def _registrar_realizacion(mascota: Mascota, usuario_id: int) -> None:
     mascota.estado = REALIZADO
     mascota.realizado_por_id = usuario_id
-    mascota.realizado_en = date.today()
+    mascota.realizado_en = hoy_local()
 
 
 # Un solo commit: el cuidado no puede quedar realizado sin su siguiente ocurrencia.

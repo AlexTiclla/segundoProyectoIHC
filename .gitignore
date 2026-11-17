@@ -5,6 +5,7 @@
 .env
 .env.*
 !.env-ejemplo
+!.env.deploy.example
 *.pem
 *.key
 *.p12
@@ -20,6 +21,9 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Datos crudos de la cobertura e2e (tests/cobertura/correr.mjs)
+/cobertura/
 
 # Registros
 *.log
@@ -40,3 +44,6 @@ desktop.ini
 /CLAUDE.local.md
 .claude/
 /clase-19-feedback-a-otro-proyecto/feedback.md
+docs/plan-10.md
+docs/plan-sistema-diseno-figma.md
+docs/figma-registro-ids.json

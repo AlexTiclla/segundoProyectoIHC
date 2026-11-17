@@ -63,7 +63,7 @@ export default function MenuAcciones({ etiqueta, opciones }: Props) {
       {abierto && (
         <div
           id={idMenu}
-          className="absolute right-0 top-12 z-10 min-w-44 overflow-hidden rounded-lg border border-arena bg-white shadow-lg"
+          className="absolute right-0 top-12 z-10 min-w-44 overflow-hidden rounded-lg border border-arena bg-blanco shadow-lg"
         >
           {opciones.map((opcion, indice) => (
             <button
@@ -76,7 +76,7 @@ export default function MenuAcciones({ etiqueta, opciones }: Props) {
               }}
               className={`flex min-h-11 w-full items-center whitespace-nowrap px-4 text-left font-semibold ${
                 opcion.peligrosa
-                  ? `${indice > 0 ? "border-t border-arena " : ""}text-red-700 hover:bg-red-50`
+                  ? `${indice > 0 ? "border-t border-arena " : ""}text-peligro hover:bg-peligro-fondo`
                   : "text-tinta hover:bg-menta-claro"
               }`}
             >

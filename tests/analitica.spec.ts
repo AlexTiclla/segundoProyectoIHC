@@ -1,4 +1,5 @@
-import { test, expect, type Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
+import { test, expect } from './base';
 
 import { agregarMascota, entrarConCuentaNueva, tarjeta, textoUnico } from './ayudantes';
 
