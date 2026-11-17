@@ -136,6 +136,15 @@ El resto de los archivos del fork ya está al 100 %.
 
 **Criterio de salida:** `diff-cover --fail-under=100` termina con código 0.
 
+**Resultado (16/11): cumplido. 100 % del diff (1 106 líneas, 0 faltantes).**
+
+- 30 pruebas nuevas por navegador (de 61 a 91): `reglas-negocio.spec.ts`, `errores-servidor.spec.ts`, `filtros.spec.ts` y casos agregados en `cuidados`, `cuidados-vencidos`, `cuidados-compartidos` y `cuenta`.
+- Dos problemas de medición corregidos en `tests/base.ts`:
+  - un documento nuevo descarta los contadores de V8 del anterior, así que se guarda lo medido antes de cada `goto`/`reload`;
+  - la redirección por sesión vencida (`window.location.assign`) se retiene una vez con un `beforeunload` para poder guardar.
+- diff-cover cuenta como faltante una línea con una rama sin ejecutar. Por eso se probaron también los mensajes genéricos (`e instanceof ErrorApi ? … : "…"`) con respuestas de datos inesperados.
+- Exclusiones justificadas (detalle en `evidencias/pruebas-e2e-cobertura.md`): 5 comprobaciones de "usuario no encontrado" que `obtener_usuario_actual` vuelve inalcanzables, el motivo vacío de omitir que el esquema ya rechaza, y las páginas estáticas `registro` y `recuperar`, que solo se ejecutan en `next build`.
+
 ### Fase 4 — Reporte en el repo y evidencia
 
 1. **Scripts en `package.json`** (raíz):
@@ -153,6 +162,13 @@ El resto de los archivos del fork ya está al 100 %.
    - capturas del reporte de Playwright y de `diff-cover`;
    - lista de exclusiones justificadas, si las hay.
 4. Actualizar el `README.md` con la sección de pruebas e2e y cobertura.
+
+**Resultado (16/11): cumplido.**
+
+- `pnpm test:e2e` deja el reporte de Playwright en `docs/reportes/e2e`.
+- `pnpm cobertura` copia `diff-cover.html`/`.md`, la cobertura de frontend y la de backend a `docs/reportes/cobertura` (sin el `.gitignore` que coverage.py pone en su HTML).
+- Índice en `docs/reportes/README.md`, evidencia en `evidencias/pruebas-e2e-cobertura.md` y sección nueva en `README.md`.
+- Pendiente: capturas de los reportes para la evidencia, si el docente las pide.
 
 ## 4. Riesgos
 

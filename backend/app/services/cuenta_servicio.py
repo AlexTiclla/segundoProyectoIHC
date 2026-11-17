@@ -16,7 +16,7 @@ from app.services import acceso_servicio, historial_servicio
 def exportar_datos(session: Session, usuario_id: int) -> MisDatosSalida:
     usuario = repo_usuario.buscar_por_id(session, usuario_id)
     if usuario is None:
-        raise ErrorDeNegocio("No se encontró el usuario", 404)
+        raise ErrorDeNegocio("No se encontró el usuario", 404)  # pragma: no cover - obtener_usuario_actual ya responde 401 si la cuenta no existe o está eliminada
     return MisDatosSalida(
         perfil=usuario,
         mascotas=repo_mascota.buscar_todas_por_propietario(session, usuario_id),
@@ -84,7 +84,7 @@ def exportar_datos_csv(session: Session, usuario_id: int) -> str:
 def eliminar_cuenta(session: Session, usuario_id: int) -> None:
     usuario = repo_usuario.buscar_por_id(session, usuario_id)
     if usuario is None or usuario.eliminado:
-        raise ErrorDeNegocio("No se encontró la cuenta", 404)
+        raise ErrorDeNegocio("No se encontró la cuenta", 404)  # pragma: no cover - obtener_usuario_actual ya responde 401 si la cuenta no existe o está eliminada
     repo_acceso.revocar_todos_de_usuario(session, usuario_id)
     contrasena_irrecuperable = hashear_contrasena(secrets.token_hex(32))
     repo_usuario.anonimizar(session, usuario, contrasena_irrecuperable)

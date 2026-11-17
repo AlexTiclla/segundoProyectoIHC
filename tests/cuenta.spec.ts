@@ -1,10 +1,14 @@
+import { readFile } from "node:fs/promises";
+
 import { test, expect } from "./base";
 
 import {
   abrirComo,
   agregarMascota,
   compartirCon,
+  crearCuidadoPorApi,
   entrarConCuentaNueva,
+  fechaConDias,
   tarjeta,
 } from "./ayudantes";
 
@@ -103,4 +107,42 @@ test("los cuidados que realizó un invitado conservan «Usuario eliminado» como
     .getByRole("button", { name: "Realizados" })
     .click();
   await expect(tarjeta(page, nombre)).toContainText("Realizado por Usuario eliminado");
+});
+
+test("Ana descarga sus datos en CSV con su perfil, cuidados, historial y accesos", async ({
+  page,
+  browser,
+}, testInfo) => {
+  const ana = await entrarConCuentaNueva(page, testInfo);
+  const juan = await abrirComo(browser, testInfo, "Juan Gestor");
+  const eva = await abrirComo(browser, testInfo, "Eva Lectora");
+  await crearCuidadoPorApi(page, { nombre: "Luna" });
+  await compartirCon(page, juan, "gestion"); // acceso que Ana otorga
+  await compartirCon(eva.page, { page, cuenta: ana }, "consulta"); // acceso que Ana recibe
+
+  await page.getByRole("link", { name: "Mi cuenta" }).click();
+  const descarga = page.waitForEvent("download");
+  await page.getByRole("link", { name: "Descargar en CSV" }).click();
+  const archivo = await descarga;
+  expect(archivo.suggestedFilename()).toBe("mis-datos.csv");
+
+  const csv = await readFile(await archivo.path(), "utf-8");
+  for (const seccion of ["Perfil", "Mascotas", "Historial", "Accesos otorgados", "Accesos recibidos"]) {
+    expect(csv).toContain(`${seccion}\r\n`);
+  }
+  expect(csv).toContain(ana.correo);
+  expect(csv).toContain(`Luna,Perro,Vacuna,${fechaConDias(0)},pendiente`);
+  expect(csv).toContain(`Juan Gestor,${juan.cuenta.correo},gestion,aceptado`);
+  expect(csv).toContain("Eva Lectora,consulta,aceptado");
+});
+
+test("Ana se arrepiente de eliminar su cuenta: al cancelar no pasa nada", async ({ page }, testInfo) => {
+  await entrarConCuentaNueva(page, testInfo);
+  await page.getByRole("link", { name: "Mi cuenta" }).click();
+  await page.getByRole("button", { name: "Eliminar mi cuenta" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Cancelar" }).click();
+
+  await expect(page.getByRole("dialog")).toBeHidden();
+  await page.getByRole("link", { name: "Mascotas" }).click();
+  await expect(page.getByRole("heading", { name: "Mis mascotas" })).toBeVisible();
 });

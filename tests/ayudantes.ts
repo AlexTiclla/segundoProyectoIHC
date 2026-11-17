@@ -98,3 +98,20 @@ export async function compartirCon(propietario: Page, invitado: { page: Page; cu
   expect(respuesta.status()).toBe(200);
   return id as number;
 }
+
+type DatosCuidado = {
+  nombre: string;
+  cuidado?: string;
+  fecha?: string;
+  intervalo_cantidad?: number;
+  intervalo_unidad?: 'dias' | 'meses' | 'anios';
+};
+
+// Crea un cuidado directo por la API, para las pruebas que no son del formulario. Devuelve su id.
+export async function crearCuidadoPorApi(page: Page, { fecha = fechaConDias(0), ...datos }: DatosCuidado): Promise<number> {
+  const respuesta = await page.request.post('/api/mascotas', {
+    data: { sexo: 'Macho', especie: 'Perro', cuidado: 'Vacuna', fecha_cuidado: fecha, ...datos },
+  });
+  expect(respuesta.status()).toBe(201);
+  return (await respuesta.json()).id as number;
+}

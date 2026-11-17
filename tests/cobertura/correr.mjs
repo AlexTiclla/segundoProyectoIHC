@@ -4,8 +4,9 @@
 // 2. Frontend: une la cobertura del navegador y la del servidor de Next en un lcov.
 // 3. Backend: el lcov y el HTML de coverage.py.
 // 4. diff-cover: cobertura solo de las líneas que el fork cambió respecto de upstream/main.
+// 5. Copia los reportes a docs/reportes/cobertura, para que queden en el repo.
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdirSync, readFileSync, rmSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 
 import { MCR } from 'monocart-coverage-reports';
@@ -19,6 +20,7 @@ import {
 
 const PYTHON_BIN = path.join('backend', '.venv', 'bin');
 const RAMA_BASE = process.env.E2E_RAMA_BASE ?? 'upstream/main';
+const CARPETA_PUBLICADA = path.join('docs', 'reportes', 'cobertura');
 
 function ejecutar(comando, argumentos, opciones = {}) {
   console.log(`\n$ ${comando} ${argumentos.join(' ')}`);
@@ -83,7 +85,27 @@ const estadoDiff = ejecutar(path.join(PYTHON_BIN, 'diff-cover'), [
   `--compare-branch=${RAMA_BASE}`,
   '--fail-under=100',
   '--format',
-  `html:${path.join(CARPETA_COBERTURA, 'diff-cover.html')}`,
+  `html:${path.join(CARPETA_COBERTURA, 'diff-cover.html')},markdown:${path.join(CARPETA_COBERTURA, 'diff-cover.md')}`,
 ]);
+
+// 5. Publicar los reportes en el repo (docs/reportes/cobertura), salvo en una corrida
+// parcial (con argumentos extra), que no representa a toda la suite
+if (process.argv.length <= 2) {
+  rmSync(CARPETA_PUBLICADA, { recursive: true, force: true });
+  mkdirSync(CARPETA_PUBLICADA, { recursive: true });
+  for (const archivo of ['diff-cover.html', 'diff-cover.md']) {
+    cpSync(path.join(CARPETA_COBERTURA, archivo), path.join(CARPETA_PUBLICADA, archivo));
+  }
+  cpSync(opcionesFrontend.outputDir, path.join(CARPETA_PUBLICADA, 'frontend'), {
+    recursive: true,
+    filter: (origen) => !origen.includes(`${path.sep}.cache`),
+  });
+  cpSync(carpetaBackend, path.join(CARPETA_PUBLICADA, 'backend'), {
+    recursive: true,
+    // coverage.py deja un .gitignore con "*" en su HTML, que impediría subirlo
+    filter: (origen) => !origen.endsWith('.coverage') && path.basename(origen) !== '.gitignore',
+  });
+  console.log(`\nReportes publicados en ${CARPETA_PUBLICADA}/`);
+}
 
 process.exit(estadoPruebas || estadoBackend || estadoDiff || (sinMedir.length > 0 ? 1 : 0));

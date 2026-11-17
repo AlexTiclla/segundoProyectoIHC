@@ -1,7 +1,10 @@
+import path from 'node:path';
+
 import { defineConfig, devices } from '@playwright/test';
 
 import {
   ARCHIVO_COBERTURA_BACKEND,
+  CARPETA_COBERTURA,
   CARPETA_V8_SERVIDOR,
   coberturaActiva,
 } from './tests/cobertura/opciones.mjs';
@@ -26,14 +29,12 @@ process.env.E2E_RUTA_SQLITE = `backend/${BASE_E2E}`;
 const reutilizar = process.env.E2E_REUTILIZAR === '1';
 
 // Con E2E_COBERTURA=1 (ver tests/cobertura/correr.mjs) el backend corre bajo coverage.py
-// y el servidor de Next guarda su cobertura de V8. Ambos la escriben al detenerse, por eso
-// se detienen con SIGINT y no con SIGKILL, que es lo que usa Playwright por defecto.
+// y Next guarda su cobertura de V8, también al compilar: las páginas estáticas (registro,
+// recuperar) solo se ejecutan en "next build", que deja listo su HTML. Ambos servidores la
+// escriben al detenerse, por eso se detienen con SIGINT y no con SIGKILL (el de Playwright).
 const servidorBackend = coberturaActiva
   ? '.venv/bin/coverage run --rcfile=.coveragerc -m uvicorn'
   : '.venv/bin/uvicorn';
-const servidorFrontend = coberturaActiva
-  ? `NODE_V8_COVERAGE=../${CARPETA_V8_SERVIDOR} npm run start`
-  : 'npm run start';
 const detenerConGracia = { signal: 'SIGINT' as const, timeout: 30_000 };
 
 export default defineConfig({
@@ -46,8 +47,12 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Pocos workers: un solo backend con SQLite atiende a los tres navegadores */
   workers: process.env.CI ? 1 : 3,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  /* El reporte HTML de la suite completa queda en el repo (docs/reportes/e2e).
+     La corrida de cobertura es solo Chromium: deja el suyo aparte, sin pisarlo. */
+  reporter: [
+    ['list'],
+    ['html', { outputFolder: coberturaActiva ? `${CARPETA_COBERTURA}/playwright` : 'docs/reportes/e2e', open: 'never' }],
+  ],
   /* Los flujos con varias personas encadenan muchas acciones del servidor */
   timeout: 60_000,
   expect: { timeout: 10_000 },
@@ -94,7 +99,7 @@ export default defineConfig({
     },
     {
       // Compilación de producción en su propia carpeta, para no pisar la de "npm run dev"
-      command: `npm run build && ${servidorFrontend} -- --port ${PUERTO_FRONTEND}`,
+      command: `npm run build && npm run start -- --port ${PUERTO_FRONTEND}`,
       cwd: 'frontend',
       url: `http://localhost:${PUERTO_FRONTEND}/ingresar`,
       reuseExistingServer: reutilizar,
@@ -102,6 +107,7 @@ export default defineConfig({
       gracefulShutdown: detenerConGracia,
       env: {
         E2E_COBERTURA: coberturaActiva ? '1' : '0',
+        ...(coberturaActiva ? { NODE_V8_COVERAGE: path.resolve(CARPETA_V8_SERVIDOR) } : {}),
         URL_BASE: URL_BACKEND,
         NEXT_DIST_DIR: '.next-e2e',
       },

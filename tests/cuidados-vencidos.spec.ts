@@ -13,6 +13,7 @@ import { expect, test } from "./base";
 
 import {
   agregarMascota,
+  crearCuidadoPorApi,
   entrarConCuentaNueva,
   fechaConDias,
   tarjeta,
@@ -175,4 +176,75 @@ test("Tarea 9: realizado tarde registra hoy y mantiene la siguiente fecha planea
   expect(siguiente).toHaveLength(1);
   // Fecha planeada original: hace 2 días; cada 7 días => dentro de 5 días.
   expect(siguiente[0].fecha_cuidado).toBe(fechaConDias(5));
+});
+
+test("omitir un cuidado recurrente vencido deja programada su siguiente fecha", async ({
+  page,
+}, testInfo) => {
+  const nombre = `OmitirSerie${textoUnico(testInfo)}`;
+  await entrarConCuentaNueva(page, testInfo);
+  const id = await crearCuidadoPorApi(page, {
+    nombre,
+    cuidado: "Baño",
+    intervalo_cantidad: 7,
+    intervalo_unidad: "dias",
+  });
+  marcarComoVencido(id, 2);
+  await page.reload();
+
+  await tarjeta(page, nombre)
+    .getByRole("button", { name: "Omitir con motivo" })
+    .click();
+  await page.getByLabel("Motivo de omisión").fill("Estuvimos de viaje");
+  await page.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(page.getByText(`Se omitió el cuidado de ${nombre}`)).toBeVisible();
+
+  // La serie sigue: fecha planeada hace 2 días, cada 7 días => dentro de 5 días
+  const lista = (await (await page.request.get("/api/mascotas")).json()) as MascotaApi[];
+  const siguiente = lista.filter(
+    (item) => item.nombre === nombre && item.estado === "pendiente",
+  );
+  expect(siguiente).toHaveLength(1);
+  expect(siguiente[0].fecha_cuidado).toBe(fechaConDias(5));
+});
+
+test("omitir pide un motivo de verdad y muestra el error si el servidor falla", async ({
+  page,
+}, testInfo) => {
+  const nombre = `OmitirError${textoUnico(testInfo)}`;
+  await entrarConCuentaNueva(page, testInfo);
+  const id = await crearCuidadoPorApi(page, { nombre });
+  marcarComoVencido(id);
+  await page.reload();
+  await tarjeta(page, nombre)
+    .getByRole("button", { name: "Omitir con motivo" })
+    .click();
+  const dialogo = page.getByRole("dialog");
+
+  // Solo espacios no cuenta como motivo
+  await dialogo.getByLabel("Motivo de omisión").fill("   ");
+  await dialogo.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(
+    dialogo.getByRole("alert").filter({ hasText: "Debes indicar el motivo de la omisión." }),
+  ).toBeVisible();
+
+  await page.route("**/api/mascotas/*/omitir", (peticion) =>
+    peticion.fulfill({ status: 500, json: { detail: "No se pudo guardar la omisión" } }),
+  );
+  await dialogo.getByLabel("Motivo de omisión").fill("No pude ir");
+  await dialogo.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(
+    dialogo.getByRole("alert").filter({ hasText: "No se pudo guardar la omisión" }),
+  ).toBeVisible();
+
+  // Una respuesta sin datos tampoco se da por buena
+  await page.unroute("**/api/mascotas/*/omitir");
+  await page.route("**/api/mascotas/*/omitir", (peticion) =>
+    peticion.fulfill({ status: 200, json: null }),
+  );
+  await dialogo.getByRole("button", { name: "Confirmar omisión" }).click();
+  await expect(
+    dialogo.getByRole("alert").filter({ hasText: "No se pudo omitir el cuidado." }),
+  ).toBeVisible();
+  expect((await obtenerCuidado(page, id)).estado).toBe("pendiente");
 });

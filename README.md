@@ -77,6 +77,21 @@ El frontend utiliza la siguiente variable de entorno:
 
 Esta variable debe configurarse en el archivo `.env`, tomando como referencia el archivo `.env-ejemplo`.
 
+## PRUEBAS E2E Y COBERTURA
+
+Las pruebas e2e (Playwright) están en `tests/` y se corren desde la raíz con **pnpm**. Playwright levanta solo un backend (puerto 8100, con una base SQLite desechable) y un frontend de producción (puerto 3100), así que no hace falta tener los servidores de desarrollo encendidos.
+
+```bash
+pnpm install
+pnpm exec playwright install --with-deps
+pnpm test:e2e     # suite completa en Chromium, Firefox y WebKit
+pnpm cobertura    # suite en Chromium midiendo la cobertura del código del fork
+```
+
+`pnpm cobertura` necesita `coverage` y `diff_cover` en el entorno virtual del backend (están en `backend/requirements.txt`) y el remoto `upstream` con el repositorio original. Falla si el código que cambió el fork no queda cubierto al 100 %.
+
+Los reportes quedan en el repo, en [`docs/reportes/`](docs/reportes/README.md): el de Playwright, el de `diff-cover` y la cobertura completa de backend y frontend. El detalle está en [`evidencias/pruebas-e2e-cobertura.md`](evidencias/pruebas-e2e-cobertura.md).
+
 ## SISTEMA DE DISEÑO
 
 * **Figma:** [Mascota Dia](https://www.figma.com/design/Pq8Q35LoYXwrKROyiItaCe/Mascota-Dia): portada, fundaciones (logo, paleta, tipografía, sombras), 11 componentes con variantes y estados, y las pantallas de los 7 flujos armadas con esos componentes.
