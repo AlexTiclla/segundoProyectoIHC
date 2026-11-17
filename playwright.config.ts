@@ -62,6 +62,9 @@ export default defineConfig({
   /* Los flujos con varias personas encadenan muchas acciones del servidor */
   timeout: 60_000,
   expect: { timeout: 10_000 },
+  /* GitHub Actions (Ubuntu 24.04) dibuja algunos caracteres, como "✓", con otra fuente
+     del sistema: sus capturas de referencia van aparte, con el sufijo -ci */
+  snapshotPathTemplate: `{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{arg}{-projectName}{-snapshotSuffix}${process.env.CI ? '-ci' : ''}{ext}`,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: urlExterna ?? `http://localhost:${PUERTO_FRONTEND}`,

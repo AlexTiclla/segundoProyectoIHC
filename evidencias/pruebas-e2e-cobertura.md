@@ -87,6 +87,17 @@ Solo se excluyó código que las pruebas e2e **no pueden ejecutar**. Cada exclus
 - **Cobertura del diff:** 100 % (1 133 líneas, 0 faltantes) → [`docs/reportes/cobertura/diff-cover.md`](../docs/reportes/cobertura/diff-cover.md).
 - **Pruebas del backend (pytest):** 100/100 en verde.
 
+## Integración continua (GitHub Actions)
+
+El workflow `.github/workflows/playwright.yml` falló en todas sus corridas anteriores: ejecutaba `playwright test` sin backend ni frontend levantados (`ERR_CONNECTION_REFUSED` en `localhost:3000`). Ahora tiene dos trabajos:
+
+| Trabajo | Qué hace |
+|---|---|
+| Backend (pytest) | Python 3.13, instala `backend/requirements.txt` y corre pytest |
+| E2E (Playwright, 3 navegadores) | Crea `backend/.venv`, instala la raíz con pnpm y `frontend/` con npm, instala los navegadores y corre la suite; `playwright.config.ts` levanta solo sus servidores. Sube como artefacto el reporte (`docs/reportes/e2e`) y `test-results/` |
+
+Las capturas visuales tienen referencias propias para el CI (`*-ci.png`, ver `snapshotPathTemplate` en `playwright.config.ts`): Ubuntu 24.04 dibuja el "✓" con otra fuente del sistema y corre unos píxeles los botones, sin cambiar el diseño. Se generaron y verificaron en un contenedor Ubuntu 24.04 limpio (el sistema de `ubuntu-latest`) con `CI=true`.
+
 ## Integración con la rama de despliegue (`feat/deploy-aws-mascota-dia`)
 
 Se unió la rama de despliegue en AWS (Docker, Caddy, configuración segura de producción, zona horaria `America/La_Paz`, Next 16.4.6 y la fuente `geist`) para comprobar que no rompe la suite ni baja la cobertura.
