@@ -28,21 +28,25 @@ jobs:
     name: E2E (Playwright, 3 navegadores)
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    # Imagen oficial de Playwright (misma versión que pnpm-lock.yaml): trae los navegadores
+    # y las fuentes del sistema. Las capturas visuales *-ci.png se generan con esta misma
+    # imagen, así que el CI dibuja igual que ellas.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    # Corre como root: Firefox lo exige con HOME=/root
+    env:
+      HOME: /root
     steps:
     - uses: actions/checkout@v4
 
     # playwright.config.ts levanta el backend con backend/.venv y el frontend con
     # "npm run build && npm run start": los dos necesitan sus dependencias instaladas
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.13'
-        cache: pip
-        cache-dependency-path: backend/requirements.txt
+    - uses: astral-sh/setup-uv@v6
     - name: Backend (backend/.venv)
       working-directory: backend
       run: |
-        python -m venv .venv
-        .venv/bin/pip install -r requirements.txt
+        uv venv --python 3.13 .venv
+        uv pip install --python .venv -r requirements.txt
 
     # La versión de pnpm sale de "packageManager" en package.json
     - uses: pnpm/action-setup@v4
@@ -55,8 +59,6 @@ jobs:
     - name: Frontend
       working-directory: frontend
       run: npm ci
-    - name: Navegadores de Playwright
-      run: pnpm exec playwright install --with-deps
 
     - name: Correr las pruebas e2e
       run: pnpm exec playwright test

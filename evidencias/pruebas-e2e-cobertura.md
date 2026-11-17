@@ -94,9 +94,9 @@ El workflow `.github/workflows/playwright.yml` falló en todas sus corridas ante
 | Trabajo | Qué hace |
 |---|---|
 | Backend (pytest) | Python 3.13, instala `backend/requirements.txt` y corre pytest |
-| E2E (Playwright, 3 navegadores) | Crea `backend/.venv`, instala la raíz con pnpm y `frontend/` con npm, instala los navegadores y corre la suite; `playwright.config.ts` levanta solo sus servidores. Sube como artefacto el reporte (`docs/reportes/e2e`) y `test-results/` |
+| E2E (Playwright, 3 navegadores) | Corre dentro de la imagen oficial `mcr.microsoft.com/playwright:v1.64.1-noble` (navegadores y fuentes fijos). Crea `backend/.venv` con uv, instala la raíz con pnpm y `frontend/` con npm, instala los navegadores y corre la suite; `playwright.config.ts` levanta solo sus servidores. Sube como artefacto el reporte (`docs/reportes/e2e`) y `test-results/` |
 
-Las capturas visuales tienen referencias propias para el CI (`*-ci.png`, ver `snapshotPathTemplate` en `playwright.config.ts`): Ubuntu 24.04 dibuja el "✓" con otra fuente del sistema y corre unos píxeles los botones, sin cambiar el diseño. Se generaron y verificaron en un contenedor Ubuntu 24.04 limpio (el sistema de `ubuntu-latest`) con `CI=true`.
+Las capturas visuales tienen referencias propias para el CI (`*-ci.png`, ver `snapshotPathTemplate` en `playwright.config.ts`): Ubuntu 24.04 dibuja el "✓" con otra fuente del sistema y corre unos píxeles los botones, sin cambiar el diseño. Se generan con la misma imagen oficial de Playwright que usa el CI: un primer intento con un contenedor `ubuntu:24.04` genérico no coincidió con el runner de GitHub, que tiene otras fuentes instaladas. En esa imagen la suite completa pasa 273/273 con `CI=true`.
 
 ## Integración con la rama de despliegue (`feat/deploy-aws-mascota-dia`)
 
