@@ -62,7 +62,7 @@ export default defineConfig({
 
   webServer: [
     {
-      command: `rm -f ${BASE_E2E} && .venv/bin/uvicorn app.main:app --port ${PUERTO_BACKEND}`,
+      command: `rm -f ${BASE_E2E} ${BASE_E2E}-wal ${BASE_E2E}-shm && .venv/bin/uvicorn app.main:app --port ${PUERTO_BACKEND}`,
       cwd: 'backend',
       url: `${URL_BACKEND}/salud`,
       reuseExistingServer: reutilizar,

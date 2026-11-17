@@ -68,7 +68,7 @@ function marcarComoVencido(id: number, diasAtras = 2): void {
   const codigo = [
     "import sqlite3, sys",
     "bd, ident, fecha = sys.argv[1], int(sys.argv[2]), sys.argv[3]",
-    "conexion = sqlite3.connect(bd)",
+    "conexion = sqlite3.connect(bd, timeout=30)",
     'cursor = conexion.execute("UPDATE mascotas SET fecha_cuidado = ?, fecha_base = ? WHERE id = ? AND estado = ?", (fecha, fecha, ident, "pendiente"))',
     'assert cursor.rowcount == 1, "No se actualizó exactamente un cuidado pendiente"',
     "conexion.commit()",

@@ -50,6 +50,14 @@ Lo que falta:
 
 **Criterio de salida:** 3 corridas completas seguidas en los 3 navegadores con **0 fallos y 0 omitidas**.
 
+**Resultado (16/11): cumplido.** 3 corridas seguidas con 183/183 pruebas en verde (unos 2,9 min cada una). Lo que se hizo:
+
+- `webServer` en `playwright.config.ts`: backend en el puerto 8100 con `backend/e2e.db` (se borra al iniciar) y frontend de producción en el 3100, compilado en `frontend/.next-e2e` (`distDir` configurable en `next.config.ts`).
+- `E2E_SQLITE_LOCAL=1` y `E2E_RUTA_SQLITE` se definen en la configuración; `cuidados-vencidos.spec.ts` ya no tiene la ruta `mascotas.db` fija.
+- 3 workers, `expect.timeout` de 10 s, `timeout` de 60 s y trazas de las pruebas que fallan.
+- Las capturas de Firefox eran anteriores a los enlaces Compartir, Analítica y Mi cuenta de la barra superior (no era ruido de renderizado). Se regeneraron las de Firefox y WebKit.
+- **Error real encontrado:** con varias pruebas a la vez, SQLite respondía `database is locked` y el backend devolvía 500 (por ejemplo, al registrar una cuenta). `backend/app/base_datos.py` ahora activa el modo WAL y una espera de 30 s, solo si la base es SQLite (Postgres no cambia).
+
 ### Fase 2 — Medir la cobertura
 
 **Backend (Python):**
