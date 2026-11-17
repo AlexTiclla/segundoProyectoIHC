@@ -84,7 +84,9 @@ test.describe('Cuidados', () => {
     await esperarError(respuesta, 400, 'La fecha del cuidado no puede ser anterior a hoy');
   });
 
-  test('un cuidado realizado no se vuelve a realizar ni cambia de responsable', async ({ page }, testInfo) => {
+  test('un cuidado realizado no se vuelve a realizar, ni se edita, ni cambia de responsable', async ({
+    page,
+  }, testInfo) => {
     const cuenta = await entrarConCuentaNueva(page, testInfo);
     const id = await crearCuidadoPorApi(page, { nombre: 'Luna' });
     expect((await page.request.patch(`/api/mascotas/${id}/realizar`)).status()).toBe(200);
@@ -95,13 +97,20 @@ test.describe('Cuidados', () => {
       'Este cuidado ya está finalizado y no puede marcarse como realizado',
     );
     await esperarError(
+      await page.request.put(`/api/mascotas/${id}`, {
+        data: { nombre: 'Luna', sexo: 'Macho', especie: 'Perro', cuidado: 'Vacuna' },
+      }),
+      400,
+      'Este cuidado ya fue realizado, por eso no se puede editar',
+    );
+    await esperarError(
       await page.request.patch(`/api/mascotas/${id}/responsable`, { data: { correo: cuenta.correo } }),
       400,
       'El cuidado ya fue realizado',
     );
   });
 
-  test('reprogramar exige otra fecha, un motivo y, para mover las siguientes, que se repita', async ({
+  test('reprogramar exige una fecha futura y distinta, un motivo y, para mover las siguientes, que se repita', async ({
     page,
   }, testInfo) => {
     await entrarConCuentaNueva(page, testInfo);
@@ -111,6 +120,7 @@ test.describe('Cuidados', () => {
         data: { fecha_cuidado: fechaConDias(3), motivo: 'Viaje', ...datos },
       });
 
+    await esperarError(await reprogramar({ fecha_cuidado: fechaConDias(-1) }), 400, 'La nueva fecha no puede ser anterior a hoy');
     await esperarError(await reprogramar({ fecha_cuidado: fechaConDias(0) }), 400, 'Elige una fecha distinta a la actual');
     await esperarError(await reprogramar({ motivo: '   ' }), 400, 'Escribe el motivo del cambio');
     await esperarError(

@@ -2,6 +2,7 @@
 ## Diff: upstream/main...HEAD, staged and unstaged changes
 
 - backend/app/base_datos&#46;py (100%)
+- backend/app/config&#46;py (100%)
 - backend/app/main&#46;py (100%)
 - backend/app/models/__init__&#46;py (100%)
 - backend/app/models/acceso&#46;py (100%)
@@ -25,6 +26,7 @@
 - backend/app/services/auth_servicio&#46;py (100%)
 - backend/app/services/cuenta_servicio&#46;py (100%)
 - backend/app/services/mascota_servicio&#46;py (100%)
+- backend/app/utilidades&#46;py (100%)
 - frontend/app/analitica/page&#46;tsx (100%)
 - frontend/app/compartir/page&#46;tsx (100%)
 - frontend/app/cuenta/page&#46;tsx (100%)
@@ -64,7 +66,7 @@
 
 ## Summary
 
-- **Total**: 1106 lines
+- **Total**: 1133 lines
 - **Missing**: 0 lines
 - **Coverage**: 100%
 

@@ -7,6 +7,7 @@ import { urlBackend } from "./lib/constantes";
 const conCobertura = process.env.E2E_COBERTURA === "1";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   // La suite e2e compila en otra carpeta para no pisar la de "npm run dev"
   distDir: process.env.NEXT_DIST_DIR ?? ".next",
   productionBrowserSourceMaps: conCobertura,

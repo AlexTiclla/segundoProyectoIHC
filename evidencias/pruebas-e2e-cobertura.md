@@ -31,7 +31,7 @@ Playwright levanta solo su backend (puerto 8100, base SQLite desechable `backend
 |---|---|---|
 | Pruebas por navegador | 59 | 91 |
 | Resultado (3 navegadores) | 159 pasan, **18 fallan**, **6 omitidas** | **273 pasan**, 0 fallan, 0 omitidas |
-| Cobertura del código del fork | no se medía | **100 %** (1 106 de 1 106 líneas) |
+| Cobertura del código del fork | no se medía | **100 %** (1 133 de 1 133 líneas, con la rama de despliegue) |
 | Reporte en el repo | no (`/playwright-report/` ignorado) | `docs/reportes/` |
 
 ## Qué se corrigió para que la suite corra
@@ -78,10 +78,23 @@ Solo se excluyó código que las pruebas e2e **no pueden ejecutar**. Cada exclus
 |---|---|
 | `mascota_servicio.py` líneas 63, 83 y 179, `cuenta_servicio.py` líneas 19 y 87: `raise ErrorDeNegocio("No se encontró el usuario"/"la cuenta", 404)` | Toda ruta protegida pasa antes por `obtener_usuario_actual`, que responde 401 si la cuenta no existe o está eliminada. Por HTTP nunca se llega a estas comprobaciones defensivas, que sí prueban los tests de pytest. |
 | `mascota_servicio.py` línea 236: motivo de omisión vacío | El esquema `MascotaOmitir` recorta espacios y exige al menos 1 carácter: un motivo vacío se rechaza con 422 antes de llegar al servicio. |
+| `config.py`: `validar_produccion` y el `except` de `validar_zona_horaria`; `routers/auth.py`: el 503 de recuperar con `RECUPERACION_SIMULADA=false` | Solo se ejecutan con la configuración de producción (o con una zona horaria inválida, con la que el backend no arranca). La suite e2e corre con `ENTORNO=desarrollo`; los prueba `backend/tests/test_seguridad_despliegue.py`. |
 | `frontend/app/registro/page.tsx` y `frontend/app/recuperar/page.tsx` | Son páginas estáticas: Next las ejecuta una sola vez en `next build` y luego solo sirve su HTML, así que la cobertura no ve ese código. Las pruebas sí abren esas pantallas y verifican lo que muestran (`acceso.spec.ts`, `visual.spec.ts`). |
 
 ## Resultados
 
 - **Suite completa:** 273/273 pruebas en verde en Chromium, Firefox y WebKit → [`docs/reportes/e2e/index.html`](../docs/reportes/e2e/index.html).
-- **Cobertura del diff:** 100 % (1 106 líneas, 0 faltantes) → [`docs/reportes/cobertura/diff-cover.md`](../docs/reportes/cobertura/diff-cover.md).
-- **Pruebas del backend (pytest):** 96/96 en verde.
+- **Cobertura del diff:** 100 % (1 133 líneas, 0 faltantes) → [`docs/reportes/cobertura/diff-cover.md`](../docs/reportes/cobertura/diff-cover.md).
+- **Pruebas del backend (pytest):** 100/100 en verde.
+
+## Integración con la rama de despliegue (`feat/deploy-aws-mascota-dia`)
+
+Se unió la rama de despliegue en AWS (Docker, Caddy, configuración segura de producción, zona horaria `America/La_Paz`, Next 16.4.6 y la fuente `geist`) para comprobar que no rompe la suite ni baja la cobertura.
+
+| Punto | Resultado |
+|---|---|
+| Conflictos | 3, resueltos: `mascota_servicio.py` (se conserva `hoy_local()` y la exclusión), `next.config.ts` (`output: "standalone"` + la configuración de la suite), `playwright.config.ts` (puertos propios de la suite + `PLAYWRIGHT_BASE_URL` para probar una app ya desplegada sin levantar servidores) |
+| Zona horaria | El backend de la suite usa la zona de la máquina (`ZONA_HORARIA`), para que su "hoy" sea el mismo que el de las pruebas |
+| Cobertura | Las líneas nuevas que la suite puede ejecutar están cubiertas; se agregaron 2 reglas a `reglas-negocio.spec.ts` (editar un cuidado realizado, reprogramar a una fecha pasada) |
+| Capturas visuales | Cambió el trazado de las letras (Geist ahora viene del paquete `geist`, no de Google Fonts); el diseño es igual. Se regeneraron |
+| Despliegue | `frontend/.dockerignore` excluye `.next-e2e`. Con `ENTORNO=produccion`: `/salud` responde, `/docs` da 404, recuperar da 503 y SQLite queda en modo WAL (mejora la concurrencia también en la EC2). `next build` compila con `output: standalone`. La imagen Docker no se construyó en esta máquina (sin permiso sobre Docker) |

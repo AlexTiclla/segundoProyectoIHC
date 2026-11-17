@@ -22,8 +22,14 @@ const URL_BACKEND = `http://127.0.0.1:${PUERTO_BACKEND}`;
 // Base SQLite desechable: se borra y se crea de nuevo al iniciar el backend.
 // cuidados-vencidos.spec.ts la modifica directamente para simular fechas vencidas.
 const BASE_E2E = 'e2e.db';
-process.env.E2E_SQLITE_LOCAL = '1';
-process.env.E2E_RUTA_SQLITE = `backend/${BASE_E2E}`;
+
+// PLAYWRIGHT_BASE_URL=<url> corre la suite contra una app ya desplegada (por ejemplo, la
+// de Docker): no se levantan servidores y se omiten las pruebas que editan la base local
+const urlExterna = process.env.PLAYWRIGHT_BASE_URL;
+if (!urlExterna) {
+  process.env.E2E_SQLITE_LOCAL = '1';
+  process.env.E2E_RUTA_SQLITE = `backend/${BASE_E2E}`;
+}
 
 // E2E_REUTILIZAR=1 usa servidores ya levantados en esos puertos (más rápido al iterar)
 const reutilizar = process.env.E2E_REUTILIZAR === '1';
@@ -58,7 +64,7 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: `http://localhost:${PUERTO_FRONTEND}`,
+    baseURL: urlExterna ?? `http://localhost:${PUERTO_FRONTEND}`,
 
     /* Guarda la traza de las pruebas que fallan, para diagnosticarlas */
     trace: 'retain-on-failure',
@@ -82,7 +88,7 @@ export default defineConfig({
     },
   ],
 
-  webServer: [
+  webServer: urlExterna ? undefined : [
     {
       command: `rm -f ${BASE_E2E} ${BASE_E2E}-wal ${BASE_E2E}-shm && ${servidorBackend} app.main:app --port ${PUERTO_BACKEND}`,
       cwd: 'backend',
@@ -95,6 +101,8 @@ export default defineConfig({
         SECRETO_JWT: 'secreto-solo-para-pruebas-e2e',
         MINUTOS_SESION: '60',
         MINUTOS_CODIGO_RECUPERACION: '15',
+        // El "hoy" del backend debe ser el mismo que el de las pruebas y el navegador
+        ZONA_HORARIA: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
     },
     {

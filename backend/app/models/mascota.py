@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column,relationship
 from app.base_datos import Base
 from app.models.reprogramacion import Reprogramacion
 from app.recurrencia import fechas_siguientes
+from app.utilidades import hoy_local
 
 PENDIENTE = "pendiente"
 REALIZADO = "realizado" 
@@ -76,7 +77,7 @@ class Mascota(Base):
             return []
         return fechas_siguientes(
             self.fecha_base or self.fecha_cuidado,
-            max(self.fecha_cuidado, date.today()),
+            max(self.fecha_cuidado, hoy_local()),
             self.intervalo_cantidad,
             self.intervalo_unidad,
         )
@@ -92,6 +93,6 @@ class Mascota(Base):
         return (
             # No se guarda en la base. Es pendiente, con fecha anterior a hoy y sin eliminar.
             self.estado == PENDIENTE
-            and self.fecha_cuidado < date.today()
+            and self.fecha_cuidado < hoy_local()
             and not self.eliminada
         )

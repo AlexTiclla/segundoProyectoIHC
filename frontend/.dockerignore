@@ -1,0 +1,13 @@
+node_modules
+.next
+out
+coverage
+.env
+.env.*
+*.log
+Dockerfile*
+.git
+.gitignore
+README.md
+# Compilación de la suite e2e (ver playwright.config.ts)
+.next-e2e
