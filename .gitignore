@@ -21,6 +21,9 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 
+# Datos crudos de la cobertura e2e (tests/cobertura/correr.mjs)
+/cobertura/
+
 # Registros
 *.log
 

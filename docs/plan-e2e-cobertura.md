@@ -81,6 +81,47 @@ diff-cover cobertura/backend.xml cobertura/frontend.lcov \
   --html-report docs/reportes/cobertura-diff.html
 ```
 
+**Resultado (16/11): cumplido.** Un solo comando, `pnpm cobertura` (`node tests/cobertura/correr.mjs`), hace todo:
+
+1. Borra `cobertura/` y corre la suite en Chromium con `E2E_COBERTURA=1`:
+   - backend bajo `coverage run` (`backend/.coveragerc`);
+   - Next con `NODE_V8_COVERAGE`, compilado con source maps y sin minificar (`frontend/next.config.ts`);
+   - los dos servidores se detienen con `SIGINT` para que alcancen a guardar sus datos.
+2. `tests/base.ts`: fixture automática que mide la página de cada prueba y también las páginas de otras personas abiertas con `browser.newContext`. Todas las specs importan `test` y `expect` de `./base`.
+3. Monocart une la cobertura del navegador y la del servidor (normaliza `[project]/frontend/...` a `frontend/...`) y deja solo `frontend/{app,componentes,lib}` y `proxy.ts`.
+4. `coverage lcov` del backend desde la raíz, para que las rutas coincidan con git.
+5. Verifica que **todo** archivo del fork tenga datos de cobertura (diff-cover se salta en silencio los que faltan) y corre `diff-cover --compare-branch=upstream/main --fail-under=100`.
+
+Salidas en `cobertura/` (ignorada por git por ahora; en la Fase 4 se publica lo que corresponda): `frontend/index.html`, `backend/html/index.html` y `diff-cover.html`.
+
+**Cifra real de partida: 89 % del diff (1 116 líneas cambiadas, faltan 112).** Por archivo:
+
+| Archivo | Diff cubierto | Líneas que faltan |
+|---|---|---|
+| `backend/app/services/cuenta_servicio.py` | 43 % | 19, 30-32, 34-36, 39, 41-42, 45-46, 58, 60-64, 66-70, 72-75, 77, 87 |
+| `backend/app/services/mascota_servicio.py` | 84 % | 33, 39, 56, 58, 63, 65, 83, 115, 151, 154, 156, 179, 194, 227, 236, 262 |
+| `backend/app/services/acceso_servicio.py` | 88 % | 11, 23, 25, 35 |
+| `backend/app/repositories/mascota_repositorio.py` | 94 % | 240, 253, 263 |
+| `backend/app/routers/auth.py` | 93 % | 84 |
+| `backend/app/routers/acceso.py` | 96 % | 29 |
+| `frontend/app/recuperar/page.tsx` | 0 % | 2 |
+| `frontend/app/registro/page.tsx` | 0 % | 2, 4-5 |
+| `frontend/lib/filtros.ts` | 53 % | 45, 94-95, 97-98, 100-101, 110, 132 |
+| `frontend/componentes/FiltrosMascotas.tsx` | 55 % | 35, 49, 52, 59, 66 |
+| `frontend/componentes/MenuAcciones.tsx` | 50 % | 79 |
+| `frontend/componentes/FormularioOmitir.tsx` | 76 % | 26-27, 37-38, 67 |
+| `frontend/componentes/PanelAccesos.tsx` | 80 % | 41, 46-47, 54-56, 68, 126, 148, 152, 157 |
+| `frontend/componentes/BuscadorMascotas.tsx` | 82 % | 45, 60 |
+| `frontend/componentes/PanelAnalitica.tsx` | 88 % | 16-17 |
+| `frontend/componentes/PanelCuenta.tsx` | 90 % | 32-33, 66 |
+| `frontend/componentes/PanelMascota.tsx` | 90 % | 80-81, 124-126, 198 |
+| `frontend/componentes/ResumenFiltros.tsx` | 91 % | 39 |
+| `frontend/lib/api.ts` | 91 % | 41, 51, 332, 440, 444 |
+| `frontend/componentes/CampoSeleccion.tsx` | 92 % | 52, 80 |
+| `frontend/componentes/FormularioReprogramar.tsx` | 94 % | 62-63 |
+
+El resto de los archivos del fork ya está al 100 %.
+
 ### Fase 3 — Llegar al 100 %
 
 1. Recorrer el reporte de `diff-cover` archivo por archivo, priorizando el que tenga más líneas sin cubrir.

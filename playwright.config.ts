@@ -1,5 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
+import {
+  ARCHIVO_COBERTURA_BACKEND,
+  CARPETA_V8_SERVIDOR,
+  coberturaActiva,
+} from './tests/cobertura/opciones.mjs';
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -18,6 +24,17 @@ process.env.E2E_RUTA_SQLITE = `backend/${BASE_E2E}`;
 
 // E2E_REUTILIZAR=1 usa servidores ya levantados en esos puertos (más rápido al iterar)
 const reutilizar = process.env.E2E_REUTILIZAR === '1';
+
+// Con E2E_COBERTURA=1 (ver tests/cobertura/correr.mjs) el backend corre bajo coverage.py
+// y el servidor de Next guarda su cobertura de V8. Ambos la escriben al detenerse, por eso
+// se detienen con SIGINT y no con SIGKILL, que es lo que usa Playwright por defecto.
+const servidorBackend = coberturaActiva
+  ? '.venv/bin/coverage run --rcfile=.coveragerc -m uvicorn'
+  : '.venv/bin/uvicorn';
+const servidorFrontend = coberturaActiva
+  ? `NODE_V8_COVERAGE=../${CARPETA_V8_SERVIDOR} npm run start`
+  : 'npm run start';
+const detenerConGracia = { signal: 'SIGINT' as const, timeout: 30_000 };
 
 export default defineConfig({
   testDir: './tests',
@@ -62,11 +79,13 @@ export default defineConfig({
 
   webServer: [
     {
-      command: `rm -f ${BASE_E2E} ${BASE_E2E}-wal ${BASE_E2E}-shm && .venv/bin/uvicorn app.main:app --port ${PUERTO_BACKEND}`,
+      command: `rm -f ${BASE_E2E} ${BASE_E2E}-wal ${BASE_E2E}-shm && ${servidorBackend} app.main:app --port ${PUERTO_BACKEND}`,
       cwd: 'backend',
       url: `${URL_BACKEND}/salud`,
       reuseExistingServer: reutilizar,
+      gracefulShutdown: detenerConGracia,
       env: {
+        COVERAGE_FILE: `../${ARCHIVO_COBERTURA_BACKEND}`,
         URL_BASE_DATOS: `sqlite:///./${BASE_E2E}`,
         SECRETO_JWT: 'secreto-solo-para-pruebas-e2e',
         MINUTOS_SESION: '60',
@@ -75,12 +94,14 @@ export default defineConfig({
     },
     {
       // Compilación de producción en su propia carpeta, para no pisar la de "npm run dev"
-      command: `npm run build && npm run start -- --port ${PUERTO_FRONTEND}`,
+      command: `npm run build && ${servidorFrontend} -- --port ${PUERTO_FRONTEND}`,
       cwd: 'frontend',
       url: `http://localhost:${PUERTO_FRONTEND}/ingresar`,
       reuseExistingServer: reutilizar,
       timeout: 300_000,
+      gracefulShutdown: detenerConGracia,
       env: {
+        E2E_COBERTURA: coberturaActiva ? '1' : '0',
         URL_BASE: URL_BACKEND,
         NEXT_DIST_DIR: '.next-e2e',
       },
