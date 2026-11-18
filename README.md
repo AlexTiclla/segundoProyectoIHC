@@ -88,13 +88,14 @@ Las pruebas e2e (Playwright) están en `tests/` y se corren desde la raíz con *
 ```bash
 pnpm install
 pnpm exec playwright install --with-deps
-pnpm test:e2e     # suite completa en Chromium, Firefox y WebKit
+pnpm test --coverage   # pruebas unitarias del backend (pytest) con cobertura → coverage/
+pnpm test:e2e     # suite completa en Chromium, Firefox y WebKit → playwright-report/
 pnpm cobertura    # suite en Chromium midiendo la cobertura del código del fork
 ```
 
 `pnpm cobertura` necesita `coverage` y `diff_cover` en el entorno virtual del backend (están en `backend/requirements.txt`) y el remoto `upstream` con el repositorio original. Falla si el código que cambió el fork no queda cubierto al 100 %.
 
-Los reportes quedan en el repo, en [`docs/reportes/`](docs/reportes/README.md): el de Playwright, el de `diff-cover` y la cobertura completa de backend y frontend. El detalle está en [`evidencias/pruebas-e2e-cobertura.md`](evidencias/pruebas-e2e-cobertura.md).
+Los reportes quedan en el repo: el de Playwright en [`playwright-report/`](playwright-report/index.html), y en [`docs/reportes/`](docs/reportes/README.md) el de `diff-cover` y la cobertura completa de backend y frontend. El detalle está en [`evidencias/pruebas-e2e-cobertura.md`](evidencias/pruebas-e2e-cobertura.md).
 
 ### Resultados verificados
 

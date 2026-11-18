@@ -1,0 +1,51 @@
+# .github/workflows/pruebas.yml
+# Las pruebas unitarias y las E2E corren solas en cada push y en cada pull request.
+name: pruebas
+on: [push, pull_request]
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # Imagen oficial de Playwright (misma versión que pnpm-lock.yaml): trae los navegadores
+    # y las fuentes del sistema. Las capturas visuales *-ci.png se generan con esta misma
+    # imagen, así que el CI dibuja igual que ellas.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+    env:
+      # Corre como root: Firefox lo exige con HOME=/root
+      HOME: /root
+      # El "hoy" de las pruebas es el de Bolivia, como el del backend (ZONA_HORARIA)
+      TZ: America/La_Paz
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+
+      # El backend (pytest y el servidor de las E2E) usa backend/.venv;
+      # el frontend se compila con sus propias dependencias
+      - uses: astral-sh/setup-uv@v6
+      - name: Backend (backend/.venv)
+        working-directory: backend
+        run: |
+          uv venv --python 3.13 .venv
+          uv pip install --python .venv -r requirements.txt
+      - name: Frontend
+        working-directory: frontend
+        run: npm ci
+
+      - run: pnpm test --coverage # unitarias + coverage
+      - run: pnpm exec playwright install --with-deps
+      - run: pnpm exec playwright test # E2E
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reportes
+          path: |
+            playwright-report
+            coverage
+            test-results
+          retention-days: 30
