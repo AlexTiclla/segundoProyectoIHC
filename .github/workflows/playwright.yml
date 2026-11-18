@@ -10,6 +10,8 @@ jobs:
     name: Backend (pytest)
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    env:
+      TZ: America/La_Paz
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
