@@ -4,7 +4,8 @@ Requisito: *"La suite e2e corre y el código que agregaron en el fork tiene 100 
 
 | Reporte | Qué muestra | Cómo se genera |
 |---|---|---|
-| [`e2e/index.html`](e2e/index.html) | Reporte HTML de Playwright: la suite completa en Chromium, Firefox y WebKit | `pnpm test:e2e` |
+| [`playwright-report/index.html`](../../playwright-report/index.html) (en la raíz del repo) | Reporte HTML de Playwright: la suite completa en Chromium, Firefox y WebKit | `pnpm test:e2e` |
+| `coverage/index.html` (no se sube; artefacto del CI) | Cobertura de las pruebas unitarias del backend (pytest) | `pnpm test --coverage` |
 | [`cobertura/diff-cover.html`](cobertura/diff-cover.html) · [`.md`](cobertura/diff-cover.md) | **Cobertura de las líneas que el fork cambió** respecto de `upstream/main` (diff-cover) | `pnpm cobertura` |
 | [`cobertura/frontend/index.html`](cobertura/frontend/index.html) | Cobertura completa del frontend (navegador + servidor de Next), por archivo y línea | `pnpm cobertura` |
 | [`cobertura/backend/html/index.html`](cobertura/backend/html/index.html) | Cobertura completa del backend (coverage.py) | `pnpm cobertura` |
@@ -12,7 +13,7 @@ Requisito: *"La suite e2e corre y el código que agregaron en el fork tiene 100 
 Los HTML se ven abriéndolos en el navegador desde una copia local del repo. El de Playwright también con:
 
 ```bash
-npx playwright show-report docs/reportes/e2e
+npx playwright show-report playwright-report
 ```
 
 ## Cómo se mide

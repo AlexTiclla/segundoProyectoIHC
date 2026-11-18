@@ -19,7 +19,8 @@
 
 ```bash
 pnpm install
-pnpm test:e2e     # suite completa en los 3 navegadores → docs/reportes/e2e
+pnpm test --coverage   # unitarias (pytest) con cobertura → coverage/
+pnpm test:e2e     # suite completa en los 3 navegadores → playwright-report
 pnpm cobertura    # suite en Chromium con cobertura → docs/reportes/cobertura
 ```
 
@@ -83,18 +84,28 @@ Solo se excluyó código que las pruebas e2e **no pueden ejecutar**. Cada exclus
 
 ## Resultados
 
-- **Suite completa:** 273/273 pruebas en verde en Chromium, Firefox y WebKit → [`docs/reportes/e2e/index.html`](../docs/reportes/e2e/index.html).
+- **Suite completa:** 273/273 pruebas en verde en Chromium, Firefox y WebKit → [`playwright-report/index.html`](../playwright-report/index.html).
 - **Cobertura del diff:** 100 % (1 133 líneas, 0 faltantes) → [`docs/reportes/cobertura/diff-cover.md`](../docs/reportes/cobertura/diff-cover.md).
 - **Pruebas del backend (pytest):** 100/100 en verde.
 
 ## Integración continua (GitHub Actions)
 
-El workflow `.github/workflows/playwright.yml` falló en todas sus corridas anteriores: ejecutaba `playwright test` sin backend ni frontend levantados (`ERR_CONNECTION_REFUSED` en `localhost:3000`). Ahora tiene dos trabajos:
+Requisito de la clase: *las pruebas unitarias y las E2E se ejecutan sí o sí en GitHub Actions*, con el workflow `.github/workflows/pruebas.yml` de la diapositiva.
 
-| Trabajo | Qué hace |
+El workflow anterior (`playwright.yml`) falló en todas sus corridas: ejecutaba `playwright test` sin backend ni frontend levantados (`ERR_CONNECTION_REFUSED` en `localhost:3000`). Ahora es `pruebas.yml`, con la estructura de la diapositiva y lo que el proyecto necesita para correr:
+
+| Paso | Qué hace |
 |---|---|
-| Backend (pytest) | Python 3.13, instala `backend/requirements.txt` y corre pytest |
-| E2E (Playwright, 3 navegadores) | Corre dentro de la imagen oficial `mcr.microsoft.com/playwright:v1.64.1-noble` (navegadores y fuentes fijos). Crea `backend/.venv` con uv, instala la raíz con pnpm y `frontend/` con npm, instala los navegadores y corre la suite; `playwright.config.ts` levanta solo sus servidores. Sube como artefacto el reporte (`docs/reportes/e2e`) y `test-results/` |
+| `on: [push, pull_request]` | Corre en cada push (cualquier rama) y en cada pull request |
+| Imagen `mcr.microsoft.com/playwright:v1.64.1-noble` | Navegadores y fuentes fijos, los mismos con los que se generaron las capturas `*-ci.png` |
+| `pnpm install --frozen-lockfile` | Dependencias de la raíz (Playwright) |
+| `backend/.venv` (uv, Python 3.13) y `npm ci` en `frontend/` | El backend y el frontend que levanta `playwright.config.ts` |
+| `pnpm test --coverage` | **Unitarias + coverage:** pytest del backend bajo coverage.py ([`tests/unitarias.mjs`](../tests/unitarias.mjs)); reporte en `coverage/` |
+| `pnpm exec playwright install --with-deps` | Navegadores (ya vienen en la imagen) |
+| `pnpm exec playwright test` | **E2E:** la suite completa en Chromium, Firefox y WebKit; reporte en `playwright-report/` |
+| `actions/upload-artifact` (`if: always()`) | Artefacto `reportes`: `playwright-report`, `coverage` y `test-results` |
+
+El reporte de Playwright también queda versionado en el repo, en [`playwright-report/`](../playwright-report/index.html).
 
 Las capturas visuales tienen referencias propias para el CI (`*-ci.png`, ver `snapshotPathTemplate` en `playwright.config.ts`): Ubuntu 24.04 dibuja el "✓" con otra fuente del sistema y corre unos píxeles los botones, sin cambiar el diseño. Se generan con la misma imagen oficial de Playwright que usa el CI: un primer intento con un contenedor `ubuntu:24.04` genérico no coincidió con el runner de GitHub, que tiene otras fuentes instaladas. En esa imagen la suite completa pasa 273/273 con `CI=true`.
 

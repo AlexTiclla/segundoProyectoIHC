@@ -53,11 +53,11 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Pocos workers: un solo backend con SQLite atiende a los tres navegadores */
   workers: process.env.CI ? 1 : 3,
-  /* El reporte HTML de la suite completa queda en el repo (docs/reportes/e2e).
+  /* El reporte HTML de la suite completa queda en el repo (playwright-report).
      La corrida de cobertura es solo Chromium: deja el suyo aparte, sin pisarlo. */
   reporter: [
     ['list'],
-    ['html', { outputFolder: coberturaActiva ? `${CARPETA_COBERTURA}/playwright` : 'docs/reportes/e2e', open: 'never' }],
+    ['html', { outputFolder: coberturaActiva ? `${CARPETA_COBERTURA}/playwright` : 'playwright-report', open: 'never' }],
   ],
   /* Los flujos con varias personas encadenan muchas acciones del servidor */
   timeout: 60_000,
