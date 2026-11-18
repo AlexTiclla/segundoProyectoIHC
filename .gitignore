@@ -17,10 +17,12 @@ node_modules/
 
 # Playwright
 /test-results/
-/playwright-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Cobertura de las pruebas unitarias (pnpm test --coverage)
+/coverage/
 
 # Datos crudos de la cobertura e2e (tests/cobertura/correr.mjs)
 /cobertura/

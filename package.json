@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "node tests/unitarias.mjs",
     "test:e2e": "playwright test",
     "cobertura": "node tests/cobertura/correr.mjs"
   },
