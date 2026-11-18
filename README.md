@@ -1,7 +1,7 @@
 
 # MASCOTA AL DÍA
 
-[![Pruebas](https://github.com/AlexTiclla/segundoProyectoIHC/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/AlexTiclla/segundoProyectoIHC/actions/workflows/playwright.yml)
+[![Pruebas](https://github.com/AlexTiclla/segundoProyectoIHC/actions/workflows/pruebas.yml)](https://github.com/AlexTiclla/segundoProyectoIHC/actions/workflows/pruebas.yml)
 
 Organiza las vacunas, controles y cuidados de tus mascotas en un solo lugar.
 
